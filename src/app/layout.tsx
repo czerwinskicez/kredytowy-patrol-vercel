@@ -51,11 +51,11 @@ export const metadata: Metadata = {
     },
   },
   // Opcjonalnie: ikony i manifest
-  // icons: {
-  //   icon: "/favicon.ico",
-  //   shortcut: "/favicon-16x16.png",
-  //   apple: "/apple-touch-icon.png",
-  // },
+  icons: {
+    icon: "/favicon.ico",
+    // shortcut: "/favicon-16x16.png",
+    // apple: "/apple-touch-icon.png",
+  },
   // manifest: "/site.webmanifest",
 };
 
