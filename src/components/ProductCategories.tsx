@@ -33,10 +33,10 @@ const categories = [{
   icon: '📝'
 }, ];
 export function ProductCategories() {
-  return <section className="bg-[#0a472e] pb-16">
-      <div className="container mx-auto px-4">
+  return <section className="bg-[#0a472e] py-16">
+      <div className="container mx-auto px-4 lg:max-w-6xl">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {categories.map(category => <div key={category.id} className="bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center hover:shadow-lg transition-shadow cursor-pointer">
+          {categories.map(category => <div key={category.id} className="bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:bg-[#f0c14b] hover:scale-105">
               <div className="text-4xl mb-3">{category.icon}</div>
               <h3 className="text-lg font-medium text-[#0a472e]">
                 {category.name}

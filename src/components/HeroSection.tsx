@@ -9,7 +9,7 @@ export function HeroSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/3 mb-8 lg:mb-0">
-            <img src="/kredytowy_pies.png" alt="Financial illustration" className="max-w-full h-auto" />
+            <img src="/kredytowy_pies.png" alt="Financial illustration" className="w-64 md:max-w-sm h-auto mx-auto lg:w-auto lg:max-w-full lg:mx-0" />
           </div>
           <div className="lg:w-2/3 lg:pl-12 text-center lg:text-left">
             <div className="flex items-center justify-center lg:justify-start mb-4">

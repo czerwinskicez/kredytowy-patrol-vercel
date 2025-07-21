@@ -3,9 +3,9 @@ import { ArrowRightIcon } from 'lucide-react';
 export function AboutSection() {
   return <section className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center">
-          <div className="lg:w-1/2 mb-8 lg:mb-0">
-            <img src="/image.png" alt="Financial consultant" className="max-w-full h-auto rounded-lg" />
+        <div className="flex flex-col lg:flex-row items-center justify-center">
+          <div className="lg:w-1/2 mb-8 lg:mb-0 flex justify-center">
+            <img src="/trust.jpg" alt="Zaufany konsultant" className="max-w-xs md:max-w-sm h-auto rounded-lg" />
           </div>
           <div className="lg:w-1/2 lg:pl-12">
             <div className="flex items-center mb-4">
@@ -71,7 +71,7 @@ export function AboutSection() {
               </div>
             </div>
             <button className="bg-[#0a472e] text-white px-6 py-3 rounded-lg flex items-center hover:bg-opacity-90 transition-colors">
-              Read More
+              Czytaj więcej
               <ArrowRightIcon className="h-4 w-4 ml-2" />
             </button>
           </div>
