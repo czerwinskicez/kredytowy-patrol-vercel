@@ -1,8 +1,12 @@
 import React from 'react';
 import { CheckIcon, XIcon, InfoIcon } from 'lucide-react';
-export function LoanCard({
-  loan
-}) {
+import type { Loan } from './ComparisonSection';
+
+type LoanCardProps = {
+  loan: Loan;
+};
+
+export function LoanCard({ loan }: LoanCardProps) {
   return <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow">
       <div className="p-5 border-b border-gray-100">
         <div className="flex items-center justify-between">

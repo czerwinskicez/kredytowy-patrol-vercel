@@ -4,9 +4,10 @@ import { Header } from '../components/Header';
 import { HeroSection } from '../components/HeroSection';
 import { ProductCategories } from '../components/ProductCategories';
 import { AboutSection } from '../components/AboutSection';
-import { ComparisonSection } from '../components/ComparisonSection';
+import { ComparisonSection, type LoanCategory } from '../components/ComparisonSection';
+
 export default function Page() {
-  const [activeCategory, setActiveCategory] = useState('mortgage');
+  const [activeCategory, setActiveCategory] = useState<LoanCategory>('mortgage');
   return <div className="min-h-screen w-full">
       <Header />
       <HeroSection />

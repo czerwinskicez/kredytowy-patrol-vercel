@@ -12,6 +12,10 @@ const categories = [{
   name: 'Kredyty hipoteczne',
   icon: '🏠'
 }, {
+  id: 'loans',
+  name: 'Pożyczki',
+  icon: '💰'
+},{
   id: 'consolidation',
   name: 'Kredyty konsolidacyjne',
   icon: '💸'
@@ -27,11 +31,7 @@ const categories = [{
   id: 'bonds',
   name: 'Obligacje skarbowe',
   icon: '📝'
-}, {
-  id: 'loans',
-  name: 'Pożyczki',
-  icon: '💰'
-}];
+}, ];
 export function ProductCategories() {
   return <section className="bg-[#0a472e] pb-16">
       <div className="container mx-auto px-4">

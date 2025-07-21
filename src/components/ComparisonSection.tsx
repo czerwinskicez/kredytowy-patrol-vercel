@@ -118,9 +118,15 @@ const loanData = {
     minCreditScore: 600
   }]
 };
-export function ComparisonSection({
-  activeCategory
-}) {
+
+export type Loan = (typeof loanData)[keyof typeof loanData][number];
+export type LoanCategory = keyof typeof loanData;
+
+type ComparisonSectionProps = {
+  activeCategory: LoanCategory;
+};
+
+export function ComparisonSection({ activeCategory }: ComparisonSectionProps) {
   // Get loan data for the active category or use default if not available
   const loans = loanData[activeCategory] || loanData.default;
   return <div>
