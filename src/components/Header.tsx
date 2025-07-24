@@ -1,18 +1,31 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 
 const dropdowns = [
   {
     label: 'Kredyty',
-    items: ['Kredyt hipoteczny', 'Kredyt gotówkowy', 'Kredyt samochodowy'],
+    items: [
+      { name: 'Kredyt Gotówkowy', href: '/kredyty/gotowkowy' },
+      { name: 'Kredyt Hipoteczny', href: '/kredyty/hipoteczny' },
+      { name: 'Kredyt Konsolidacyjny', href: '/kredyty/konsolidacyjny' },
+    ],
   },
   {
     label: 'Oszczędności',
-    items: ['Lokaty', 'Konta oszczędnościowe', 'Obligacje'],
+    items: [
+      { name: 'Lokaty', href: '#' },
+      { name: 'Konta oszczędnościowe', href: '#' },
+      { name: 'Obligacje', href: '#' }
+    ],
   },
   {
     label: 'FinanSowa',
-    items: ['Blog finansowy', 'Porady', 'Aktualności'],
+    items: [
+      { name: 'Blog finansowy', href: '#' },
+      { name: 'Porady', href: '#' },
+      { name: 'Aktualności', href: '#' },
+    ],
     isBlog: true,
   },
 ];
@@ -58,17 +71,17 @@ export function Header() {
   return <header className="bg-[#053320] text-white py-4 px-4 relative z-50">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <img src="/logo_male.png" alt="Logo" className="h-12 mr-3" />
             <span className="text-lg font-semibold">
               <span className="text-white">Kredytowy</span>
               <span className="text-[#f0c14b]"> Patrol</span>
             </span>
-          </div>
+          </Link>
           <nav className="hidden md:flex space-x-6 text-sm">
-            <a href="#" className="text-[#f0c14b] hover:text-white">
+            <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
-            </a>
+            </Link>
             {dropdowns.map((dropdown) => (
               <div
                 key={dropdown.label}
@@ -95,16 +108,16 @@ export function Header() {
                 </button>
                 {/* Dropdown menu */}
                 {openDropdown === dropdown.label && (
-                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn">
+                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-56 bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn">
                     <ul className="py-2">
                       {dropdown.items.map((item, idx) => (
                         <li key={idx}>
-                          <a
-                            href="#"
+                          <Link
+                            href={item.href}
                             className="block px-4 py-2 hover:bg-[#f0c14b] hover:text-[#0a472e] transition-colors duration-150"
                           >
-                            {item}
-                          </a>
+                            {item.name}
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -144,9 +157,9 @@ export function Header() {
           className="md:hidden absolute top-full left-0 w-full bg-[#053320] text-white py-4 px-4 animate-fadeIn"
         >
           <nav className="flex flex-col space-y-4 text-sm">
-            <a href="#" className="text-[#f0c14b] hover:text-white">
+            <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
-            </a>
+            </Link>
             {dropdowns.map((dropdown) => (
               <div key={dropdown.label} className="relative">
                 <button
@@ -175,12 +188,12 @@ export function Header() {
                     <ul className="py-2">
                       {dropdown.items.map((item, idx) => (
                         <li key={idx}>
-                          <a
-                            href="#"
+                          <Link
+                            href={item.href}
                             className="block px-4 py-2 hover:bg-[#f0c14b] hover:text-[#0a472e] transition-colors duration-150"
                           >
-                            {item}
-                          </a>
+                            {item.name}
+                          </Link>
                         </li>
                       ))}
                     </ul>

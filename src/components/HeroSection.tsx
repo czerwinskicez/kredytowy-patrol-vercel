@@ -1,13 +1,13 @@
 import React from 'react';
-
+import Link from 'next/link';
 import { ProductCategories } from '@/components/ProductCategories';
 
 export function HeroSection() {
   return (
     <section className="bg-[#0a472e] text-white pt-12 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-80">
-        {/* <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center"></div> */}
-      </div>
+      {/* <div className="absolute inset-0 z-0 opacity-80">
+        <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center"></div>
+      </div> */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/3 mb-8 lg:mb-0">
@@ -35,7 +35,6 @@ export function HeroSection() {
               i pomoże Ci wybrać produkt idealny dla Twoich potrzeb. 
               Oszczędź czas, pieniądze i nerwy dzięki naszemu porównaniu.
             </p>
-            
           </div>
         </div>
       </div>

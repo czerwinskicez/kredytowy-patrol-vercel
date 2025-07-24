@@ -1,25 +1,26 @@
-"use client";
-import React from 'react';
-import { Header } from '../components/Header';
-import { HeroSection } from '../components/HeroSection';
-import { AboutSection } from '../components/AboutSection';
-import { ComparisonSection } from '../components/ComparisonSection';
-// import { ProductCategories } from '@/components/ProductCategories';
+import { AboutSection } from '@/components/AboutSection';
+import { ComparisonSection } from '@/components/ComparisonSection';
 import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+import { HeroSection } from '@/components/HeroSection';
+import { TrustBar } from '@/components/TrustBar';
+import { getLoanOffers } from '@/lib/google-sheets';
 
-export default function Page() {
+export default async function Home() {
+  const loanOffers = await getLoanOffers('gotowkowy');
+
   return (
-    <div className="min-h-screen w-full">
+    <main>
       <Header />
       <HeroSection />
-      {/* <ProductCategories /> */}
       <AboutSection />
-      <div className="bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <ComparisonSection />
+      <div className="bg-gray-50/50 py-16 md:py-24">
+        <div className="container mx-auto px-4 lg:max-w-6xl">
+          <ComparisonSection initialLoanOffers={loanOffers} />
         </div>
       </div>
+      <TrustBar />
       <Footer />
-    </div>
+    </main>
   );
 }

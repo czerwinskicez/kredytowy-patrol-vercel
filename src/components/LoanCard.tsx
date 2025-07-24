@@ -1,5 +1,7 @@
-import React from 'react';
-import type { CalculatedLoanOffer } from './ComparisonSection';
+"use client";
+import React, { useState } from 'react';
+import type { CalculatedLoanOffer } from '@/types';
+import { LoanDetailModal } from './LoanDetailModal';
 
 type LoanCardProps = {
   loan: CalculatedLoanOffer;
@@ -7,55 +9,81 @@ type LoanCardProps = {
 };
 
 export function LoanCard({ loan, rank }: LoanCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const rankColors: { [key: number]: string } = {
+    1: 'bg-[#f0c14b] text-[#0a472e]',
+    2: 'bg-gray-300 text-gray-800',
+    3: 'bg-yellow-700 text-white',
+  };
+  const rankColor = rankColors[rank] || 'bg-gray-200 text-gray-700';
+
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col">
-      <div className="p-5 border-b border-gray-200">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start">
-            <div className="text-lg font-bold text-gray-400 mr-4">Nr {rank}</div>
-            <img src={loan.logo} alt={`${loan.provider} logo`} className="h-10 w-auto mr-4" />
-            <div>
-              <h3 className="font-bold text-lg text-gray-800">{loan.provider}</h3>
-              <p className="text-sm text-gray-600">{loan.name}</p>
+    <>
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col relative border border-gray-100">
+        <div 
+          className={`absolute top-4 -left-1 px-3 py-1 text-xs font-bold rounded-r-md ${rankColor} shadow-sm`}
+        >
+          #{rank}
+        </div>
+        
+        <div className="p-6 flex-grow">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+
+            {/* Combined Info and Details */}
+            <div className="md:col-span-10">
+              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                <div className="flex-shrink-0 w-24 h-10 flex items-center justify-center">
+                  <img 
+                    src={loan.logo} 
+                    alt={`${loan.provider} logo`} 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <div className="w-full">
+                  <div className="flex flex-col items-center space-y-1 md:flex-row md:items-baseline md:space-y-0 md:space-x-3">
+                    <h3 className="font-bold text-lg text-gray-800">{loan.provider}</h3>
+                    <p className="text-sm text-gray-600">{loan.name}</p>
+                  </div>
+                  
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center md:text-left">
+                    <div>
+                      <p className="text-sm text-gray-500">Miesięczna rata</p>
+                      <p className="text-xl font-bold text-[#0a472e]">{loan.monthlyRate.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">RRSO</p>
+                      <p className="text-lg font-bold text-gray-800">{loan.rrso.toFixed(2)} %</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Prowizja</p>
+                      <p className="text-lg font-bold text-gray-800">{loan.commission} %</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Całkowita kwota</p>
+                      <p className="text-lg font-bold text-gray-800">{loan.totalAmount.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="md:col-span-2 flex flex-col items-center md:items-end space-y-2">
+              <button className="w-full md:w-auto bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                Wybierz
+              </button>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="w-full md:w-auto text-sm font-semibold text-[#0a472e] hover:underline"
+              >
+                Szczegóły oferty
+              </button>
             </div>
           </div>
-          <div className="hidden md:block text-right">
-            <button className="bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-6 rounded-lg transition-colors">
-              Wybierz
-            </button>
-          </div>
         </div>
       </div>
-
-      <div className="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 items-center">
-        <div>
-          <p className="text-sm text-gray-500">Całkowita kwota</p>
-          <p className="text-lg font-bold text-gray-800">{loan.totalAmount.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Prowizja</p>
-          <p className="text-lg font-bold text-gray-800">{loan.commission} %</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">RRSO</p>
-          <p className="text-lg font-bold text-gray-800">{loan.rrso.toFixed(2)} %</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">Miesięczna rata</p>
-          <p className="text-2xl font-bold text-[#0a472e]">{loan.monthlyRate.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
-        </div>
-      </div>
-      
-      <div className="p-5 bg-gray-50 flex items-center justify-between mt-auto">
-        <a href="#" className="text-sm font-semibold text-[#0a472e] hover:underline">
-          Szczegóły oferty
-        </a>
-        <div className="md:hidden">
-          <button className="bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-2 px-4 rounded-lg transition-colors">
-            Wybierz
-          </button>
-        </div>
-      </div>
-    </div>
+      <LoanDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} loan={loan} />
+    </>
   );
 }
