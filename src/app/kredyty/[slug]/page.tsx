@@ -1,4 +1,4 @@
-import { Ranking } from '@/components/Ranking';
+import { ComparisonSection } from '@/components/ComparisonSection';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { getLoanOffers } from '@/lib/google-sheets';
@@ -20,8 +20,8 @@ export default async function KredytPage({ params }: { params: Promise<{ slug: s
       <Header />
       <main className="container mx-auto px-4 py-12 lg:max-w-6xl">
         <h1 className="text-4xl font-bold text-gray-800 mb-8">{loanTypeName}</h1>
-        <Ranking 
-          initialLoanOffers={loanOffers}
+        <ComparisonSection 
+          initialLoanOffers={loanOffers} 
           title={`Porównaj ${loanTypeName.toLowerCase()}`}
         />
       </main>

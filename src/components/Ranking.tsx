@@ -50,11 +50,16 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
           rrso: offer.rrso,
           commission: offer.commission,
           representativeExample: offer.representativeExample,
+          promoted: offer.promoted,
+          hidden: offer.hidden,
+          extraLabel: offer.extraLabel,
         };
       })
       .sort((a, b) => a.monthlyRate - b.monthlyRate);
 
+    // Oferty promowane: promoted = true (niezależnie od hidden)
     const promoted = calculated.filter(offer => offer.promoted);
+    // Oferty regularne w sortowanej liście: wszystkie które nie są hidden
     const regular = calculated.filter(offer => !offer.hidden);
 
     return { promotedOffers: promoted, regularOffers: regular };

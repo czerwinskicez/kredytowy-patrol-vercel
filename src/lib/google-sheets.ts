@@ -108,15 +108,29 @@ export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
         const hidden = row[columnIndex['hidden']] === 'TRUE';
         const extraLabel = row[columnIndex['extraLabel']] || '';
 
+        // Bezpieczniejsze parsowanie wartości numerycznych
+        const parseNumericValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const cleaned = value.toString().replace(',', '.');
+          const parsed = parseFloat(cleaned);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        const parseIntValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const parsed = parseInt(value, 10);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
         return {
           provider: provider,
-          baseInterestRate: parseFloat(row[columnIndex['baseInterestRate']].replace(',', '.')),
-          rrso: parseFloat(row[columnIndex['rrso']].replace(',', '.')),
-          commission: parseFloat(row[columnIndex['comission']].replace(',', '.')),
-          name: row[columnIndex['name']],
-          maxLoanValue: parseInt(row[columnIndex['maxLoanValue']], 10),
-          maxLoanTime: parseInt(row[columnIndex['maxLoanTime']], 10),
-          representativeExample: row[columnIndex['representativeExample']],
+          baseInterestRate: parseNumericValue(row[columnIndex['baseInterestRate']], 0),
+          rrso: parseNumericValue(row[columnIndex['rrso']], 0),
+          commission: parseNumericValue(row[columnIndex['comission']], 0),
+          name: row[columnIndex['name']] || '',
+          maxLoanValue: parseIntValue(row[columnIndex['maxLoanValue']], 500000),
+          maxLoanTime: parseIntValue(row[columnIndex['maxLoanTime']], 120),
+          representativeExample: row[columnIndex['representativeExample']] || '',
           logo: logoUrl,
           promoted,
           hidden,
