@@ -13,6 +13,7 @@ import { AnalyticsScripts } from '@/components/AnalyticsScripts';
 import { StructuredData } from '@/components/StructuredData';
 import { PageSpeedOptimizer } from '@/components/PageSpeedOptimizer';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
+import { SpeedInsights as VercelSpeedInsights} from '@vercel/speed-insights/next'
 import { baseMetadata } from '@/lib/metadata';
 
 // const fontHeading = Poppins({
@@ -68,6 +69,7 @@ export default function RootLayout({
         <StructuredData />
         <PageSpeedOptimizer />
         <VercelAnalytics />
+        <VercelSpeedInsights />
       </body>
     </html>
   );
