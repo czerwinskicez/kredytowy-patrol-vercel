@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Ubuntu, Lato } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const fontHeading = Ubuntu({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-heading',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const fontBody = Lato({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-body',
 });
 
 export const metadata: Metadata = {
@@ -66,8 +68,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl">
+      <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fontHeading.variable} ${fontBody.variable} font-body antialiased`}
       >
         {children}
       </body>

@@ -83,7 +83,7 @@ export function ComparisonSection() {
   return (
     <div>
       <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Dopasuj kredyt do swoich potrzeb</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 font-heading">Dopasuj kredyt do swoich potrzeb</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Suwak kwoty */}
           <div>
@@ -111,7 +111,7 @@ export function ComparisonSection() {
       </div>
       
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">
+        <h2 className="text-xl font-bold text-gray-800 font-heading">
           Najlepsze oferty dla kwoty {amount.toLocaleString('pl-PL')} zł na {months} miesięcy:
         </h2>
       </div>

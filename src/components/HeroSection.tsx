@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { ProductCategories } from '@/components/ProductCategories';
+
 export function HeroSection() {
   return (
-    <section className="bg-[#0a472e] text-white py-16 relative overflow-hidden">
+    <section className="bg-[#0a472e] text-white pt-12 relative overflow-hidden">
       <div className="absolute inset-0 z-0 opacity-80">
         {/* <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center"></div> */}
       </div>
@@ -22,7 +24,7 @@ export function HeroSection() {
                 </span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-heading">
               Kredytowy Patrol na
               <br />
               tropie najlepszych okazji!
@@ -34,47 +36,11 @@ export function HeroSection() {
               Oszczędź czas, pieniądze i nerwy dzięki naszemu porównaniu.
             </p>
             
-            {/* Interaktywne karty */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto lg:mx-0">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/20 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                <div className="text-[#f0c14b] text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  🔍
-                </div>
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-[#f0c14b] transition-colors duration-300">
-                  Szybkie Porównanie
-                </h3>
-                <p className="text-gray-300 text-sm">
-                  Porównaj oferty kredytów hipotecznych, gotówkowych i samochodowych w kilka sekund
-                </p>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/20 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                <div className="text-[#f0c14b] text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  💰
-                </div>
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-[#f0c14b] transition-colors duration-300">
-                  Oszczędności
-                </h3>
-                <p className="text-gray-300 text-sm">
-                  Znajdź najlepsze lokaty, konta oszczędnościowe i inwestycje dla swoich pieniędzy
-                </p>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:bg-white/20 hover:scale-105 hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                <div className="text-[#f0c14b] text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  📊
-                </div>
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-[#f0c14b] transition-colors duration-300">
-                  Ekspercka Analiza
-                </h3>
-                <p className="text-gray-300 text-sm">
-                  Skorzystaj z wiedzy naszych ekspertów i aktualnych porad finansowych
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
+      
+      <ProductCategories />
     </section>
   );
 }

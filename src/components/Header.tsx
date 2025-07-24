@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const dropdowns = [
   {
@@ -20,16 +20,42 @@ const dropdowns = [
 export function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Obsługa najechania i opuszczenia
-  const handleMouseEnter = (label: string) => setOpenDropdown(label);
-  const handleMouseLeave = () => setOpenDropdown(null);
-  // Obsługa kliknięcia (mobile)
   const handleToggle = (label: string) => {
-    setOpenDropdown((prev) => (prev === label ? null : label));
+    if (openDropdown === label) {
+      setOpenDropdown(null);
+    } else {
+      setOpenDropdown(label);
+    }
   };
 
-  return <header className="bg-[#0a472e] text-white py-4 px-4 relative">
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setOpenDropdown(null);
+    }
+    
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (
+      mobileMenuButton &&
+      !mobileMenuButton.contains(event.target as Node) &&
+      mobileMenu &&
+      !mobileMenu.contains(event.target as Node)
+    ) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return <header className="bg-[#053320] text-white py-4 px-4 relative z-50">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
@@ -47,8 +73,7 @@ export function Header() {
               <div
                 key={dropdown.label}
                 className="relative"
-                onMouseEnter={() => handleMouseEnter(dropdown.label)}
-                onMouseLeave={handleMouseLeave}
+                ref={openDropdown === dropdown.label ? dropdownRef : null}
               >
                 <button
                   className="flex items-center hover:text-[#f0c14b] focus:outline-none"
@@ -70,7 +95,7 @@ export function Header() {
                 </button>
                 {/* Dropdown menu */}
                 {openDropdown === dropdown.label && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn">
+                  <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn">
                     <ul className="py-2">
                       {dropdown.items.map((item, idx) => (
                         <li key={idx}>
@@ -94,7 +119,12 @@ export function Header() {
               Kontakt
             </a>
           </nav>
-          <button className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
+          <button 
+            id="mobile-menu-button"
+            className="md:hidden" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            aria-label="Toggle menu"
+          >
             {isMobileMenuOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -109,7 +139,10 @@ export function Header() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-[#053320] text-white py-4 px-4 animate-fadeIn z-50">
+        <div 
+          id="mobile-menu"
+          className="md:hidden absolute top-full left-0 w-full bg-[#053320] text-white py-4 px-4 animate-fadeIn"
+        >
           <nav className="flex flex-col space-y-4 text-sm">
             <a href="#" className="text-[#f0c14b] hover:text-white">
               Strona Główna
@@ -135,7 +168,10 @@ export function Header() {
                   </svg>
                 </button>
                 {openDropdown === dropdown.label && (
-                  <div className="mt-2 w-full bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn">
+                  <div 
+                    className="mt-2 w-full bg-white text-[#0a472e] rounded-md shadow-lg z-20 animate-fadeIn"
+                    ref={dropdownRef}
+                  >
                     <ul className="py-2">
                       {dropdown.items.map((item, idx) => (
                         <li key={idx}>
