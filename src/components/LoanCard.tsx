@@ -6,9 +6,10 @@ import { LoanDetailModal } from './LoanDetailModal';
 type LoanCardProps = {
   loan: CalculatedLoanOffer;
   rank: number;
+  isPromoted?: boolean;
 };
 
-export function LoanCard({ loan, rank }: LoanCardProps) {
+export function LoanCard({ loan, rank, isPromoted = false }: LoanCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const rankColors: { [key: number]: string } = {
@@ -22,12 +23,26 @@ export function LoanCard({ loan, rank }: LoanCardProps) {
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col relative border border-gray-100">
-        <div 
-          className={`absolute top-4 -left-1 px-3 py-1 text-xs font-bold rounded-r-md ${rankColor} shadow-sm`}
-        >
-          #{rank}
-        </div>
+      <div className={`bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col relative border ${isPromoted ? 'border-[#f0c14b]' : 'border-gray-100'}`}>
+        {!isPromoted && (
+          <div 
+            className={`absolute top-4 -left-1 px-3 py-1 text-xs font-bold rounded-r-md ${rankColor} shadow-sm`}
+          >
+            #{rank}
+          </div>
+        )}
+
+        {isPromoted && (
+          <div className="absolute top-4 -left-1 px-3 py-1 text-xs font-bold rounded-r-md bg-[#f0c14b] text-[#0a472e] shadow-sm">
+            Promowane
+          </div>
+        )}
+
+        {loan.extraLabel && (
+          <div className="absolute top-4 right-4 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+            {loan.extraLabel}
+          </div>
+        )}
         
         <div className="p-6 flex-grow">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">

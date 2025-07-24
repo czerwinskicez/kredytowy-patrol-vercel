@@ -67,33 +67,63 @@ export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
     const logos = await getLogos();
     const logoMap = new Map(logos.map(logo => [logo.provider, logo.logoURL]));
 
+    const headerResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A1:K1`,
+    });
+
+    const headers = headerResponse.data.values?.[0];
+    if (!headers) {
+      console.error('Sheet headers are missing.');
+      return [];
+    }
+
+    const columnIndex: { [key: string]: number } = {};
+    headers.forEach((header, index) => {
+      columnIndex[header] = index;
+    });
+
+    const requiredColumns = ['provider', 'baseInterestRate', 'rrso', 'comission', 'name', 'maxLoanValue', 'maxLoanTime', 'representativeExample'];
+    for (const col of requiredColumns) {
+      if (columnIndex[col] === undefined) {
+        console.error(`Missing required column: ${col}`);
+        return [];
+      }
+    }
+
     const response = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A2:H`, // Assuming data is in columns A to H, starting from row 2
+      range: `${sheetName}!A2:K`, 
     });
 
     const rows = response.data.values;
     if (rows && rows.length) {
       return rows.map(row => {
-        const provider = row[0];
-        const logoUrl = logoMap.get(provider) || '/trust.jpg'; // Use a default logo if not found
+        const provider = row[columnIndex['provider']];
+        const logoUrl = logoMap.get(provider) || '/trust.jpg';
         
+        const promoted = row[columnIndex['promoted']] === 'TRUE';
+        const hidden = row[columnIndex['hidden']] === 'TRUE';
+        const extraLabel = row[columnIndex['extraLabel']] || '';
+
         return {
           provider: provider,
-          baseInterestRate: parseFloat(row[1].replace(',', '.')),
-          rrso: parseFloat(row[2].replace(',', '.')),
-          commission: parseFloat(row[3].replace(',', '.')),
-          name: row[4],
-          maxLoanValue: parseInt(row[5], 10),
-          maxLoanTime: parseInt(row[6], 10),
-          representativeExample: row[7],
+          baseInterestRate: parseFloat(row[columnIndex['baseInterestRate']].replace(',', '.')),
+          rrso: parseFloat(row[columnIndex['rrso']].replace(',', '.')),
+          commission: parseFloat(row[columnIndex['comission']].replace(',', '.')),
+          name: row[columnIndex['name']],
+          maxLoanValue: parseInt(row[columnIndex['maxLoanValue']], 10),
+          maxLoanTime: parseInt(row[columnIndex['maxLoanTime']], 10),
+          representativeExample: row[columnIndex['representativeExample']],
           logo: logoUrl,
+          promoted,
+          hidden,
+          extraLabel,
         }
       });
     }
-
-    // window.console.log(rows);
 
     return [];
   } catch (error) {

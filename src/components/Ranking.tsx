@@ -27,8 +27,8 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
     return Math.max(...initialLoanOffers.map(offer => offer.maxLoanTime));
   }, [initialLoanOffers]);
 
-  const calculatedOffers = useMemo(() => {
-    return initialLoanOffers
+  const { promotedOffers, regularOffers } = useMemo(() => {
+    const calculated = initialLoanOffers
       .filter(offer => amount <= offer.maxLoanValue && months <= offer.maxLoanTime)
       .map(offer => {
         const principal = amount;
@@ -47,12 +47,17 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
           ...offer,
           totalAmount,
           monthlyRate,
-          rrso: offer.rrso, // Używamy oryginalnego RRSO z Google Sheets
+          rrso: offer.rrso,
           commission: offer.commission,
           representativeExample: offer.representativeExample,
         };
       })
       .sort((a, b) => a.monthlyRate - b.monthlyRate);
+
+    const promoted = calculated.filter(offer => offer.promoted);
+    const regular = calculated.filter(offer => !offer.hidden);
+
+    return { promotedOffers: promoted, regularOffers: regular };
   }, [amount, months, initialLoanOffers]);
 
   return (
@@ -113,13 +118,24 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
         </div>
       </div>
       
+      {promotedOffers.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-[#f0c14b] pl-4">
+            Oferty promowane
+          </h2>
+          <div className="space-y-6">
+            {promotedOffers.map((loan, index) => <LoanCard key={`promo-${index}`} loan={loan} rank={index + 1} isPromoted />)}
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">
           Najlepsze oferty dla kwoty {amount.toLocaleString('pl-PL')} zł na {months} miesięcy:
         </h2>
       </div>
       <div className="space-y-6">
-        {calculatedOffers.map((loan, index) => <LoanCard key={index} loan={loan} rank={index + 1} />)}
+        {regularOffers.map((loan, index) => <LoanCard key={index} loan={loan} rank={index + 1} />)}
       </div>
     </div>
   );

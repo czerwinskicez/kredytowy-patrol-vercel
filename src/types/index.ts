@@ -8,6 +8,9 @@ export type LoanOffer = {
   maxLoanValue: number;
   maxLoanTime: number;
   representativeExample: string;
+  promoted: boolean;
+  hidden: boolean;
+  extraLabel: string;
 };
 
 export type Logo = {
@@ -24,4 +27,7 @@ export type CalculatedLoanOffer = {
   rrso: number;
   monthlyRate: number;
   representativeExample: string;
+  promoted: boolean;
+  hidden: boolean;
+  extraLabel: string;
 }; 
