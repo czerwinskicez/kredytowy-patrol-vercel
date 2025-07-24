@@ -76,10 +76,10 @@ export const baseMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@KredytowyPatrol', // Dodaj po utworzeniu konta Twitter
-    creator: '@KredytowyPatrol',
+    site: '@kredytowypatrol', // Dodaj po utworzeniu konta Twitter
+    creator: '@kredytowypatrol',
     title: `${siteName} - Porównywarka Finansowa`,
-    description: 'Znajdź najlepsze kredyty i lokaty w Polsce. Szybko, łatwo i bezpłatnie.',
+    description: 'Znajdź najlepsze kredyty i lokaty w Polsce. Szybko i łatwo.',
     images: [`${siteUrl}/twitter-image.png`],
   },
   alternates: {

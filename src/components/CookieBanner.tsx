@@ -34,22 +34,22 @@ export function CookieBanner() {
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:min-w-fit">
+          <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto lg:flex-shrink-0">
             <button
               onClick={() => setShowDetails(true)}
-              className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              className="w-full sm:w-auto px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200"
             >
               Ustawienia
             </button>
             <button
               onClick={rejectAll}
-              className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              className="w-full sm:w-auto px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition-colors duration-200"
             >
               Odrzuć wszystkie
             </button>
             <button
               onClick={acceptAll}
-              className="w-full sm:w-auto px-6 py-2 text-sm font-medium text-white bg-[#0a472e] hover:bg-[#0a472e]/90 rounded-lg transition-colors duration-200"
+              className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-white bg-[#0a472e] hover:bg-[#0a472e]/90 rounded-lg transition-colors duration-200"
             >
               Akceptuj wszystkie
             </button>
