@@ -73,12 +73,12 @@ export function Header() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <img src="/logo_male.png" alt="Logo" className="h-12 mr-3" />
-            <span className="text-lg font-semibold">
+            <span className="text-lg font-semibold font-sarala">
               <span className="text-white">Kredytowy</span>
               <span className="text-[#f0c14b]"> Patrol</span>
             </span>
           </Link>
-          <nav className="hidden md:flex space-x-6 text-sm">
+          <nav className="hidden md:flex space-x-6 text-sm font-sarala">
             <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
             </Link>
@@ -156,7 +156,7 @@ export function Header() {
           id="mobile-menu"
           className="md:hidden absolute top-full left-0 w-full bg-[#053320] text-white py-4 px-4 animate-fadeIn"
         >
-          <nav className="flex flex-col space-y-4 text-sm">
+          <nav className="flex flex-col space-y-4 text-sm font-sarala">
             <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
             </Link>

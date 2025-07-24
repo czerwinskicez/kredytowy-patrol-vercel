@@ -22,6 +22,10 @@ body {
   color: var(--foreground);
 }
 
+html{
+  font-family: var(--font-sarala);
+}
+
 /* Style dla naszego własnego komponentu suwaka */
 .slider-thumb::-webkit-slider-thumb {
   -webkit-appearance: none;

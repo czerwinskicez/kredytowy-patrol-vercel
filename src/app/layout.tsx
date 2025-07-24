@@ -1,18 +1,42 @@
 import type { Metadata } from "next";
-import { Poppins, Ubuntu } from "next/font/google";
+import { 
+  // Poppins, 
+  // Ubuntu, 
+  Sarala, 
+  // Merriweather_Sans, 
+  // Fira_Sans 
+} from "next/font/google";
 import "./globals.css";
 
-const fontHeading = Poppins({
+// const fontHeading = Poppins({
+//   subsets: ['latin'],
+//   weight: ['400', '700'],
+//   variable: '--font-heading',
+// });
+
+// const fontBody = Ubuntu({
+//   subsets: ['latin'],
+//   weight: ['400', '700'],
+//   variable: '--font-body',
+// });
+
+const fontSarala = Sarala({
   subsets: ['latin'],
   weight: ['400', '700'],
-  variable: '--font-heading',
+  variable: '--font-sarala',
 });
 
-const fontBody = Ubuntu({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-body',
-});
+// const fontMerriweatherSans = Merriweather_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '700'],
+//   variable: '--font-merriweather-sans',
+// });
+
+// const fontFiraSans = Fira_Sans({
+//   subsets: ['latin'],
+//   weight: ['400', '700'],
+//   variable: '--font-fira-sans',
+// });
 
 export const metadata: Metadata = {
   title: "Kredytowy Patrol - Porównywarka Kredytów i Oszczędności",
@@ -67,7 +91,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${fontBody.variable} ${fontHeading.variable}`}>
+    <html lang="pl" className={`
+      ${fontSarala.variable}
+    `}>
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
       </head>

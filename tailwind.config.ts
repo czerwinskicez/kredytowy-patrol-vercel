@@ -9,8 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['var(--font-heading)'],
-        body: ['var(--font-body)'],
+        // heading: ['var(--font-heading)'],
+        // body: ['var(--font-body)'],
+        sarala: ['var(--font-sarala)'],
       },
     },
   },
