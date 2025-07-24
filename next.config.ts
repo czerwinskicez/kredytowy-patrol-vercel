@@ -2,9 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Performance optimizations
-  experimental: {
-    optimizeCss: true,
-  },
+  // experimental: {
+  //   optimizeCss: true, // Disabled due to critters dependency issue
+  // },
   
   // Image optimization
   images: {
@@ -52,7 +52,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/(.*\\.(png|jpg|jpeg|gif|webp|avif|ico|svg))$',
+        source: '/(.*)\\.(png|jpg|jpeg|gif|webp|avif|ico|svg)',
         headers: [
           {
             key: 'Cache-Control',
