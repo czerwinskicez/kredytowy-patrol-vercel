@@ -1,6 +1,11 @@
+'use client';
+
 import React from 'react';
+import { useConsent } from '@/contexts/ConsentContext';
 
 export function Footer() {
+  const { showPreferences } = useConsent();
+
   return (
     <footer className="bg-[#0a472e] text-white pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -44,6 +49,14 @@ export function Footer() {
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">O nas</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kontakt</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Polityka prywatności</a></li>
+                <li className="mb-2">
+                  <button 
+                    onClick={showPreferences}
+                    className="hover:text-[#f0c14b] text-left"
+                  >
+                    Ustawienia cookies
+                  </button>
+                </li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Blog</a></li>
               </ul>
             </div>

@@ -7,6 +7,10 @@ import {
   // Fira_Sans 
 } from "next/font/google";
 import "./globals.css";
+import { ConsentProvider } from '@/contexts/ConsentContext';
+import { CookieBanner } from '@/components/CookieBanner';
+import { AnalyticsScripts } from '@/components/AnalyticsScripts';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 
 // const fontHeading = Poppins({
 //   subsets: ['latin'],
@@ -98,7 +102,12 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
       </head>
       <body className="antialiased font-body">
-        {children}
+        <ConsentProvider>
+          {children}
+          <CookieBanner />
+        </ConsentProvider>
+        <AnalyticsScripts />
+        <VercelAnalytics />
       </body>
     </html>
   );

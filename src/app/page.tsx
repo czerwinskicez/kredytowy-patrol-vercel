@@ -3,7 +3,8 @@ import { ComparisonSection } from '@/components/ComparisonSection';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
-import { TrustBar } from '@/components/TrustBar';
+import { TestimonialsSection } from '@/components/TestimonialsSection';
+// import { TrustBar } from '@/components/TrustBar';
 import { getLoanOffers } from '@/lib/google-sheets';
 
 export default async function Home() {
@@ -19,7 +20,8 @@ export default async function Home() {
           <ComparisonSection initialLoanOffers={loanOffers} />
         </div>
       </div>
-      <TrustBar />
+      <TestimonialsSection />
+      {/* <TrustBar /> */}
       <Footer />
     </main>
   );
