@@ -49,8 +49,6 @@ export function AnalyticsScripts() {
           `}
         </Script>
       )}
-
-      {/* Vercel Analytics - handled by @vercel/analytics package */}
     </>
   );
 } 
