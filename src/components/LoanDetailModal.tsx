@@ -33,7 +33,7 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
         <div className="flex items-center mb-6">
           <img src={loan.logo} alt={`${loan.provider} logo`} className="h-12 mr-6" />
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 font-heading">{loan.provider}</h2>
+            <h2 className="text-2xl font-bold text-gray-800">{loan.provider}</h2>
             <p className="text-md text-gray-600">{loan.name}</p>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
         </div>
 
         <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2 font-heading">Reprezentatywny przykład</h3>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Reprezentatywny przykład</h3>
           <p className="text-sm text-gray-600 whitespace-pre-wrap">{loan.representativeExample}</p>
         </div>
         

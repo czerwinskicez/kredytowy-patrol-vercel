@@ -51,7 +51,7 @@ export function ProductCategories() {
             <Link href={category.href} key={category.id}>
               <div className="group bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 hover:bg-[#f0c14b] hover:scale-105 h-full">
                 <div className="text-4xl mb-3 text-[#0a472e] group-hover:text-white">{category.icon}</div>
-                <h3 className="text-lg font-medium text-[#0a472e] group-hover:text-white font-heading">
+                <h3 className="text-lg font-medium text-[#0a472e] group-hover:text-white">
                   {category.name}
                 </h3>
               </div>

@@ -10,15 +10,16 @@ const loanTypeNames: { [key: string]: string } = {
   'konsolidacyjny': 'Kredyt Konsolidacyjny',
 }
 
-export default async function KredytPage({ params }: { params: { slug: string } }) {
-  const loanOffers = await getLoanOffers(params.slug);
-  const loanTypeName = loanTypeNames[params.slug] || 'Ranking Kredytów';
+export default async function KredytPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const loanOffers = await getLoanOffers(slug);
+  const loanTypeName = loanTypeNames[slug] || 'Ranking Kredytów';
 
   return (
     <div>
       <Header />
       <main className="container mx-auto px-4 py-12 lg:max-w-6xl">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 font-heading">{loanTypeName}</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-8">{loanTypeName}</h1>
         <Ranking 
           initialLoanOffers={loanOffers}
           title={`Porównaj ${loanTypeName.toLowerCase()}`}

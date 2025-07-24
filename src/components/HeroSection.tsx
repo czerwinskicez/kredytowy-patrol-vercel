@@ -24,7 +24,7 @@ export function HeroSection() {
                 </span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 font-heading">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Kredytowy Patrol na
               <br />
               tropie najlepszych okazji!

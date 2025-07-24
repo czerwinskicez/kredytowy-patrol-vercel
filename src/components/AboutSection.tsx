@@ -16,7 +16,7 @@ export function AboutSection() {
                 <span className="text-[#0a472e] text-lg">O nas</span>
               </div>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#0a472e] font-heading">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#0a472e]">
               Twój lojalny i zaufany partner w<br />
               zakresie finansów osobistych
             </h2>

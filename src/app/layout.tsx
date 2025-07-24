@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Ubuntu, Lato } from "next/font/google";
+import { Poppins, Ubuntu } from "next/font/google";
 import "./globals.css";
 
-const fontHeading = Ubuntu({
+const fontHeading = Poppins({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-heading',
 });
 
-const fontBody = Lato({
+const fontBody = Ubuntu({
   subsets: ['latin'],
   weight: ['400', '700'],
   variable: '--font-body',
@@ -67,13 +67,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
+    <html lang="pl" className={`${fontBody.variable} ${fontHeading.variable}`}>
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
       </head>
-      <body
-        className={`${fontHeading.variable} ${fontBody.variable} font-body antialiased`}
-      >
+      <body className="antialiased font-body">
         {children}
       </body>
     </html>

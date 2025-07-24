@@ -60,7 +60,7 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
   return (
     <div>
       <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 font-heading">{title}</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <div className="flex justify-between items-center mb-2">
@@ -116,7 +116,7 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
       </div>
       
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800 font-heading">
+        <h2 className="text-xl font-bold text-gray-800">
           Najlepsze oferty dla kwoty {amount.toLocaleString('pl-PL')} zł na {months} miesięcy:
         </h2>
       </div>
