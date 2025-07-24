@@ -78,6 +78,7 @@ export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
       return rows.map(row => {
         const provider = row[0];
         const logoUrl = logoMap.get(provider) || '/trust.jpg'; // Use a default logo if not found
+        
         return {
           provider: provider,
           baseInterestRate: parseFloat(row[1].replace(',', '.')),
@@ -91,6 +92,9 @@ export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
         }
       });
     }
+
+    // window.console.log(rows);
+
     return [];
   } catch (error) {
     console.error('API Error:', error);

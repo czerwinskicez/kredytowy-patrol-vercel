@@ -18,6 +18,8 @@ export function LoanCard({ loan, rank }: LoanCardProps) {
   };
   const rankColor = rankColors[rank] || 'bg-gray-200 text-gray-700';
 
+  // console.log(loan);
+
   return (
     <>
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col relative border border-gray-100">
@@ -45,7 +47,6 @@ export function LoanCard({ loan, rank }: LoanCardProps) {
                     <h3 className="font-bold text-lg text-gray-800">{loan.provider}</h3>
                     <p className="text-sm text-gray-600">{loan.name}</p>
                   </div>
-                  
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center md:text-left">
                     <div>
                       <p className="text-sm text-gray-500">Miesięczna rata</p>

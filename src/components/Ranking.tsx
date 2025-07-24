@@ -42,14 +42,12 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
           (Math.pow(1 + monthlyInterestRate, months) - 1);
 
         const totalAmount = monthlyRate * months;
-        
-        const rrso = (((totalAmount / principal) - 1) / (months / 12)) * 100;
 
         return {
           ...offer,
           totalAmount,
           monthlyRate,
-          rrso: parseFloat(rrso.toFixed(2)),
+          rrso: offer.rrso, // Używamy oryginalnego RRSO z Google Sheets
           commission: offer.commission,
           representativeExample: offer.representativeExample,
         };
