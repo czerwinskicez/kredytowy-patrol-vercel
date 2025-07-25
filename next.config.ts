@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
       }, {
         source: '/lokaty',
         destination: '/lokata',
-        permanent: false,
+        permanent: true,
       }
     ];
   },
