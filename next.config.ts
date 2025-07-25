@@ -70,12 +70,11 @@ const nextConfig: NextConfig = {
         source: '/kredyt',
         destination: '/kredyty/gotowkowy',
         permanent: true,
-      },
-      {
+      }, {
         source: '/lokaty',
-        destination: '/kredyty/lokaty',
-        permanent: true,
-      },
+        destination: '/lokata',
+        permanent: false,
+      }
     ];
   },
 

@@ -30,4 +30,53 @@ export type CalculatedLoanOffer = {
   promoted: boolean;
   hidden: boolean;
   extraLabel: string;
+  acceptsBik: boolean;
+  acceptsKrd: boolean;
+  age: {
+    min: number;
+    max: number;
+  };
+  requiredDocuments: string[];
+}; 
+
+export type DepositOffer = {
+  provider: string;
+  logo: string;
+  name: string;
+  baseInterestRate: number;
+  minDepositValue: number;
+  maxDepositValue: number;
+  period: number;
+  new: boolean;
+  newMoney: boolean;
+  isOnline: boolean;
+  inApp: boolean;
+  accNeed: boolean;
+  capitalization: string;
+  brakeUp: boolean;
+  safety: string;
+  promoted: boolean;
+  hidden: boolean;
+};
+
+export type CalculatedDepositOffer = {
+  provider: string;
+  logo: string;
+  name: string;
+  baseInterestRate: number;
+  minDepositValue: number;
+  maxDepositValue: number;
+  period: number;
+  new: boolean;
+  newMoney: boolean;
+  isOnline: boolean;
+  inApp: boolean;
+  accNeed: boolean;
+  capitalization: string;
+  brakeUp: boolean;
+  safety: string;
+  totalReturn: number;
+  profit: number;
+  promoted: boolean;
+  hidden: boolean;
 }; 

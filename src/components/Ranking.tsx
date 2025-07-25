@@ -53,7 +53,17 @@ export function Ranking({ initialLoanOffers, title }: RankingProps) {
           promoted: offer.promoted,
           hidden: offer.hidden,
           extraLabel: offer.extraLabel,
-        };
+          acceptsBik: true, // Default value - can be made configurable later
+          acceptsKrd: false, // Default value - can be made configurable later
+          age: {
+            min: 18,
+            max: 80
+          },
+          requiredDocuments: [
+            "Dokument tożsamości",
+            "Zaświadczenie o dochodach"
+          ]
+        } as CalculatedLoanOffer;
       })
       .sort((a, b) => a.monthlyRate - b.monthlyRate);
 

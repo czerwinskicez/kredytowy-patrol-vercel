@@ -14,7 +14,8 @@ const dropdowns = [
   {
     label: 'Oszczędności',
     items: [
-      { name: 'Lokaty', href: '#' },
+      { name: 'Lokaty', href: '/lokata' },
+      { name: 'Lokaty Walutowe', href: '/lokata-walutowa' },
       { name: 'Konta oszczędnościowe', href: '#' },
       { name: 'Obligacje', href: '#' }
     ],
@@ -78,7 +79,7 @@ export function Header() {
               <span className="text-[#f0c14b]"> Patrol</span>
             </span>
           </Link>
-          <nav className="hidden md:flex space-x-6 text-sm font-sarala">
+          <nav className="hidden md:flex space-x-6 text-sm font-sarala font-bold">
             <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
             </Link>
@@ -156,7 +157,7 @@ export function Header() {
           id="mobile-menu"
           className="md:hidden absolute top-full left-0 w-full bg-[#053320] text-white py-4 px-4 animate-fadeIn"
         >
-          <nav className="flex flex-col space-y-4 text-sm font-sarala">
+          <nav className="flex flex-col space-y-4 text-sm font-sarala font-bold">
             <Link href="/" className="text-[#f0c14b] hover:text-white">
               Strona Główna
             </Link>

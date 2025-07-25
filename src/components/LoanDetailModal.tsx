@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import type { CalculatedLoanOffer } from '@/types';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 type LoanDetailModalProps = {
   isOpen: boolean;
@@ -13,9 +14,13 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
     return null;
   }
 
+  const renderCheckmark = (condition: boolean) => {
+    return condition ? <FaCheckCircle className="text-green-500" /> : <FaTimesCircle className="text-red-500" />;
+  };
+
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"
+      className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center p-4"
       onClick={onClose}
     >
       <div 
@@ -38,9 +43,9 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-6">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-6 text-center">
             <div className="border-b pb-2">
-                <p className="text-sm text-gray-500">Całkowita kwota do spłaty</p>
+                <p className="text-sm text-gray-500">Całkowita kwota</p>
                 <p className="text-xl font-bold text-gray-800">{loan.totalAmount.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
             </div>
             <div className="border-b pb-2">
@@ -53,19 +58,53 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
             </div>
             <div className="border-b pb-2">
                 <p className="text-sm text-gray-500">RRSO</p>
-                <p className="text-xl font-bold text-gray-800">{loan.rrso.toFixed(2)} %</p>
+                <p className="text-xl font-bold text-gray-800">{loan.rrso} %</p>
             </div>
         </div>
-
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">Reprezentatywny przykład</h3>
-          <p className="text-sm text-gray-600 whitespace-pre-wrap">{loan.representativeExample}</p>
-        </div>
         
+        <div className="text-xs text-gray-500 mb-6">
+          <p>{loan.representativeExample}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-3">Warunki oferty</h3>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                {renderCheckmark(loan.acceptsBik)}
+                <span>Akceptacja wpisów w BIK</span>
+              </li>
+              <li className="flex items-center gap-2">
+                {renderCheckmark(loan.acceptsKrd)}
+                <span>Akceptacja wpisów w KRD</span>
+              </li>
+              <li className="flex items-center gap-2">
+                {renderCheckmark(loan.age?.min ? loan.age.min >= 18 : true)}
+                <span>Wiek min. {loan.age?.min || 18} lat</span>
+              </li>
+              <li className="flex items-center gap-2">
+                {renderCheckmark(loan.age?.max ? loan.age.max <= 80 : true)}
+                <span>Wiek max. {loan.age?.max || 80} lat</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-3">Wymagane dokumenty</h3>
+            <ul className="space-y-2 text-sm text-gray-700">
+              {(loan.requiredDocuments || []).map((doc, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <FaCheckCircle className="text-green-500" />
+                  <span>{doc}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
         <div className="mt-8 text-right">
-            <button className="bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-3 px-8 rounded-lg transition-colors">
-              Przejdź do wniosku
-            </button>
+          <button className="bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-3 px-8 rounded-lg transition-colors">
+            Przejdź do oferty
+          </button>
         </div>
       </div>
     </div>

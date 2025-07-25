@@ -31,12 +31,12 @@ const categories = [{
   id: 'properties',
   name: 'Lokaty',
   icon: <FaChartLine />,
-  href: '#'
+  href: '/lokata'
 }, {
   id: 'currency',
   name: 'Lokaty walutowe',
   icon: <FaCoins />,
-  href: '#'
+  href: '/lokata-walutowa'
 }, {
   id: 'bonds',
   name: 'Obligacje skarbowe',

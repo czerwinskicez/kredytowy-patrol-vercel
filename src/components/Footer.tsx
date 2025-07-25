@@ -38,7 +38,8 @@ export function Footer() {
             <div className="w-1/2 md:w-1/3 mb-8 md:mb-0">
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Oszczędności</h4>
               <ul>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Lokaty</a></li>
+                <li className="mb-2"><a href="/lokata" className="hover:text-[#f0c14b]">Lokaty</a></li>
+                <li className="mb-2"><a href="/lokata-walutowa" className="hover:text-[#f0c14b]">Lokaty walutowe</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Konta oszczędnościowe</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Obligacje</a></li>
               </ul>
