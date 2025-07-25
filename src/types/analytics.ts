@@ -7,6 +7,8 @@ export interface ConsentSettings {
 
 export interface AnalyticsConfig {
   googleAnalyticsId?: string;
+  gtmContainerId?: string;
+  clarityProjectId?: string;
   facebookPixelId?: string;
   cloudflareToken?: string;
 }
@@ -39,11 +41,35 @@ export interface GoogleConsentSettings {
   security_storage: 'granted' | 'denied';
 }
 
+// GTM DataLayer event types
+export interface GTMEvent {
+  event: string;
+  [key: string]: any;
+}
+
+export interface GTMConsentEvent extends GTMEvent {
+  event: 'gtm_consent_default' | 'gtm_consent_update';
+  gtm_consent_default?: GoogleConsentSettings;
+  gtm_consent_update?: GoogleConsentSettings;
+}
+
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
+    dataLayer?: (GTMEvent | any)[];
     fbq?: any;
     _fbq?: any;
+    clarity?: {
+      q?: any[];
+      (...args: any[]): void;
+    };
+    google_tag_manager?: any;
+    analyticsDebugger?: {
+      config: any;
+      healthCheck: () => Record<string, boolean>;
+      testEvent: (name: string, params?: any) => void;
+      testPageView: (url?: string) => void;
+      clearDataLayer: () => void;
+    };
   }
 } 

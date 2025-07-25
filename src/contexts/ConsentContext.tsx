@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ConsentSettings, ConsentContextType, CookieConsentData } from '@/types/analytics';
-import { initializeAnalytics, updateGoogleConsent } from '@/lib/analytics';
+import { initializeAnalytics, updateGoogleConsent, enableAnalyticsDebugger } from '@/lib/analytics';
 
 const CONSENT_VERSION = '1.0';
 const CONSENT_STORAGE_KEY = 'cookie-consent';
@@ -25,6 +25,13 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
   const [hasConsent, setHasConsent] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
 
+  // Enable analytics debugger in development
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      enableAnalyticsDebugger();
+    }
+  }, []);
+
   // Load consent from localStorage on mount
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -42,7 +49,7 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
           setConsent(consentData.consent);
           setHasConsent(true);
           // Initialize analytics with saved consent
-          initializeAnalytics(consentData.consent);
+          setTimeout(() => initializeAnalytics(consentData.consent), 100);
         } else {
           // Remove expired consent
           localStorage.removeItem(CONSENT_STORAGE_KEY);
@@ -75,7 +82,13 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
     
     // If analytics or marketing was just enabled, initialize those services
     if (newConsent.analytics || newConsent.marketing) {
-      initializeAnalytics(newConsent);
+      // Small delay to ensure DOM is ready
+      setTimeout(() => initializeAnalytics(newConsent), 100);
+    }
+    
+    // Log consent changes in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🍪 Consent updated:', newConsent);
     }
   };
 
