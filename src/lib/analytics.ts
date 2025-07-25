@@ -6,6 +6,17 @@ export const ANALYTICS_CONFIG = {
   CLOUDFLARE_TOKEN: process.env.NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN || '',
 };
 
+// Helper function to convert ConsentSettings to GoogleConsentSettings
+const mapToGoogleConsent = (consentSettings: ConsentSettings): GoogleConsentSettings => ({
+  ad_storage: consentSettings.marketing ? 'granted' : 'denied',
+  ad_user_data: consentSettings.marketing ? 'granted' : 'denied',
+  ad_personalization: consentSettings.marketing ? 'granted' : 'denied',
+  analytics_storage: consentSettings.analytics ? 'granted' : 'denied',
+  functionality_storage: consentSettings.preferences ? 'granted' : 'denied',
+  personalization_storage: consentSettings.preferences ? 'granted' : 'denied',
+  security_storage: 'granted',
+});
+
 // Google Analytics 4
 export const initializeGA = (consentSettings: ConsentSettings) => {
   if (!ANALYTICS_CONFIG.GA_MEASUREMENT_ID || typeof window === 'undefined') return;
@@ -16,16 +27,9 @@ export const initializeGA = (consentSettings: ConsentSettings) => {
     window.dataLayer?.push(arguments);
   };
 
-  // Set default consent state
-  window.gtag('consent', 'default', {
-    ad_storage: consentSettings.marketing ? 'granted' : 'denied',
-    ad_user_data: consentSettings.marketing ? 'granted' : 'denied',
-    ad_personalization: consentSettings.marketing ? 'granted' : 'denied',
-    analytics_storage: consentSettings.analytics ? 'granted' : 'denied',
-    functionality_storage: consentSettings.preferences ? 'granted' : 'denied',
-    personalization_storage: consentSettings.preferences ? 'granted' : 'denied',
-    security_storage: 'granted',
-  });
+  // Set default consent state using type-safe GoogleConsentSettings
+  const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
+  window.gtag('consent', 'default', googleConsentSettings);
 
   // Initialize GA4
   window.gtag('js', new Date());
@@ -39,14 +43,9 @@ export const initializeGA = (consentSettings: ConsentSettings) => {
 export const updateGoogleConsent = (consentSettings: ConsentSettings) => {
   if (typeof window === 'undefined' || !window.gtag) return;
 
-  window.gtag('consent', 'update', {
-    ad_storage: consentSettings.marketing ? 'granted' : 'denied',
-    ad_user_data: consentSettings.marketing ? 'granted' : 'denied',
-    ad_personalization: consentSettings.marketing ? 'granted' : 'denied',
-    analytics_storage: consentSettings.analytics ? 'granted' : 'denied',
-    functionality_storage: consentSettings.preferences ? 'granted' : 'denied',
-    personalization_storage: consentSettings.preferences ? 'granted' : 'denied',
-  });
+  // Use type-safe GoogleConsentSettings for consent updates
+  const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
+  window.gtag('consent', 'update', googleConsentSettings);
 };
 
 // Facebook Pixel
