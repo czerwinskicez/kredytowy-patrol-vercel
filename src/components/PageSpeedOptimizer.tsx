@@ -52,12 +52,45 @@ export function PageSpeedOptimizer() {
       }
     };
 
-    // Service Worker registration for caching
+    // Service Worker registration for caching with update handling
     const registerServiceWorker = () => {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {
-          // Service worker registration failed - ignore silently
-        });
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('Service Worker registered successfully');
+            
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New service worker is available
+                    console.log('New version available! Page will reload automatically.');
+                    
+                    // Auto-reload after a short delay to apply updates
+                    setTimeout(() => {
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                      window.location.reload();
+                    }, 1000);
+                  }
+                });
+              }
+            });
+
+            // Handle service worker updates
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              if (!refreshing) {
+                refreshing = true;
+                console.log('Service Worker updated, reloading page...');
+                window.location.reload();
+              }
+            });
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
       }
     };
 
