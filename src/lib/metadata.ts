@@ -72,6 +72,20 @@ export const baseMetadata: Metadata = {
         alt: `${siteName} - Logo`,
         type: 'image/png',
       },
+      {
+        url: `${siteUrl}/screenshot_wide.jpg`,
+        width: 1682,
+        height: 985,
+        alt: `${siteName} - Zrzut ekranu szeroki`,
+        type: 'image/jpeg',
+      },
+      {
+        url: `${siteUrl}/screenshot_narrow_vertical.jpg`,
+        width: 551,
+        height: 713,
+        alt: `${siteName} - Zrzut ekranu wąski`,
+        type: 'image/jpeg',
+      },
     ],
   },
   twitter: {
@@ -80,7 +94,10 @@ export const baseMetadata: Metadata = {
     creator: '@kredytowypatrol',
     title: `${siteName} - Porównywarka Finansowa`,
     description: 'Znajdź najlepsze kredyty i lokaty w Polsce. Szybko i łatwo.',
-    images: [`${siteUrl}/twitter-image.png`],
+    images: [
+      `${siteUrl}/screenshot_wide.jpg`,
+      `${siteUrl}/screenshot_narrow_vertical.jpg`,
+    ],
   },
   alternates: {
     canonical: siteUrl,
