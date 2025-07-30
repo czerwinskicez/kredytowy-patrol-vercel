@@ -1,9 +1,11 @@
 import { MetadataRoute } from 'next';
+import { getLoanOffers, getDepositOffers } from '@/lib/google-sheets';
+import { sheetNameMapping } from '@/lib/google-sheets';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kredytowy-patrol.vercel.app';
+const siteUrl = 'https://www.kredytowypatrol.pl';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticRoutes = [
     {
       url: siteUrl,
       lastModified: new Date(),
@@ -11,73 +13,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${siteUrl}/kredyty/gotowkowy`,
+      url: `${siteUrl}/lokata`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/kredyty/hipoteczny`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/kredyty/samochodowy`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/kredyty/konsolidacyjny`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/kredyty/lokaty`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/kredyty/konta-oszczednosciowe`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    },
-    // Dodatkowe statyczne strony
-    {
-      url: `${siteUrl}/o-nas`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/kontakt`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/polityka-prywatnosci`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/regulamin`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
     },
   ];
+
+  const loanTypes = Object.keys(sheetNameMapping);
+  const loanOffersPromises = loanTypes.map(type => getLoanOffers(type));
+  const allLoanOffers = await Promise.all(loanOffersPromises);
+
+  const loanRoutes = allLoanOffers.flat().map(offer => ({
+    url: `${siteUrl}/kredyty/${offer.provider.toLowerCase().replace(/ /g, '-')}/${offer.name.toLowerCase().replace(/ /g, '-')}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  const depositOffers = await getDepositOffers();
+  const depositRoutes = depositOffers.map(offer => ({
+    url: `${siteUrl}/lokata/${offer.provider.toLowerCase().replace(/ /g, '-')}/${offer.name.toLowerCase().replace(/ /g, '-')}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  const dynamicRoutes = [...loanRoutes, ...depositRoutes];
+
+  const routes = [...staticRoutes, ...dynamicRoutes];
 
   return routes;
 } 

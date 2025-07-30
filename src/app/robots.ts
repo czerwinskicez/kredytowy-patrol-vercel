@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kredytowy-patrol.vercel.app';
+const siteUrl = 'https://www.kredytowypatrol.pl';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -40,6 +40,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
-    host: siteUrl,
   };
 } 

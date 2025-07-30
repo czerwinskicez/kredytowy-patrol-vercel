@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://kredytowy-patrol.vercel.app';
+const siteUrl = 'https://www.kredytowypatrol.pl';
 const siteName = 'Kredytowy Patrol';
 const siteDescription = 'Znajdź najlepsze oferty kredytów hipotecznych, gotówkowych, samochodowych i oszczędności w Polsce. Porównaj setki ofert banków i wybierz najkorzystniejszą. Kredytowy Patrol - Twój przewodnik po świecie finansów.';
 
@@ -120,10 +120,10 @@ export const organizationJsonLd = {
   url: siteUrl,
   logo: `${siteUrl}/logo_male.png`,
   sameAs: [
-    // Dodaj linki do social media gdy będą dostępne
-    // 'https://www.facebook.com/kredytowypatrol',
-    // 'https://twitter.com/kredytowypatrol',
-    // 'https://www.linkedin.com/company/kredytowy-patrol',
+    'https://www.tiktok.com/@kredytowypatrol',
+    'https://www.facebook.com/kredytowypatrol',
+    'https://x.com/kredytowypatrol',
+    'https://www.linkedin.com/company/kredytowy-patrol',
   ],
   contactPoint: {
     '@type': 'ContactPoint',

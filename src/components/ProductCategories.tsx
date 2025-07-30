@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaLandmark, FaMoneyBillWave, FaHome, FaPiggyBank, FaCreditCard, FaChartLine, FaCoins, FaFileAlt } from 'react-icons/fa';
+import { FaLandmark, FaMoneyBillWave, FaHome, FaPiggyBank, FaChartLine, FaCoins, FaFileAlt } from 'react-icons/fa';
+import { FaRegCreditCard } from 'react-icons/fa6';
 import Link from 'next/link';
 
 const categories = [{
@@ -20,12 +21,7 @@ const categories = [{
 }, {
   id: 'creditcards',
   name: 'Karty kredytowe',
-  icon: <FaCreditCard />,
-  href: '#'
-}, {
-  id: 'savings',
-  name: 'Konta oszczędnościowe',
-  icon: <FaPiggyBank />,
+  icon: <FaRegCreditCard />,
   href: '#'
 }, {
   id: 'properties',
@@ -41,6 +37,11 @@ const categories = [{
   id: 'bonds',
   name: 'Obligacje skarbowe',
   icon: <FaFileAlt />,
+  href: '#'
+}, {
+  id: 'savings',
+  name: 'Konta oszczędnościowe',
+  icon: <FaPiggyBank />,
   href: '#'
 }, ];
 export function ProductCategories() {

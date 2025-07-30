@@ -4,7 +4,7 @@ import type { LoanOffer, Logo, DepositOffer } from '@/types';
 
 const sheets = google.sheets('v4');
 
-const sheetNameMapping: { [key: string]: string } = {
+export const sheetNameMapping: { [key: string]: string } = {
   'gotowkowy': 'Kredyt_Gotówkowy',
   'hipoteczny': 'Kredyt_Hipoteczny',
   'konsolidacyjny': 'Kredyt_Konsolidacyjny',
