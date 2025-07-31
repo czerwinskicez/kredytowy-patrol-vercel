@@ -6,7 +6,6 @@ const STATIC_CACHE = `static-${CACHE_VERSION}`;
 
 // Files to cache
 const STATIC_FILES = [
-  '/',
   '/logo_male.png',
   '/kredytowy_pies.png',
   '/favicon.ico',
@@ -76,13 +75,34 @@ self.addEventListener('fetch', (event) => {
   // Handle different types of requests
   const url = new URL(event.request.url);
   
+  // Special handling for homepage - Network First strategy
+  if (url.pathname === '/' && event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // If network fails, try to serve from cache
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then((cachedResponse) => {
         // If we have a cached response, return it
         if (cachedResponse) {
-          // For HTML pages, check for updates in background
-          if (event.request.mode === 'navigate') {
+          // For HTML pages (except homepage), check for updates in background
+          if (event.request.mode === 'navigate' && url.pathname !== '/') {
             // Background fetch to update cache
             fetch(event.request)
               .then((response) => {
@@ -115,8 +135,8 @@ self.addEventListener('fetch', (event) => {
             const shouldCache = 
               // Cache static assets
               event.request.url.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|webp|avif)$/) ||
-              // Cache HTML pages
-              event.request.mode === 'navigate' ||
+              // Cache HTML pages (except homepage)
+              (event.request.mode === 'navigate' && url.pathname !== '/') ||
               // Cache API responses (with shorter TTL)
               event.request.url.includes('/api/');
 

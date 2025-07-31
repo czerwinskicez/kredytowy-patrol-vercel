@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 
+/**
+ * Endpoint do rewalidacji stron po zmianach w Google Sheets
+ * 
+ * Przykłady użycia:
+ * - Odświeżenie konkretnego arkusza: { "sheetName": "Kredyt_Gotówkowy" }
+ * - Odświeżenie wszystkich stron: { "sheetName": "ALL" }
+ * - Odświeżenie po zmianie logo: { "sheetName": "Logo" }
+ */
+
 export async function POST(request: NextRequest) {
   // 1. Sprawdź, czy sekretny token jest poprawny
   const secret = request.nextUrl.searchParams.get('secret')
@@ -23,13 +32,14 @@ export async function POST(request: NextRequest) {
 
   // 3. Zdecyduj, które ścieżki odświeżyć
   try {
-    if (sheetName === 'Logo') {
-      // Jeśli zmienią się loga, odświeżamy wszystko
-      console.log('Revalidating all paths due to Logo sheet change...');
+    if (sheetName === 'Logo' || sheetName === 'ALL') {
+      // Jeśli zmienią się loga lub żądanie odświeżenia wszystkiego, odświeżamy wszystko
+      console.log(`Revalidating all paths due to ${sheetName === 'ALL' ? 'manual refresh request' : 'Logo sheet change'}...`);
       revalidatePath('/');
       revalidatePath('/kredyty/gotowkowy');
       revalidatePath('/kredyty/hipoteczny');
       revalidatePath('/kredyty/konsolidacyjny');
+      revalidatePath('/lokata');
     } else {
       const slug = editedSheetToSlug[sheetName];
       if (slug) {
