@@ -1,27 +1,68 @@
 import { AboutSection } from '@/components/AboutSection';
-import { ComparisonSection } from '@/components/ComparisonSection';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
-// import { TrustBar } from '@/components/TrustBar';
 import { getLoanOffers } from '@/lib/google-sheets';
+import PromotedLoansSection from '@/components/PromotedLoansSection';
+import type { LoanOffer, CalculatedLoanOffer } from '@/types';
+
+function calculateOffer(loan: LoanOffer): CalculatedLoanOffer {
+  const principal = loan.maxLoanValue;
+  const months = loan.maxLoanTime;
+  const commissionAmount = principal * (loan.commission / 100);
+  const totalPrincipal = principal + commissionAmount;
+  const monthlyInterestRate = loan.baseInterestRate / 100 / 12;
+  
+  const monthlyRate =
+    totalPrincipal *
+    (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) /
+    (Math.pow(1 + monthlyInterestRate, months) - 1);
+
+  const totalAmount = monthlyRate * months;
+
+  return {
+    ...loan,
+    totalAmount: isFinite(totalAmount) ? totalAmount : 0,
+    monthlyRate: isFinite(monthlyRate) ? monthlyRate : 0,
+    // Poniżej znajdują się domyślne wartości, tak jak w komponencie Ranking.tsx
+    acceptsBik: true,
+    acceptsKrd: false,
+    age: { min: 18, max: 80 },
+    requiredDocuments: ["Dokument tożsamości", "Zaświadczenie o dochodach"],
+  };
+}
 
 export default async function Home() {
-  const loanOffers = await getLoanOffers('gotowkowy');
+  const [cashLoans, mortgageLoans, consolidationLoans] = await Promise.all([
+    getLoanOffers('gotowkowy'),
+    getLoanOffers('hipoteczny'),
+    getLoanOffers('konsolidacyjny'),
+  ]);
+
+  const promotedCashLoans = cashLoans
+    .filter(loan => loan.promoted && !loan.hidden)
+    .map(calculateOffer);
+  
+  const promotedMortgageLoans = mortgageLoans
+    .filter(loan => loan.promoted && !loan.hidden)
+    .map(calculateOffer);
+
+  const promotedConsolidationLoans = consolidationLoans
+    .filter(loan => loan.promoted && !loan.hidden)
+    .map(calculateOffer);
 
   return (
     <main>
       <Header />
       <HeroSection />
       <AboutSection />
-      <div className="bg-gray-50/50 py-16 md:py-24">
-        <div className="container mx-auto px-4 lg:max-w-6xl">
-          <ComparisonSection initialLoanOffers={loanOffers} />
-        </div>
-      </div>
+      <PromotedLoansSection 
+        promotedCashLoans={promotedCashLoans}
+        promotedMortgageLoans={promotedMortgageLoans}
+        promotedConsolidationLoans={promotedConsolidationLoans}
+      />
       <TestimonialsSection />
-      {/* <TrustBar /> */}
       <Footer />
     </main>
   );
