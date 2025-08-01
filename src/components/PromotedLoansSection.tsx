@@ -38,16 +38,16 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
         </div>
 
         <div className="mt-12">
-          <div className="flex justify-center border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-center border-b border-gray-200">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 text-lg font-semibold transition-all duration-300 ease-in-out border-b-4
+                className={`px-6 py-3 text-lg font-semibold transition-all duration-300 ease-in-out border-b-4 mb-2 sm:mb-0 rounded-lg sm:rounded-none
                   ${
                     activeTab === tab.id
-                      ? 'border-[#f0c14b] text-[#0a472e]'
-                      : 'border-transparent text-gray-500 hover:text-[#0a472e]'
+                      ? 'border-[#f0c14b] text-[#0a472e] bg-white sm:bg-transparent'
+                      : 'border-transparent text-gray-500 hover:text-[#0a472e] bg-gray-100 sm:bg-transparent hover:bg-gray-50 sm:hover:bg-transparent'
                   }`}
               >
                 {tab.label}
@@ -55,7 +55,7 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
             ))}
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 max-w-4xl mx-auto">
             {tabs.map(tab => (
               <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
                 {tab.loans.length > 0 ? (

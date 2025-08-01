@@ -56,12 +56,12 @@ export default async function Home() {
     <main>
       <Header />
       <HeroSection />
-      <AboutSection />
       <PromotedLoansSection 
         promotedCashLoans={promotedCashLoans}
         promotedMortgageLoans={promotedMortgageLoans}
         promotedConsolidationLoans={promotedConsolidationLoans}
       />
+      <AboutSection />
       <TestimonialsSection />
       <Footer />
     </main>
