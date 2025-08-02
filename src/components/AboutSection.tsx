@@ -5,8 +5,8 @@ export function AboutSection() {
   return (
     <section className="bg-white py-20">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col lg:flex-row items-center justify-center">
-          <div className="lg:w-1/2 mb-12 lg:mb-0 flex justify-center">
+        <div className="flex flex-col lg:flex-row items-center">
+          <div className="lg:w-1/3 mb-12 lg:mb-0 flex justify-center">
             <img 
               src="/trust.jpg" 
               alt="Ekspert finansowy analizujący dane" 
@@ -14,7 +14,7 @@ export function AboutSection() {
               loading="lazy"
             />
           </div>
-          <div className="lg:w-1/2 lg:pl-16">
+          <div className="lg:w-2/3 lg:pl-16">
             <div className="flex items-center mb-4">
               <div className="flex items-center">
                 <div className="w-2 h-2 rounded-full bg-[#0a472e] mr-1"></div>
@@ -46,12 +46,14 @@ export function AboutSection() {
                 <p className="text-gray-600">Naszym celem jest Twoja satysfakcja i finansowy spokój.</p>
               </div>
             </div>
-            <a 
-              href="/kredyty/gotowkowy" 
-              className="inline-flex items-center px-8 py-4 bg-[#f0c14b] text-[#0a472e] font-bold rounded-lg hover:bg-opacity-90 transition-colors"
-            >
-              Sprawdź najlepsze kredyty <ArrowRightIcon className="w-5 h-5 ml-2" />
-            </a>
+            <div className="text-center lg:text-left">
+              <a 
+                href="/kredyty/gotowkowy" 
+                className="inline-flex items-center px-8 py-4 bg-[#f0c14b] text-[#0a472e] font-bold rounded-lg hover:bg-opacity-90 transition-colors"
+              >
+                Sprawdź najlepsze kredyty <ArrowRightIcon className="w-5 h-5 ml-2" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

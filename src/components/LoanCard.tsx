@@ -58,7 +58,7 @@ export function LoanCard({ loan, rank, isPromoted = false }: LoanCardProps) {
                   />
                 </div>
                 <div className="w-full">
-                  <div className="flex flex-col items-center space-y-1 md:flex-row md:items-baseline md:space-y-0 md:space-x-3">
+                  <div className="flex flex-col items-center md:items-start">
                     <h3 className="font-bold text-lg text-gray-800">{loan.provider}</h3>
                     <p className="text-sm text-gray-600">{loan.name}</p>
                   </div>
