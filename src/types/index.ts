@@ -99,4 +99,23 @@ export type CalculatedDepositOffer = {
   profit: number;
   promoted: boolean;
   hidden: boolean;
+};
+
+export type TreasuryBondOffer = {
+  symbol: string;
+  baseInterestRate: number;
+  interestDescription: string;
+  interestDescriptionV2: string;
+  interestDescriptionV3: string;
+  capitalization: string;
+  payday: string;
+  url: string;
+  promoted?: boolean;
+  hidden?: boolean;
+};
+
+export type CalculatedTreasuryBondOffer = TreasuryBondOffer & {
+  totalReturn: number;
+  profit: number;
+  duration: number; // w latach
 }; 

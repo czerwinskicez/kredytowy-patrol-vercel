@@ -1,6 +1,6 @@
 import 'server-only';
 import { google } from 'googleapis';
-import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer } from '@/types';
+import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer } from '@/types';
 
 const sheets = google.sheets('v4');
 
@@ -336,6 +336,80 @@ export async function getCurrencyDepositOffers(): Promise<CurrencyDepositOffer[]
     return [];
   } catch (error) {
     console.error('API Error fetching currency deposit offers:', error);
+    return [];
+  }
+}
+
+export async function getTreasuryBondOffers(): Promise<TreasuryBondOffer[]> {
+  try {
+    const auth = await getAuth();
+    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    const sheetName = 'Obligacje_Skarbowe';
+
+    if (!spreadsheetId || !sheetName) {
+      console.error('Spreadsheet ID or Sheet Name is missing.');
+      return [];
+    }
+
+    const headerResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A1:H1`,
+    });
+
+    const headers = headerResponse.data.values?.[0];
+    if (!headers) {
+      console.error('Sheet headers are missing.');
+      return [];
+    }
+
+    const columnIndex: { [key: string]: number } = {};
+    headers.forEach((header, index) => {
+      columnIndex[header] = index;
+    });
+
+    const requiredColumns = ['symbol', 'baseInterestRate', 'Interest_description', 'Interest_description_v2', 'Interest_description_v3', 'capitalization', 'payday', 'url'];
+    for (const col of requiredColumns) {
+      if (columnIndex[col] === undefined) {
+        console.error(`Missing required column: ${col}`);
+        return [];
+      }
+    }
+
+    const response = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A2:H`, 
+    });
+
+    const rows = response.data.values;
+    if (rows && rows.length) {
+      return rows.map(row => {
+        const parseNumericValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const cleaned = value.toString().replace(',', '.').replace('%', '');
+          const parsed = parseFloat(cleaned);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        return {
+          symbol: row[columnIndex['symbol']] || '',
+          baseInterestRate: parseNumericValue(row[columnIndex['baseInterestRate']], 0),
+          interestDescription: row[columnIndex['Interest_description']] || '',
+          interestDescriptionV2: row[columnIndex['Interest_description_v2']] || '',
+          interestDescriptionV3: row[columnIndex['Interest_description_v3']] || '',
+          capitalization: row[columnIndex['capitalization']] || '',
+          payday: row[columnIndex['payday']] || '',
+          url: row[columnIndex['url']] || '/#',
+          promoted: false,
+          hidden: false,
+        };
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.error('API Error fetching treasury bond offers:', error);
     return [];
   }
 }

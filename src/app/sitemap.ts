@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getLoanOffers, getDepositOffers } from '@/lib/google-sheets';
+import { getLoanOffers, getDepositOffers, getTreasuryBondOffers } from '@/lib/google-sheets';
 import { sheetNameMapping } from '@/lib/google-sheets';
 
 const siteUrl = 'https://www.kredytowypatrol.pl';
@@ -14,6 +14,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${siteUrl}/lokata`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/lokaty-walutowe`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/obligacje-skarbowe`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.9,
