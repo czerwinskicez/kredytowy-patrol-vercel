@@ -22,7 +22,7 @@ export const bondColors: { [key: string]: string } = {
 const sizeClasses = {
   sm: 'w-8 h-8 text-xs',
   md: 'w-10 h-10 text-sm',
-  lg: 'px-3 py-1 text-sm',
+  lg: 'w-12 h-12 text-sm',
 };
 
 export function BondBadge({ symbol, size = 'md', className = '' }: BondBadgeProps) {
@@ -31,7 +31,7 @@ export function BondBadge({ symbol, size = 'md', className = '' }: BondBadgeProp
 
   return (
     <span 
-      className={`inline-flex items-center justify-center rounded-lg text-white font-bold ${sizeClass} ${className}`}
+      className={`inline-flex items-center justify-center rounded text-white font-bold ${sizeClass} ${className}`}
       style={{ backgroundColor }}
     >
       {symbol}

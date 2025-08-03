@@ -2,97 +2,20 @@
 import React, { useState, useMemo } from 'react';
 import { CustomSlider } from './CustomSlider';
 import { BondBadge, bondColors } from './BondBadge';
-import type { TreasuryBondOffer, CalculatedTreasuryBondOffer } from '@/types';
+import type { TreasuryBondOffer } from '@/types';
+import { calculateTreasuryBondOffers } from '@/lib/treasury-bonds-calculations';
 
 type TreasuryBondComparisonProps = {
   initialBondOffers: TreasuryBondOffer[];
-  amount: number;
-  expectedInflation: number;
-  onAmountChange: (amount: number) => void;
-  onInflationChange: (inflation: number) => void;
 };
 
-// Mapowanie symboli na okresy w latach
-const bondDurations: { [key: string]: number } = {
-  OTS: 0.25, // 3 miesiące
-  ROR: 1,    // 1 rok
-  DOR: 2,    // 2 lata
-  TOS: 3,    // 3 lata
-  COI: 4,    // 4 lata
-  ROS: 6,    // 6 lat
-  EDO: 10,   // 10 lat
-  ROD: 12,   // 12 lat
-};
-
-
-
-export function TreasuryBondComparison({ 
-  initialBondOffers, 
-  amount, 
-  expectedInflation, 
-  onAmountChange, 
-  onInflationChange 
-}: TreasuryBondComparisonProps) {
+export function TreasuryBondComparison({ initialBondOffers }: TreasuryBondComparisonProps) {
+  const [amount, setAmount] = useState(10000);
+  const [expectedInflation, setExpectedInflation] = useState(4.0);
   const maxPossibleAmount = 200000;
 
   const calculatedOffers = useMemo(() => {
-    return initialBondOffers
-      .map(bond => {
-        const duration = bondDurations[bond.symbol] || 1;
-        let effectiveAnnualRate = bond.baseInterestRate / 100;
-        
-        // Obliczenie efektywnej stopy procentowej z uwzględnieniem inflacji
-        // dla obligacji inflacyjnych (COI, EDO, ROS, ROD)
-        if (['COI', 'EDO', 'ROS', 'ROD'].includes(bond.symbol)) {
-          if (bond.symbol === 'COI') {
-            // COI: 6% w pierwszym roku, potem inflacja + 1.5%
-            const firstYearRate = 6 / 100;
-            const subsequentRate = (expectedInflation + 1.5) / 100;
-            effectiveAnnualRate = duration === 1 ? firstYearRate : 
-              (firstYearRate + subsequentRate * (duration - 1)) / duration;
-          } else if (bond.symbol === 'EDO') {
-            // EDO: 6.25% w pierwszym roku, potem inflacja + 2%
-            const firstYearRate = 6.25 / 100;
-            const subsequentRate = (expectedInflation + 2.0) / 100;
-            effectiveAnnualRate = duration === 1 ? firstYearRate : 
-              (firstYearRate + subsequentRate * (duration - 1)) / duration;
-          } else if (bond.symbol === 'ROS') {
-            // ROS: 5.95% w pierwszym roku, potem inflacja + 2%
-            const firstYearRate = 5.95 / 100;
-            const subsequentRate = (expectedInflation + 2.0) / 100;
-            effectiveAnnualRate = duration === 1 ? firstYearRate : 
-              (firstYearRate + subsequentRate * (duration - 1)) / duration;
-          } else if (bond.symbol === 'ROD') {
-            // ROD: 6.5% w pierwszym roku, potem inflacja + 2.5%
-            const firstYearRate = 6.5 / 100;
-            const subsequentRate = (expectedInflation + 2.5) / 100;
-            effectiveAnnualRate = duration === 1 ? firstYearRate : 
-              (firstYearRate + subsequentRate * (duration - 1)) / duration;
-          }
-        }
-        
-        // Obliczenie zysku zależnie od typu kapitalizacji
-        let profit: number;
-        let totalReturn: number;
-        
-        if (bond.capitalization.includes('Kapitalizacja')) {
-          // Z kapitalizacją - procent składany
-          totalReturn = amount * Math.pow(1 + effectiveAnnualRate, duration);
-          profit = totalReturn - amount;
-        } else {
-          // Bez kapitalizacji - procent prosty
-          profit = amount * effectiveAnnualRate * duration;
-          totalReturn = amount + profit;
-        }
-
-        return {
-          ...bond,
-          duration,
-          profit,
-          totalReturn,
-          effectiveRate: effectiveAnnualRate * 100, // Dodajemy efektywną stopę do wyświetlenia
-        } as CalculatedTreasuryBondOffer & { effectiveRate: number };
-      })
+    return calculateTreasuryBondOffers(initialBondOffers, amount, expectedInflation)
       .sort((a, b) => b.profit - a.profit);
   }, [initialBondOffers, amount, expectedInflation]);
 
@@ -123,18 +46,18 @@ export function TreasuryBondComparison({
                   id="bondAmountInput"
                   type="number"
                   value={amount}
-                  onChange={(e) => onAmountChange(Number(e.target.value))}
+                  onChange={(e) => setAmount(Number(e.target.value))}
                   className="font-bold text-2xl text-[#0a472e] border-b-2 border-gray-300 focus:border-[#f0c14b] outline-none transition-colors w-40 text-right bg-transparent"
                   min={100}
                   max={maxPossibleAmount}
-                  step={500}
+                  step={1000}
                 />
                 <span className="text-xl text-gray-600">zł</span>
               </div>
             </div>
             <CustomSlider
               value={amount}
-              onChange={onAmountChange}
+              onChange={setAmount}
               min={100}
               max={maxPossibleAmount}
               step={1000}
@@ -154,21 +77,21 @@ export function TreasuryBondComparison({
                   id="inflationInput"
                   type="number"
                   value={expectedInflation}
-                  onChange={(e) => onInflationChange(Number(e.target.value))}
+                  onChange={(e) => setExpectedInflation(Number(e.target.value))}
                   className="font-bold text-2xl text-[#0a472e] border-b-2 border-gray-300 focus:border-[#f0c14b] outline-none transition-colors w-20 text-right bg-transparent"
                   min={0}
                   max={20}
-                  step={2.5}
+                  step={0.5}
                 />
                 <span className="text-xl text-gray-600">%</span>
               </div>
             </div>
             <CustomSlider
               value={expectedInflation}
-              onChange={onInflationChange}
+              onChange={setExpectedInflation}
               min={0}
               max={20}
-              step={0.1}
+              step={0.5}
             />
             <div className="flex justify-between text-sm text-gray-500 mt-2">
               <span>0%</span>
@@ -185,40 +108,87 @@ export function TreasuryBondComparison({
       <div className="space-y-6">
         <h3 className="text-xl font-bold text-gray-800">Porównanie zysków dla {formatCurrency(amount)} zł</h3>
         
-        {/* Wykres słupkowy */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <div className="space-y-4">
+        {/* Wykres porównawczy - paski */}
+        <div className="bg-gray-50 p-4 lg:p-6 rounded-lg">
+          <div className="space-y-3 lg:space-y-2">
             {calculatedOffers.map((bond, index) => (
-              <div key={bond.symbol} className="flex items-center space-x-4">
-                <div className="w-12 text-sm font-bold text-center">
-                  {bond.symbol}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-600 truncate">{bond.interestDescription}</span>
+              <div key={bond.symbol}>
+                {/* Mobile Layout - dwulinijkowy */}
+                <div className="lg:hidden">
+                  {/* Pierwsza linia: Badge + Nazwa + Zysk */}
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="flex-shrink-0">
+                      <BondBadge symbol={bond.symbol} size="sm" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-600 truncate">{bond.interestDescription}</div>
+                      <div className="text-xs text-gray-400">
+                        {bond.baseInterestRate}% • {bond.duration}{bond.duration === 1 ? 'r' : bond.duration < 5 ? 'l' : 'l'}
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <span className="text-sm font-bold text-[#0a472e]">
+                        +{formatCurrency(bond.profit)} zł
+                      </span>
+                      <div className="text-xs text-gray-500">#{index + 1}</div>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-1 bg-gray-200 rounded-full h-8 relative overflow-hidden">
+                  
+                  {/* Druga linia: Progress bar na całą szerokość */}
+                  <div className="w-full">
+                    <div className="w-full bg-gray-200 rounded-full h-6 relative overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500 relative"
                         style={{
-                          width: `${(bond.profit / maxProfit) * 100}%`,
+                          width: `${Math.max((bond.profit / maxProfit) * 100, 8)}%`,
                           backgroundColor: bondColors[bond.symbol] || '#6B7280'
                         }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-15"></div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop Layout - jednolinijkowy */}
+                <div className="hidden lg:flex items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <BondBadge symbol={bond.symbol} size="sm" />
+                  </div>
+                  
+                  <div className="w-40 flex-shrink-0">
+                    <div className="text-sm text-gray-600 truncate">{bond.interestDescription}</div>
+                  </div>
+                  
+                  <div className="flex-1 relative">
+                    <div className="w-full bg-gray-200 rounded-full h-8 relative overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500 relative"
+                        style={{
+                          width: `${Math.max((bond.profit / maxProfit) * 100, 8)}%`,
+                          backgroundColor: bondColors[bond.symbol] || '#6B7280'
+                        }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-15"></div>
+                      </div>
+                      
                       <div className="absolute inset-0 flex items-center justify-start pl-3">
-                        <span className="text-xs font-bold text-white mix-blend-difference">
+                        <span 
+                          className="text-xs font-bold text-white"
+                          style={{ 
+                            textShadow: '1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.8), 1px -1px 2px rgba(0,0,0,0.8), -1px 1px 2px rgba(0,0,0,0.8)'
+                          }}
+                        >
                           {bond.baseInterestRate}% • {bond.duration} {bond.duration === 1 ? 'rok' : bond.duration < 5 ? 'lata' : 'lat'}
                         </span>
                       </div>
                     </div>
-                    <div className="w-28 text-right">
-                      <span className="text-lg font-bold text-[#0a472e]">
-                        +{formatCurrencyDetailed(bond.profit)} zł
-                      </span>
-                    </div>
+                  </div>
+                  
+                  <div className="w-28 text-right flex-shrink-0">
+                    <span className="text-lg font-bold text-[#0a472e]">
+                      +{formatCurrency(bond.profit)} zł
+                    </span>
                   </div>
                 </div>
               </div>
@@ -227,9 +197,9 @@ export function TreasuryBondComparison({
         </div>
 
         {/* Karty z detalami - szerszy układ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {calculatedOffers.map((bond, index) => (
-            <div key={bond.symbol} className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-lg border border-gray-200 hover:shadow-md transition-all flex flex-col h-full">
+            <div key={bond.symbol} className="bg-gradient-to-br from-white to-gray-50 p-4 sm:p-6 rounded-lg border border-gray-200 hover:shadow-md transition-all flex flex-col h-full">
               <div className="flex items-center justify-between mb-4">
                 <BondBadge symbol={bond.symbol} size="lg" />
                 <div className="text-xs text-gray-500">
@@ -237,9 +207,9 @@ export function TreasuryBondComparison({
                 </div>
               </div>
               
-              <h4 className="font-bold text-gray-800 mb-2">{bond.interestDescriptionV2}</h4>
+              <h4 className="font-bold text-gray-800 mb-2 break-words">{bond.interestDescriptionV2}</h4>
               
-              <div className="space-y-3 flex-grow">
+              <div className="space-y-3 flex-grow mb-4">
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Zysk:</span>
                   <span className="font-bold text-[#0a472e]">+{formatCurrencyDetailed(bond.profit)} zł</span>
@@ -267,7 +237,7 @@ export function TreasuryBondComparison({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Wypłata:</span>
-                  <span className="font-semibold">{bond.payday}</span>
+                  <span className="font-semibold text-sm text-right break-words">{bond.payday}</span>
                 </div>
               </div>
 
@@ -276,8 +246,7 @@ export function TreasuryBondComparison({
                   href={bond.url !== '/#' ? bond.url : "https://www.gov.pl/web/finanse/skarb-panstwa-obligacje-skarbowe"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm"
-                  style={{ whiteSpace: 'nowrap' }}
+                  className="block w-full text-center bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-2 sm:px-4 rounded-lg transition-colors text-sm leading-tight"
                 >
                   Kup {bond.symbol} Online
                 </a>

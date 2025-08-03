@@ -1,54 +1,33 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
+import { getTreasuryBondOffers } from '@/lib/google-sheets';
 import { TreasuryBondComparison } from '@/components/TreasuryBondComparison';
 import { TreasuryBondRanking } from '@/components/TreasuryBondRanking';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { TreasuryBondOffer } from '@/types';
+import { Metadata } from 'next';
 
-// Funkcja do pobierania danych - będzie wywołana po stronie klienta
-async function fetchTreasuryBondOffers(): Promise<TreasuryBondOffer[]> {
-  try {
-    const response = await fetch('/api/treasury-bonds');
-    if (!response.ok) {
-      throw new Error('Failed to fetch treasury bonds');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching treasury bonds:', error);
-    return [];
-  }
-}
+const title = 'Obligacje Skarbowe - Porównaj i Wybierz Najlepsze';
+const description = 'Znajdź najlepsze obligacje skarbowe. Porównaj oprocentowanie OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD. Interaktywny symulator zysków.';
+const url = "/obligacje-skarbowe";
 
-export default function TreasuryBondsPage() {
-  const [amount, setAmount] = useState(10000);
-  const [expectedInflation, setExpectedInflation] = useState(4.0);
-  const [treasuryBondOffers, setTreasuryBondOffers] = useState<TreasuryBondOffer[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export const metadata: Metadata = {
+  title,
+  description,
+  keywords: "obligacje skarbowe, obligacje skarbu państwa, inwestycje, OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD, oprocentowanie obligacji, symulator obligacji, porównanie obligacji, obligacje 2024, bezpieczne inwestycje, oszczędzanie, kapitalizacja odsetek, obligacje długoterminowe, obligacje krótkoterminowe, inflacja plus, obligacje rodzinne",
+  openGraph: {
+    title,
+    description,
+    url,
+    type: 'website',
+  },
+  alternates: {
+    canonical: url,
+  },
+};
 
-  useEffect(() => {
-    fetchTreasuryBondOffers().then(offers => {
-      setTreasuryBondOffers(offers);
-      setIsLoading(false);
-    });
-  }, []);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <div className="text-center">Ładowanie obligacji skarbowych...</div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const title = 'Obligacje Skarbowe - Porównaj i Wybierz Najlepsze';
-  const description = 'Znajdź najlepsze obligacje skarbowe. Porównaj oprocentowanie OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD. Interaktywny symulator zysków.';
+export default async function TreasuryBondsPage() {
+  const treasuryBondOffers: TreasuryBondOffer[] = await getTreasuryBondOffers();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -79,16 +58,6 @@ export default function TreasuryBondsPage() {
 
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content="/obligacje-skarbowe" />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href="/obligacje-skarbowe" />
-        <meta name="keywords" content="obligacje skarbowe, obligacje skarbu państwa, inwestycje, OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD, oprocentowanie obligacji, symulator obligacji, porównanie obligacji, obligacje 2024, bezpieczne inwestycje, oszczędzanie, kapitalizacja odsetek, obligacje długoterminowe, obligacje krótkoterminowe, inflacja plus, obligacje rodzinne" />
-      </Head>
       <div>
         <script
           type="application/ld+json"
@@ -109,12 +78,8 @@ export default function TreasuryBondsPage() {
         {/* Interaktywny symulator - główny feature */}
         <section className="mb-16">
           <TreasuryBondComparison 
-          initialBondOffers={treasuryBondOffers} 
-          amount={amount}
-          expectedInflation={expectedInflation}
-          onAmountChange={setAmount}
-          onInflationChange={setExpectedInflation}
-        />
+            initialBondOffers={treasuryBondOffers} 
+          />
         </section>
 
         {/* Separator */}
@@ -129,8 +94,6 @@ export default function TreasuryBondsPage() {
           <TreasuryBondRanking 
             initialBondOffers={treasuryBondOffers} 
             title="Pełny ranking obligacji skarbowych"
-            amount={amount}
-            expectedInflation={expectedInflation}
           />
         </section>
 

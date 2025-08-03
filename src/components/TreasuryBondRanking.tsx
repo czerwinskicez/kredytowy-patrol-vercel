@@ -1,89 +1,22 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { BondBadge } from './BondBadge';
-import type { TreasuryBondOffer, CalculatedTreasuryBondOffer } from '@/types';
+import type { TreasuryBondOffer } from '@/types';
+import { calculateTreasuryBondOffers } from '@/lib/treasury-bonds-calculations';
 
 type TreasuryBondRankingProps = {
   initialBondOffers: TreasuryBondOffer[];
   title: string;
-  amount: number;
-  expectedInflation: number;
 };
 
-// Mapowanie symboli na okresy w latach
-const bondDurations: { [key: string]: number } = {
-  OTS: 0.25, // 3 miesiące
-  ROR: 1,    // 1 rok
-  DOR: 2,    // 2 lata
-  TOS: 3,    // 3 lata
-  COI: 4,    // 4 lata
-  ROS: 6,    // 6 lat
-  EDO: 10,   // 10 lat
-  ROD: 12,   // 12 lat
-};
-
-export function TreasuryBondRanking({ initialBondOffers, title, amount, expectedInflation }: TreasuryBondRankingProps) {
+export function TreasuryBondRanking({ initialBondOffers, title }: TreasuryBondRankingProps) {
   const [sortBy, setSortBy] = useState<'rate' | 'duration'>('rate');
-
+  const [amount, setAmount] = useState(10000);
+  const [expectedInflation, setExpectedInflation] = useState(4.0);
 
 
   const calculatedOffers = useMemo(() => {
-    return initialBondOffers
-      .map(bond => {
-            const duration = bondDurations[bond.symbol] || 1;
-            let effectiveAnnualRate = bond.baseInterestRate / 100;
-            
-            // Obliczenie efektywnej stopy procentowej z uwzględnieniem inflacji
-            // dla obligacji inflacyjnych (COI, EDO, ROS, ROD)
-            if (['COI', 'EDO', 'ROS', 'ROD'].includes(bond.symbol)) {
-              if (bond.symbol === 'COI') {
-                // COI: 6% w pierwszym roku, potem inflacja + 1.5%
-                const firstYearRate = 6 / 100;
-                const subsequentRate = (expectedInflation + 1.5) / 100;
-                effectiveAnnualRate = duration === 1 ? firstYearRate : 
-                  (firstYearRate + subsequentRate * (duration - 1)) / duration;
-              } else if (bond.symbol === 'EDO') {
-                // EDO: 6.25% w pierwszym roku, potem inflacja + 2%
-                const firstYearRate = 6.25 / 100;
-                const subsequentRate = (expectedInflation + 2.0) / 100;
-                effectiveAnnualRate = duration === 1 ? firstYearRate : 
-                  (firstYearRate + subsequentRate * (duration - 1)) / duration;
-              } else if (bond.symbol === 'ROS') {
-                // ROS: 5.95% w pierwszym roku, potem inflacja + 2%
-                const firstYearRate = 5.95 / 100;
-                const subsequentRate = (expectedInflation + 2.0) / 100;
-                effectiveAnnualRate = duration === 1 ? firstYearRate : 
-                  (firstYearRate + subsequentRate * (duration - 1)) / duration;
-              } else if (bond.symbol === 'ROD') {
-                // ROD: 6.5% w pierwszym roku, potem inflacja + 2.5%
-                const firstYearRate = 6.5 / 100;
-                const subsequentRate = (expectedInflation + 2.5) / 100;
-                effectiveAnnualRate = duration === 1 ? firstYearRate : 
-                  (firstYearRate + subsequentRate * (duration - 1)) / duration;
-              }
-            }
-            
-            // Obliczenie zysku zależnie od typu kapitalizacji
-            let profit: number;
-            let totalReturn: number;
-            
-            if (bond.capitalization.includes('Kapitalizacja')) {
-              // Z kapitalizacją - procent składany
-              totalReturn = amount * Math.pow(1 + effectiveAnnualRate, duration);
-              profit = totalReturn - amount;
-            } else {
-              // Bez kapitalizacji - procent prosty
-              profit = amount * effectiveAnnualRate * duration;
-              totalReturn = amount + profit;
-            }
-
-                    return {
-          ...bond,
-          duration,
-          profit,
-          totalReturn,
-        } as CalculatedTreasuryBondOffer;
-      })
+    return calculateTreasuryBondOffers(initialBondOffers, amount, expectedInflation)
       .sort((a, b) => {
         switch (sortBy) {
           case 'rate':
@@ -149,7 +82,7 @@ export function TreasuryBondRanking({ initialBondOffers, title, amount, expected
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {calculatedOffers.map((bond, index) => (
+                  {calculatedOffers.map((bond) => (
                     <tr key={bond.symbol} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-4">
                         <div className="flex items-center space-x-3">
@@ -200,8 +133,7 @@ export function TreasuryBondRanking({ initialBondOffers, title, amount, expected
                           href={bond.url !== '/#' ? bond.url : "https://www.gov.pl/web/finanse/skarb-panstwa-obligacje-skarbowe"} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-[#0a472e] hover:bg-[#0c5a3a] transition-colors"
-                          style={{ whiteSpace: 'nowrap' }}
+                          className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-[#0a472e] hover:bg-[#0c5a3a] transition-colors whitespace-nowrap"
                         >
                           Kup online
                         </a>
@@ -214,7 +146,7 @@ export function TreasuryBondRanking({ initialBondOffers, title, amount, expected
 
             {/* Mobile/Tablet Cards */}
             <div className="lg:hidden divide-y divide-gray-200">
-              {calculatedOffers.map((bond, index) => (
+              {calculatedOffers.map((bond) => (
                 <div key={bond.symbol} className="p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3">
