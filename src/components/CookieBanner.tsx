@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useConsent } from '@/contexts/ConsentContext';
 
 export function CookieBanner() {
@@ -31,6 +32,7 @@ export function CookieBanner() {
             </p>
             <p className="text-xs text-gray-500 mt-2">
               Zgodnie z GDPR i Rozporządzeniem ePrivacy masz pełną kontrolę nad cookies.
+              Więcej informacji znajdziesz w naszej <Link href="/polityka-prywatnosci" className="text-blue-600 hover:underline">Polityce Prywatności</Link>.
             </p>
           </div>
           

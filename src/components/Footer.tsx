@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import { useConsent } from '@/contexts/ConsentContext';
 
@@ -7,7 +8,7 @@ export function Footer() {
   const { showPreferences } = useConsent();
 
   return (
-    <footer className="bg-[#053320] text-white pt-16 pb-8">
+    <footer className="bg-[#053320] text-white pt-12 pb-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap justify-between mb-8">
           {/* Logo i opis */}
@@ -19,7 +20,7 @@ export function Footer() {
                 <span className="text-[#f0c14b]"> Patrol</span>
               </span>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-300 text-sm mt-4">
               Twój zaufany partner w świecie finansów. Porównujemy setki ofert, abyś mógł wybrać najlepszą.
             </p>
           </div>
@@ -29,41 +30,42 @@ export function Footer() {
             <div className="w-1/2 md:w-1/3 mb-8 md:mb-0">
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Kredyty</h4>
               <ul>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kredyt hipoteczny</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kredyt gotówkowy</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kredyt samochodowy</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kredyt konsolidacyjny</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt hipoteczny</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt gotówkowy</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt samochodowy</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt konsolidacyjny</a></li>
               </ul>
             </div>
             <div className="w-1/2 md:w-1/3 mb-8 md:mb-0">
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Oszczędności</h4>
               <ul>
-                <li className="mb-2"><a href="/lokata" className="hover:text-[#f0c14b]">Lokaty</a></li>
-                <li className="mb-2"><a href="/lokata-walutowa" className="hover:text-[#f0c14b]">Lokaty walutowe</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Konta oszczędnościowe</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Obligacje</a></li>
+                <li className="mb-2"><a href="/lokata" className="hover:text-[#f0c14b] transition-colors">Lokaty</a></li>
+                <li className="mb-2"><a href="/lokata-walutowa" className="hover:text-[#f0c14b] transition-colors">Lokaty walutowe</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Konta oszczędnościowe</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Obligacje</a></li>
               </ul>
             </div>
             <div className="w-1/2 md:w-1/3">
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Informacje</h4>
               <ul>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">O nas</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Kontakt</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Polityka prywatności</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">O nas</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kontakt</a></li>
+                <li className="mb-2"><Link href="/polityka-prywatnosci" className="hover:text-[#f0c14b] transition-colors">Polityka prywatności</Link></li>
+                <li className="mb-2"><Link href="/regulamin" className="hover:text-[#f0c14b] transition-colors">Regulamin</Link></li>
                 <li className="mb-2">
                   <button 
                     onClick={showPreferences}
-                    className="hover:text-[#f0c14b] text-left"
+                    className="hover:text-[#f0c14b] text-left transition-colors"
                   >
                     Ustawienia cookies
                   </button>
                 </li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b]">Blog</a></li>
+                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Blog</a></li>
               </ul>
             </div>
           </div>
         </div>
-        <div className="border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
+        <div className="border-t border-gray-700 pt-6 text-center text-sm text-gray-300">
           <p>&copy; {new Date().getFullYear()} Kredytowy Patrol. Wszelkie prawa zastrzeżone.</p>
         </div>
       </div>

@@ -29,6 +29,13 @@ const dropdowns = [
     ],
     isBlog: true,
   },
+  {
+    label: 'Regulamin',
+    items: [
+      { name: 'Regulamin', href: '/regulamin' },
+      { name: 'Polityka prywatności', href: '/polityka-prywatnosci' },
+    ],
+  },
 ];
 
 export function Header() {
@@ -127,9 +134,6 @@ export function Header() {
               </div>
             ))}
             <a href="#" className="hover:text-[#f0c14b]">
-              Polityka prywatności
-            </a>
-            <a href="#" className="hover:text-[#f0c14b]">
               Kontakt
             </a>
           </nav>
@@ -202,9 +206,6 @@ export function Header() {
                 )}
               </div>
             ))}
-            <a href="#" className="hover:text-[#f0c14b]">
-              Polityka prywatności
-            </a>
             <a href="#" className="hover:text-[#f0c14b]">
               Kontakt
             </a>

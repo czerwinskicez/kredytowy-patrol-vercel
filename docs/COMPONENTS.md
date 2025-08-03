@@ -1,6 +1,6 @@
-# Dokumentacja Komponentów
+# Dokumentacja Komponentów i Stron
 
-Ten dokument zawiera przegląd kluczowych komponentów React używanych w aplikacji Kredytowy Patrol.
+Ten dokument zawiera przegląd kluczowych komponentów React i stron używanych w aplikacji Kredytowy Patrol.
 
 ## Komponenty Główne
 
@@ -9,11 +9,12 @@ Ten dokument zawiera przegląd kluczowych komponentów React używanych w aplika
 - **Lokalizacja:** `src/components/Header.tsx`
 - **Cechy:**
   - Responsywny (dostosowuje się do urządzeń mobilnych).
-  - Zawiera linki do kluczowych sekcji: Kredyty, Lokaty.
+  - Zawiera linki do kluczowych sekcji: Kredyty, Lokaty, Polityka Prywatności, Regulamin.
 
 ### `Footer.tsx`
 - **Opis:** Stopka aplikacji, zawierająca dodatkowe linki, informacje o prawach autorskich i mediach społecznościowych.
 - **Lokalizacja:** `src/components/Footer.tsx`
+- **Zmiany:** Dodano linki do stron `Polityka Prywatności` i `Regulamin`.
 
 ### `PageSpeedOptimizer.tsx`
 - **Opis:** Kluczowy komponent do optymalizacji wydajności. Odpowiada za rejestrację i zarządzanie Service Workerem.
@@ -63,7 +64,24 @@ Ten dokument zawiera przegląd kluczowych komponentów React używanych w aplika
 - **Opis:** Banner informujący o używaniu plików cookie i proszący o zgodę użytkownika.
 - **Lokalizacja:** `src/components/CookieBanner.tsx`
 - **Kontekst:** Używa `ConsentContext` do zarządzania stanem zgody.
+- **Zmiany:** Dodano bezpośredni link do `Polityki Prywatności`.
 
 ### `StructuredData.tsx`
 - **Opis:** Komponent do wstrzykiwania danych strukturalnych (JSON-LD) do nagłówka strony, co pomaga w SEO.
-- **Lokalizacja:** `src/components/StructuredData.tsx` 
+- **Lokalizacja:** `src/components/StructuredData.tsx`
+
+## Strony informacyjne
+
+### `polityka-prywatnosci/page.tsx`
+- **Opis:** Nowa strona wyświetlająca politykę prywatności serwisu.
+- **Lokalizacja:** `src/app/polityka-prywatnosci/page.tsx`
+- **Cechy:**
+  - Treść pobierana z pliku Markdown i formatowana w komponencie.
+  - Dodana do mapy witryny w `sitemap.ts`.
+
+### `regulamin/page.tsx`
+- **Opis:** Nowa strona wyświetlająca regulamin serwisu.
+- **Lokalizacja:** `src/app/regulamin/page.tsx`
+- **Cechy:**
+  - Treść pobierana z pliku Markdown i formatowana w komponencie.
+  - Dodana do mapy witryny w `sitemap.ts`.
