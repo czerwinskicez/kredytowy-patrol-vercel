@@ -2,6 +2,7 @@ import { AboutSection } from '@/components/AboutSection';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
+import { NewsletterSection } from '@/components/NewsletterSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { getLoanOffers } from '@/lib/google-sheets';
 import PromotedLoansSection from '@/components/PromotedLoansSection';
@@ -63,6 +64,7 @@ export default async function Home() {
       />
       <AboutSection />
       <TestimonialsSection />
+      <NewsletterSection />
       <Footer />
     </main>
   );

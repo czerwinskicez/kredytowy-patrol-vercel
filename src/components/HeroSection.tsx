@@ -5,7 +5,7 @@ import { ProductCategories } from '@/components/ProductCategories';
 export function HeroSection() {
   return (
     <section className="bg-[#0a472e] text-white pt-12 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 opacity-40">
+      <div className="absolute inset-0 z-0 opacity-32">
         <div className="absolute inset-0 bg-[url('/background.jpg')] bg-cover bg-center"></div>
       </div>
       <div className="container mx-auto px-4 relative z-10">

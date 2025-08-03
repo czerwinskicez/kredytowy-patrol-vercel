@@ -62,7 +62,7 @@ const testimonials: Testimonial[] = [
 
 export function TestimonialsSection() {
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-gray-50 py-16 md:py-24">
       <div className="container mx-auto px-4 lg:max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -78,7 +78,7 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <div className="flex items-center mb-4">
                 <div className="flex text-yellow-400">
@@ -111,31 +111,6 @@ export function TestimonialsSection() {
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <div className="bg-green-50 rounded-xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-green-800 mb-4">
-              Dołącz do tysięcy zadowolonych klientów!
-            </h3>
-            <p className="text-green-700 mb-6">
-              Średnio nasi użytkownicy oszczędzają <span className="font-bold">4,200 zł</span> na swoich kredytach
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">50,000+</div>
-                <div className="text-sm text-green-700">Zadowolonych klientów</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">210M zł</div>
-                <div className="text-sm text-green-700">Zaoszczędzonych pieniędzy</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">4.9/5</div>
-                <div className="text-sm text-green-700">Średnia ocena</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
