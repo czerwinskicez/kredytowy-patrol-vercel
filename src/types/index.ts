@@ -59,6 +59,26 @@ export type DepositOffer = {
   hidden: boolean;
 };
 
+export type CurrencyDepositOffer = {
+  provider: string;
+  currency: 'EUR' | 'USD' | 'GBP' | 'CHF';
+  baseInterestRate: number;
+  name: string;
+  minDepositValue: number;
+  maxDepositValue: number;
+  period: number;
+  capitalization: number;
+  url: string;
+  logo: string;
+  promoted: boolean;
+  hidden: boolean;
+};
+
+export type CalculatedCurrencyDepositOffer = CurrencyDepositOffer & {
+  totalReturn: number;
+  profit: number;
+};
+
 export type CalculatedDepositOffer = {
   provider: string;
   logo: string;

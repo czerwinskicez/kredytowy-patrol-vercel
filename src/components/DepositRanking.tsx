@@ -11,10 +11,6 @@ type DepositRankingProps = {
 
 export function DepositRanking({ initialDepositOffers, title }: DepositRankingProps) {
   const [amount, setAmount] = useState(50000);
-  const [selectedMonths, setSelectedMonths] = useState<number[]>([12]); // Changed to array
-
-  const maxPossibleAmount = 300000;
-
   const availablePeriods = useMemo(() => {
     if (!initialDepositOffers || initialDepositOffers.length === 0) {
       return [3, 6, 12, 24, 36];
@@ -22,6 +18,10 @@ export function DepositRanking({ initialDepositOffers, title }: DepositRankingPr
     const periods = [...new Set(initialDepositOffers.map(offer => offer.period))].sort((a, b) => a - b);
     return periods.length > 0 ? periods : [3, 6, 12, 24, 36];
   }, [initialDepositOffers]);
+
+  const [selectedMonths, setSelectedMonths] = useState<number[]>(availablePeriods); 
+
+  const maxPossibleAmount = 300000;
 
   const toggleMonth = (month: number) => {
     setSelectedMonths(prev => {

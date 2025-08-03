@@ -1,57 +1,45 @@
-# Przepływ Danych
+## Data Flow
+This document outlines the data flow within the Kredytowy Patrol application, from data sources to the components that display the information.
 
-Ten dokument wyjaśnia, w jaki sposób dane są pobierane, przetwarzane i wyświetlane w aplikacji Kredytowy Patrol. Głównym źródłem danych jest Google Sheets.
+### Data Sources
+The primary data source for loan and deposit offers is **Google Sheets**. This allows for easy updates and management of financial product data without requiring code changes.
 
-## 1. Źródło Danych: Google Sheets
+- **Spreadsheet ID**: Stored in `process.env.GOOGLE_SHEETS_SPREADSHEET_ID`
+- **Authentication**: Uses a service account with credentials stored in environment variables (`GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`).
 
-Zamiast tradycyjnej bazy danych, aplikacja wykorzystuje Arkusze Google jako CMS (Content Management System). To rozwiązanie pozwala na łatwe i szybkie zarządzanie ofertami kredytów i lokat bez potrzeby interwencji programistycznej.
+### Data Fetching
+Data is fetched on the server-side using the `googleapis` library. The core logic is located in `src/lib/google-sheets.ts`.
 
-- **Arkusze:** Oddzielne arkusze są używane do przechowywania różnych typów danych (np. "Kredyty gotówkowe", "Lokaty").
-- **Struktura:** Każdy wiersz w arkuszu odpowiada jednemu produktowi, a kolumny reprezentują jego atrybuty (np. nazwa banku, oprocentowanie, RRSO, okres).
+#### 1. **`getLogos()`**
+- **Sheet**: `Logo`
+- **Function**: Fetches a list of provider names and their corresponding logo URLs. This data is used to enrich the offer data with visual branding.
 
-## 2. Pobieranie Danych: Moduł `google-sheets.ts`
+#### 2. **`getLoanOffers(loanType: string)`**
+- **Sheets**: `Kredyt_Gotówkowy`, `Kredyt_Hipoteczny`, `Kredyt_Konsolidacyjny`
+- **Function**: Fetches loan offers for a specific loan type. It maps the `loanType` parameter to the corresponding sheet name.
+- **Enrichment**: Merges loan data with logos from `getLogos()`.
 
-Logika odpowiedzialna za komunikację z API Google Sheets znajduje się w pliku `src/lib/google-sheets.ts`.
+#### 3. **`getDepositOffers()`**
+- **Sheet**: `Lokata`
+- **Function**: Fetches standard deposit offers (in PLN).
+- **Enrichment**: Merges deposit data with logos.
 
-### Proces Pobierania
+#### 4. **`getCurrencyDepositOffers()`**
+- **Sheet**: `Lokaty_Walutowe`
+- **Function**: Fetches currency deposit offers (EUR, USD, etc.).
+- **Enrichment**: Merges deposit data with logos.
 
-1.  **Uwierzytelnienie:** Aplikacja używa klucza API do uwierzytelnienia się w usłudze Google Cloud. Dane uwierzytelniające są przechowywane jako zmienne środowiskowe (`GOOGLE_SHEETS_API_KEY`, `GOOGLE_SHEETS_PRIVATE_KEY`, `GOOGLE_SHEETS_CLIENT_EMAIL`).
-2.  **Zapytanie do API:** Funkcje w `google-sheets.ts` (np. `getLoans`, `getDeposits`) wysyłają zapytania do API Google Sheets, określając ID arkusza oraz zakres komórek do pobrania.
-3.  **Cache'owanie na Serwerze:** Next.js automatycznie cache'uje wyniki zapytań API po stronie serwera. Aby zapewnić aktualność danych, wdrożono mechanizm rewalidacji on-demand:
-    - Endpoint `api/revalidate` jest wywoływany (np. przez webhook z zewnętrznego systemu lub ręcznie), aby unieważnić cache dla określonych ścieżek (`revalidatePath`).
-    - Dzięki temu dane na stronie mogą być odświeżane bez konieczności ponownego budowania całej aplikacji.
+### Data Display
+The fetched data is passed as props to server components, which then render the information.
 
-## 3. Przetwarzanie i Wyświetlanie
+- **Loan Offers**: Displayed in `Ranking.tsx`, which uses `LoanCard.tsx` to render individual offers.
+- **Deposit Offers**: Displayed in `DepositRanking.tsx`, using `DepositCard.tsx`.
+- **Currency Deposit Offers**: Displayed in `CurrencyDepositRanking.tsx`, using `CurrencyDepositCard.tsx` for each offer. This component includes advanced filtering by currency, amount, and period.
 
-1.  **Pobranie Danych w Komponentach Server-Side:** Strony i komponenty serwerowe (renderowane po stronie serwera) w `src/app` wywołują funkcje z `google-sheets.ts`, aby pobrać potrzebne dane. Dzieje się to w trakcie renderowania strony na serwerze.
-    ```typescript
-    // Przykład w src/app/kredyty/page.tsx
-    import { getLoans } from '@/lib/google-sheets';
+### Revalidation
+- **On-Demand Revalidation**: The application uses Next.js's on-demand revalidation feature to update the cache when data in Google Sheets changes.
+- **Endpoint**: `api/revalidate`
+- **Trigger**: A secure webhook or manual request to this endpoint triggers a revalidation of the specified pages (`revalidateTag`).
+- **Cache Tags**: Functions in `google-sheets.ts` use cache tags (e.g., `loans`, `deposits`) to control which data gets revalidated.
 
-    export default async function KredytyPage() {
-      const loans = await getLoans('Gotówkowe'); 
-      // ... reszta komponentu
-    }
-    ```
-2.  **Transformacja Danych:** Pobrane surowe dane (tablica tablic) są transformowane do bardziej ustrukturyzowanej formy (np. tablica obiektów) z odpowiednimi typami, zdefiniowanymi w `src/types/index.ts`.
-3.  **Przekazanie do Komponentów:** Przetworzone dane są przekazywane jako `props` do komponentów UI (np. `Ranking`, `LoanCard`), które są odpowiedzialne za ich wyświetlenie.
-
-## Schemat Przepływu Danych
-
-```mermaid
-graph TD
-    A[Google Sheet] -- Dane o produktach --> B{API Google Sheets};
-    B -- Odpowiedź JSON --> C[Next.js Server];
-    C -- revalidatePath('/kredyty') --> C{Cache serwera};
-    C -- getLoans() --> D[Strona/Komponent Server-Side];
-    D -- props --> E[Komponent UI];
-    E -- Renderowanie --> F[HTML dla użytkownika];
-
-    subgraph "Zarządzanie"
-        G[Edytor treści] --> A;
-    end
-
-    subgraph "Aplikacja Kredytowy Patrol"
-        C; D; E; F;
-    end
-``` 
+This data flow ensures that the application displays up-to-date information while maintaining high performance through server-side rendering and caching.

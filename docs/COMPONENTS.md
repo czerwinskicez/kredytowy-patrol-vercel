@@ -1,87 +1,69 @@
-# Dokumentacja Komponentów i Stron
+# Components Documentation
 
-Ten dokument zawiera przegląd kluczowych komponentów React i stron używanych w aplikacji Kredytowy Patrol.
+This document provides an overview of the key components in the Kredytowy Patrol application.
 
-## Komponenty Główne
+## Core Components
 
 ### `Header.tsx`
-- **Opis:** Nagłówek aplikacji, zawierający logo, główne menu nawigacyjne oraz przyciski akcji.
-- **Lokalizacja:** `src/components/Header.tsx`
-- **Cechy:**
-  - Responsywny (dostosowuje się do urządzeń mobilnych).
-  - Zawiera linki do kluczowych sekcji: Kredyty, Lokaty, Polityka Prywatności, Regulamin.
+- **Description**: The main navigation header for the application. It includes links to different product categories and informational pages.
+- **Features**:
+  - Responsive design with a mobile-friendly menu.
+  - Dropdown menus for nested navigation.
 
 ### `Footer.tsx`
-- **Opis:** Stopka aplikacji, zawierająca dodatkowe linki, informacje o prawach autorskich i mediach społecznościowych.
-- **Lokalizacja:** `src/components/Footer.tsx`
-- **Zmiany:** Dodano linki do stron `Polityka Prywatności` i `Regulamin`.
-
-### `PageSpeedOptimizer.tsx`
-- **Opis:** Kluczowy komponent do optymalizacji wydajności. Odpowiada za rejestrację i zarządzanie Service Workerem.
-- **Lokalizacja:** `src/components/PageSpeedOptimizer.tsx`
-- **Cechy:**
-  - Rejestruje `sw.js`.
-  - Nasłuchuje na aktualizacje Service Workera i automatycznie przeładowuje stronę, aby użytkownik otrzymał najnowszą wersję.
-  - Szczegółowy opis działania znajduje się w [dokumentacji Service Workera](SW.md).
-
-## Komponenty Produktowe
-
-### `Ranking.tsx` i `DepositRanking.tsx`
-- **Opis:** Komponenty wyświetlające rankingi produktów finansowych (odpowiednio kredytów i lokat) w formie tabeli.
-- **Lokalizacja:** `src/components/Ranking.tsx`, `src/components/DepositRanking.tsx`
-- **Props:**
-  - `loans` / `deposits`: Tablica z danymi produktów do wyświetlenia.
-  - `title`: Tytuł rankingu.
-- **Funkcjonalność:**
-  - Sortowanie i filtrowanie (jeśli zaimplementowane).
-  - Wyświetla kluczowe informacje o każdym produkcie.
-
-### `LoanCard.tsx` i `DepositCard.tsx`
-- **Opis:** Karty reprezentujące pojedynczy produkt (kredyt lub lokatę) w rankingu.
-- **Lokalizacja:** `src/components/LoanCard.tsx`, `src/components/DepositCard.tsx`
-- **Funkcjonalność:**
-  - Prezentuje logo banku, nazwę produktu i kluczowe parametry.
-  - Zawiera przycisk "Zobacz szczegóły", który otwiera modal z pełnymi informacjami.
-
-### `LoanDetailModal.tsx` i `DepositDetailModal.tsx`
-- **Opis:** Okna modalne wyświetlające szczegółowe informacje o wybranym produkcie.
-- **Lokalizacja:** `src/components/LoanDetailModal.tsx`, `src/components/DepositDetailModal.tsx`
-- **Funkcjonalność:**
-  - Aktywowane po kliknięciu przycisku na `LoanCard` lub `DepositCard`.
-  - Przedstawia wszystkie dostępne informacje o produkcie w czytelnej formie.
-
-## Komponenty UI i Sekcje
-
-### `HeroSection.tsx`
-- **Opis:** Sekcja "bohatera" na stronie głównej, zawierająca główny nagłówek i wezwanie do działania (CTA).
-- **Lokalizacja:** `src/components/HeroSection.tsx`
+- **Description**: The application footer, containing links to legal documents, social media, and other important information.
 
 ### `CustomSlider.tsx`
-- **Opis:** Generyczny komponent suwaka, używany do interaktywnego wybierania wartości (np. kwoty kredytu, okresu spłaty).
-- **Lokalizacja:** `src/components/CustomSlider.tsx`
+- **Description**: A reusable slider component used for selecting loan amounts and periods.
+- **Styling**: Styled with Tailwind CSS for a consistent look and feel.
 
-### `CookieBanner.tsx`
-- **Opis:** Banner informujący o używaniu plików cookie i proszący o zgodę użytkownika.
-- **Lokalizacja:** `src/components/CookieBanner.tsx`
-- **Kontekst:** Używa `ConsentContext` do zarządzania stanem zgody.
-- **Zmiany:** Dodano bezpośredni link do `Polityki Prywatności`.
+## Loan Components
+
+### `Ranking.tsx`
+- **Description**: A server component that displays a ranked list of loan offers.
+- **Data**: Fetches loan data using `getLoanOffers`.
+- **Features**:
+  - Interactive sliders for loan amount and period.
+  - Real-time calculation of monthly payments and total costs.
+
+### `LoanCard.tsx`
+- **Description**: A component that displays a single loan offer with all its details.
+- **Data**: Receives a `LoanOffer` object as a prop.
+- **Features**:
+  - Displays provider logo, interest rates, RRSO, and other key details.
+  - Includes a call-to-action button to the provider's website.
+
+## Deposit Components
+
+### `DepositRanking.tsx`
+- **Description**: A component for displaying and comparing standard deposit offers.
+- **Data**: Fetches data using `getDepositOffers`.
+
+### `DepositCard.tsx`
+- **Description**: Renders a single standard deposit offer.
+
+### `CurrencyDepositRanking.tsx`
+- **Description**: A sophisticated component for displaying and filtering currency deposit offers.
+- **Data**: Fetches data using `getCurrencyDepositOffers`.
+- **Features**:
+  - **Multi-select currency filter**: Allows users to compare offers in different currencies (EUR, USD, etc.).
+  - **Period filter**: Filters offers by deposit duration.
+  - **Amount slider**: Adjusts the deposit amount to calculate potential profit.
+  - **Combined ranking**: Ranks all selected currency offers together based on profitability for a given period.
+
+### `CurrencyDepositCard.tsx`
+- **Description**: Renders a single currency deposit offer.
+- **Features**:
+  - **Floating currency badge**: A stylish badge in the top-right corner indicates the currency of the offer (e.g., EUR, USD).
+  - **Clear presentation**: Displays key information like profit, interest rate, and total return.
+
+## SEO & Metadata
 
 ### `StructuredData.tsx`
-- **Opis:** Komponent do wstrzykiwania danych strukturalnych (JSON-LD) do nagłówka strony, co pomaga w SEO.
-- **Lokalizacja:** `src/components/StructuredData.tsx`
+- **Description**: A component that injects JSON-LD structured data into the page for SEO purposes.
+- **Data**: Uses data from `baseMetadata` in `src/lib/metadata.ts`.
 
-## Strony informacyjne
+### `sitemap.ts` & `robots.ts`
+- **Description**: These files generate the `sitemap.xml` and `robots.txt` files, respectively, to guide search engine crawlers.
 
-### `polityka-prywatnosci/page.tsx`
-- **Opis:** Nowa strona wyświetlająca politykę prywatności serwisu.
-- **Lokalizacja:** `src/app/polityka-prywatnosci/page.tsx`
-- **Cechy:**
-  - Treść pobierana z pliku Markdown i formatowana w komponencie.
-  - Dodana do mapy witryny w `sitemap.ts`.
-
-### `regulamin/page.tsx`
-- **Opis:** Nowa strona wyświetlająca regulamin serwisu.
-- **Lokalizacja:** `src/app/regulamin/page.tsx`
-- **Cechy:**
-  - Treść pobierana z pliku Markdown i formatowana w komponencie.
-  - Dodana do mapy witryny w `sitemap.ts`.
+This component-based architecture allows for easy maintenance and scalability of the application. Each component is designed to be reusable and focused on a specific piece of functionality.

@@ -15,7 +15,7 @@ const dropdowns = [
     label: 'Oszczędności',
     items: [
       { name: 'Lokaty', href: '/lokata' },
-      { name: 'Lokaty Walutowe', href: '/lokata-walutowa' },
+      { name: 'Lokaty Walutowe', href: '/lokaty-walutowe' },
       { name: 'Konta oszczędnościowe', href: '#' },
       { name: 'Obligacje', href: '#' }
     ],

@@ -40,7 +40,7 @@ export function Footer() {
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Oszczędności</h4>
               <ul>
                 <li className="mb-2"><a href="/lokata" className="hover:text-[#f0c14b] transition-colors">Lokaty</a></li>
-                <li className="mb-2"><a href="/lokata-walutowa" className="hover:text-[#f0c14b] transition-colors">Lokaty walutowe</a></li>
+                <li className="mb-2"><a href="/lokaty-walutowe" className="hover:text-[#f0c14b] transition-colors">Lokaty walutowe</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Konta oszczędnościowe</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Obligacje</a></li>
               </ul>

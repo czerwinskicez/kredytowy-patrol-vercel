@@ -1,6 +1,6 @@
 import 'server-only';
 import { google } from 'googleapis';
-import type { LoanOffer, Logo, DepositOffer } from '@/types';
+import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer } from '@/types';
 
 const sheets = google.sheets('v4');
 
@@ -247,4 +247,95 @@ export async function getDepositOffers(): Promise<DepositOffer[]> {
     console.error('API Error:', error);
     return [];
   }
-} 
+}
+
+export async function getCurrencyDepositOffers(): Promise<CurrencyDepositOffer[]> {
+  try {
+    const auth = await getAuth();
+    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    const sheetName = 'Lokaty_Walutowe';
+
+    if (!spreadsheetId || !sheetName) {
+      console.error('Spreadsheet ID or Sheet Name is missing.');
+      return [];
+    }
+
+    const logos = await getLogos();
+    const logoMap = new Map(logos.map(logo => [logo.provider, logo.logoURL]));
+
+    const headerResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A1:I1`,
+    });
+
+    const headers = headerResponse.data.values?.[0];
+    if (!headers) {
+      console.error('Sheet headers are missing.');
+      return [];
+    }
+
+    const columnIndex: { [key: string]: number } = {};
+    headers.forEach((header, index) => {
+      columnIndex[header] = index;
+    });
+
+    const requiredColumns = ['provider', 'currency', 'baseInterestRate', 'name', 'minDepositValue', 'maxDepositValue', 'period', 'capitalization', 'url'];
+    for (const col of requiredColumns) {
+      if (columnIndex[col] === undefined) {
+        console.error(`Missing required column: ${col}`);
+        return [];
+      }
+    }
+
+    const response = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A2:I`, 
+    });
+
+    const rows = response.data.values;
+    if (rows && rows.length) {
+      return rows.map(row => {
+        const provider = row[columnIndex['provider']];
+        const logoUrl = logoMap.get(provider) || '/trust.jpg';
+        
+        const promoted = row[columnIndex['promoted']] === 'TRUE';
+        const hidden = row[columnIndex['hidden']] === 'TRUE';
+
+        const parseNumericValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const cleaned = value.toString().replace(',', '.');
+          const parsed = parseFloat(cleaned);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        const parseIntValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const parsed = parseInt(value, 10);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        return {
+          provider,
+          currency: row[columnIndex['currency']],
+          baseInterestRate: parseNumericValue(row[columnIndex['baseInterestRate']], 0),
+          name: row[columnIndex['name']] || '',
+          minDepositValue: parseIntValue(row[columnIndex['minDepositValue']], 0),
+          maxDepositValue: parseIntValue(row[columnIndex['maxDepositValue']], -1),
+          period: parseIntValue(row[columnIndex['period']], 0),
+          capitalization: parseIntValue(row[columnIndex['capitalization']], 0),
+          url: row[columnIndex['url']] || '/#',
+          logo: logoUrl,
+          promoted,
+          hidden,
+        };
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.error('API Error fetching currency deposit offers:', error);
+    return [];
+  }
+}
