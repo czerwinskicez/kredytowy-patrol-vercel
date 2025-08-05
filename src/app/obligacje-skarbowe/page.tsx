@@ -79,7 +79,6 @@ export default async function TreasuryBondsPage() {
           <TreasuryBondOffers 
             initialBondOffers={treasuryBondOffers}
             title="Symulator Obligacji Skarbowych"
-            showSimulator={true}
           />
         </section>
 

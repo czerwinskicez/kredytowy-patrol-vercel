@@ -32,12 +32,12 @@ const categories = [{
   id: 'currency',
   name: 'Lokaty walutowe',
   icon: <FaCoins />,
-  href: '/lokata-walutowa'
+  href: '/lokaty-walutowe'
 }, {
   id: 'bonds',
   name: 'Obligacje skarbowe',
   icon: <FaFileAlt />,
-  href: '#'
+  href: '/obligacje-skarbowe'
 }, {
   id: 'savings',
   name: 'Konta oszczędnościowe',
