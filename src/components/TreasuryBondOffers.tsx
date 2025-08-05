@@ -25,7 +25,7 @@ export function TreasuryBondOffers({
   const [sortBy, setSortBy] = useState<SortBy>('profit');
   const [includeTax, setIncludeTax] = useState(true);
   const [hideFamilyBonds, setHideFamilyBonds] = useState(false);
-  const maxPossibleAmount = 200000;
+  const maxPossibleAmount = 100000;
 
   const filteredOffers = useMemo(() => {
     let offers = initialBondOffers;
@@ -65,15 +65,15 @@ export function TreasuryBondOffers({
       <div className="bg-gray-50 rounded-lg p-6 mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
           <div>
-            <div className="flex justify-between items-center mb-4">
-              <label htmlFor="bondAmountInput" className="block text-gray-600 font-semibold">Kwota inwestycji:</label>
-              <div className="flex items-baseline space-x-2">
-                <input id="bondAmountInput" type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="font-bold text-2xl text-[#0a472e] border-b-2 border-gray-300 focus:border-[#f0c14b] outline-none transition-colors w-40 text-right bg-transparent" min={100} max={maxPossibleAmount} step={1000} />
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <label htmlFor="bondAmountInput" className="block text-gray-600 font-semibold mb-2 sm:mb-0">Kwota inwestycji:</label>
+              <div className="flex items-baseline space-x-2 w-full sm:w-auto">
+                <input id="bondAmountInput" type="number" value={amount} onChange={(e) => setAmount(Number(e.target.value))} className="font-bold text-2xl text-[#0a472e] border-b-2 border-gray-300 focus:border-[#f0c14b] outline-none transition-colors w-full sm:w-40 text-right bg-transparent" min={500} max={maxPossibleAmount} step={500} />
                 <span className="text-xl text-gray-600">zł</span>
               </div>
             </div>
-            <CustomSlider value={amount} onChange={setAmount} min={100} max={maxPossibleAmount} step={1000} />
-            <div className="flex justify-between text-sm text-gray-500 mt-2"><span>100 zł</span><span>{formatCurrency(maxPossibleAmount)} zł</span></div>
+            <CustomSlider value={amount} onChange={setAmount} min={500} max={maxPossibleAmount} step={500} />
+            <div className="flex justify-between text-sm text-gray-500 mt-2"><span>500 zł</span><span>{formatCurrency(maxPossibleAmount)} zł</span></div>
           </div>
           <div>
             <div className="flex justify-between items-center mb-4">
@@ -85,6 +85,7 @@ export function TreasuryBondOffers({
             </div>
             <CustomSlider value={expectedInflation} onChange={setExpectedInflation} min={0} max={20} step={0.5} />
             <div className="flex justify-between text-sm text-gray-500 mt-2"><span>0%</span><span>20%</span></div>
+            <p className="text-xs text-gray-500 mt-2">💡 Wpływa na obligacje inflacyjne (COI, EDO, ROS, ROD)</p>
           </div>
         </div>
         <div className="border-t border-gray-200 pt-6">
@@ -149,31 +150,34 @@ export function TreasuryBondOffers({
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="w-full min-w-max">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th className="px-4 py-3">Obligacja</th>
-                <th className="px-4 py-3">Oprocentowanie</th>
-                <th className="px-4 py-3">Okres</th>
-                <th className="px-4 py-3">Zysk</th>
-                <th className="px-4 py-3">Całkowity zwrot</th>
-                <th className="px-4 py-3">Akcja</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {calculatedOffers.map((bond) => (
-                <tr key={bond.symbol} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-4"><div className="flex items-center space-x-3"><BondBadge symbol={bond.symbol} size="sm" /><div><div className="text-sm font-medium text-gray-900">{bond.interestDescription}</div><div className="text-xs text-gray-500">{bond.interestDescriptionV2}</div></div></div></td>
-                  <td className="px-4 py-4"><div className="text-sm font-semibold text-gray-900">{bond.baseInterestRate.toFixed(2)}%</div>{['COI', 'EDO', 'ROS', 'ROD'].includes(bond.symbol) && <div className="text-xs text-blue-600">inflacyjne</div>}</td>
-                  <td className="px-4 py-4"><span className="text-sm text-gray-900">{bond.duration < 1 ? `${bond.duration * 12} mies.` : `${bond.duration} ${bond.duration === 1 ? 'rok' : 'lat'}`}</span></td>
-                  <td className="px-4 py-4"><span className="text-sm font-bold text-[#0a472e]">+{formatCurrency(bond.profit)} zł</span></td>
-                  <td className="px-4 py-4"><span className="text-sm text-gray-900">{formatCurrency(bond.totalReturn)} zł</span></td>
-                  <td className="px-4 py-4"><a href={bond.url !== '/#' ? bond.url : "https://www.gov.pl/web/finanse/skarb-panstwa-obligacje-skarbowe"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-[#0a472e] hover:bg-[#0c5a3a] transition-colors whitespace-nowrap">Kup online</a></td>
+        <div className="relative">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+            <table className="w-full min-w-max">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-2 py-3 sm:px-4">Obligacja</th>
+                  <th className="px-2 py-3 sm:px-4">Oprocentowanie</th>
+                  <th className="px-2 py-3 sm:px-4">Okres</th>
+                  <th className="px-2 py-3 sm:px-4">Zysk</th>
+                  <th className="px-2 py-3 sm:px-4">Całkowity zwrot</th>
+                  <th className="px-2 py-3 sm:px-4">Akcja</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {calculatedOffers.map((bond) => (
+                  <tr key={bond.symbol} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><div className="flex items-center space-x-2 sm:space-x-3"><BondBadge symbol={bond.symbol} size="sm" /><div><div className="text-sm font-medium text-gray-900">{bond.interestDescription}</div><div className="text-xs text-gray-500">{bond.interestDescriptionV2}</div></div></div></td>
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><div className="text-sm font-semibold text-gray-900">{bond.baseInterestRate.toFixed(2)}%</div>{['COI', 'EDO', 'ROS', 'ROD'].includes(bond.symbol) && <div className="text-xs text-blue-600">inflacyjne</div>}</td>
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><span className="text-sm text-gray-900">{bond.duration < 1 ? `${bond.duration * 12} mies.` : `${bond.duration} ${bond.duration === 1 ? 'rok' : 'lat'}`}</span></td>
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><span className="text-sm font-bold text-[#0a472e]">+{formatCurrency(bond.profit)} zł</span></td>
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><span className="text-sm text-gray-900">{formatCurrency(bond.totalReturn)} zł</span></td>
+                    <td className="px-2 py-3 sm:px-4 sm:py-4"><a href={bond.url !== '/#' ? bond.url : "https://www.gov.pl/web/finanse/skarb-panstwa-obligacje-skarbowe"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-[#0a472e] hover:bg-[#0c5a3a] transition-colors whitespace-nowrap">Kup online</a></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white pointer-events-none lg:hidden"></div>
         </div>
       )}
     </div>

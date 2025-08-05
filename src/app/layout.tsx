@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { 
   // Poppins, 
   // Ubuntu, 
@@ -47,6 +47,10 @@ const fontSarala = Sarala({
 // });
 
 export const metadata: Metadata = baseMetadata;
+
+export const viewport: Viewport = {
+  themeColor: '#053320',
+};
 
 export default function RootLayout({
   children,
