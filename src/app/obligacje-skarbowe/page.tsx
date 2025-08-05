@@ -1,6 +1,5 @@
 import { getTreasuryBondOffers } from '@/lib/google-sheets';
-import { TreasuryBondComparison } from '@/components/TreasuryBondComparison';
-import { TreasuryBondRanking } from '@/components/TreasuryBondRanking';
+import { TreasuryBondOffers } from '@/components/TreasuryBondOffers';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { TreasuryBondOffer } from '@/types';
@@ -75,25 +74,12 @@ export default async function TreasuryBondsPage() {
           </p>
         </div>
 
-        {/* Interaktywny symulator - główny feature */}
-        <section className="mb-16">
-          <TreasuryBondComparison 
-            initialBondOffers={treasuryBondOffers} 
-          />
-        </section>
-
-        {/* Separator */}
-        <div className="flex items-center my-16">
-          <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-          <div className="px-6 text-gray-500 font-medium">lub przejrzyj pełną listę</div>
-          <div className="flex-grow h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-        </div>
-
-        {/* Ranking obligacji - druga część */}
+        {/* Zunifikowany komponent obligacji z symulatoremo i przełączaniem widoku */}
         <section>
-          <TreasuryBondRanking 
-            initialBondOffers={treasuryBondOffers} 
-            title="Pełny ranking obligacji skarbowych"
+          <TreasuryBondOffers 
+            initialBondOffers={treasuryBondOffers}
+            title="Symulator Obligacji Skarbowych"
+            showSimulator={true}
           />
         </section>
 

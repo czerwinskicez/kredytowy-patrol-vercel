@@ -13,11 +13,11 @@ export function NewsletterSection() {
             Zapisz się do naszego newslettera, aby otrzymywać cotygodniowe podsumowanie 
             najkorzystniejszych kredytów i lokat prosto na Twoją skrzynkę mailową.
           </p>
-          <form className="flex items-center gap-4 justify-center max-w-lg mx-auto">
+          <form className="flex flex-col gap-4 justify-center max-w-lg mx-auto">
             <input
               type="email"
               placeholder="Wpisz swój adres e-mail"
-              className="flex-1 px-5 py-2 rounded-lg border-2 border-gray-300 focus:border-[#0a472e] focus:ring-0 transition-colors bg-white"
+              className="w-full px-5 py-2 rounded-lg border-2 border-gray-300 focus:border-[#0a472e] focus:ring-0 transition-colors bg-white"
               required
             />
             <button

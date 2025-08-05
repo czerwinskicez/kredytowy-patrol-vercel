@@ -15,50 +15,51 @@ const bondDurations: { [key: string]: number } = {
 export function calculateTreasuryBondOffers(
   bondOffers: TreasuryBondOffer[],
   amount: number,
-  expectedInflation: number
+  expectedInflation: number,
+  includeTax: boolean
 ): CalculatedTreasuryBondOffer[] {
+  const taxRate = 0.19; // Podatek Belki
+
   return bondOffers.map(bond => {
     const duration = bondDurations[bond.symbol] || 1;
     let effectiveAnnualRate = bond.baseInterestRate / 100;
+    let profitBeforeTax: number;
+    let totalReturn: number;
 
+    // Specjalna logika dla obligacji inflacyjnych
     if (['COI', 'EDO', 'ROS', 'ROD'].includes(bond.symbol)) {
       const inflationRate = expectedInflation / 100;
       let firstYearRate = 0;
       let margin = 0;
 
+      // Ustawienia oprocentowania w zależności od typu obligacji
       switch (bond.symbol) {
         case 'COI':
-          firstYearRate = 6 / 100;
-          margin = 1.5 / 100;
-          break;
+          firstYearRate = 6.00 / 100; margin = 1.50 / 100; break;
         case 'EDO':
-          firstYearRate = 6.25 / 100;
-          margin = 2.0 / 100;
-          break;
+          firstYearRate = 6.25 / 100; margin = 2.00 / 100; break;
         case 'ROS':
-            firstYearRate = 5.95 / 100;
-            margin = 2.0 / 100;
-            break;
+          firstYearRate = 5.95 / 100; margin = 2.00 / 100; break;
         case 'ROD':
-            firstYearRate = 6.5 / 100;
-            margin = 2.5 / 100;
-            break;
+          firstYearRate = 6.50 / 100; margin = 2.50 / 100; break;
       }
       
       const subsequentRate = inflationRate + margin;
-      effectiveAnnualRate = (firstYearRate + subsequentRate * (duration - 1)) / duration;
-    }
+      effectiveAnnualRate = Math.pow((1 + firstYearRate) * Math.pow(1 + subsequentRate, duration - 1), 1 / duration) - 1;
 
-    let profit: number;
-    let totalReturn: number;
+      profitBeforeTax = amount * (Math.pow(1 + effectiveAnnualRate, duration) - 1);
 
-    if (bond.capitalization.includes('Kapitalizacja')) {
-      totalReturn = amount * Math.pow(1 + effectiveAnnualRate, duration);
-      profit = totalReturn - amount;
+    } else if (bond.capitalization.includes('Kapitalizacja')) {
+      // Obligacje z kapitalizacją roczną (np. TOS)
+      profitBeforeTax = amount * (Math.pow(1 + effectiveAnnualRate, duration) - 1);
     } else {
-      profit = amount * effectiveAnnualRate * duration;
-      totalReturn = amount + profit;
+      // Obligacje o stałym oprocentowaniu bez kapitalizacji (np. OTS, ROR, DOR)
+      profitBeforeTax = amount * effectiveAnnualRate * duration;
     }
+
+    const tax = includeTax ? profitBeforeTax * taxRate : 0;
+    const profit = profitBeforeTax - tax;
+    totalReturn = amount + profit;
 
     return {
       ...bond,
