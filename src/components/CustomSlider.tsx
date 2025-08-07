@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import * as Slider from '@radix-ui/react-slider';
 
 type CustomSliderProps = {
   value: number;
@@ -29,26 +30,33 @@ export function CustomSlider({ value, onChange, min, max, step }: CustomSliderPr
         type="button"
         onClick={handleDecrease}
         disabled={value <= min}
-        className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-[#0a472e] text-[#0a472e] hover:bg-[#0a472e] hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 transition-colors duration-200 flex items-center justify-center font-bold"
+        className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-[#0a472e] text-[#0a472e] hover:bg-[#0a472e] hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 transition-colors duration-200 flex items-center justify-center font-bold focus:outline-none focus:ring-2 focus:ring-[#0a472e] focus:ring-offset-2"
         aria-label="Zmniejsz wartość"
       >
         −
       </button>
 
-      {/* Suwak */}
+      {/* Suwak Radix UI */}
       <div className="flex-grow relative">
-        <input
-          type="range"
-          min={min}
+        <Slider.Root
+          className="relative flex items-center select-none touch-none w-full h-5"
+          value={[value]}
+          onValueChange={([newValue]) => onChange(newValue)}
           max={max}
+          min={min}
           step={step}
-          value={value}
-          onChange={(e) => onChange(parseInt(e.target.value, 10))}
-          className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb"
-          style={{
-            background: `linear-gradient(to right, #0a472e ${percentage}%, #e5e7eb ${percentage}%)`,
-          }}
-        />
+        >
+          <Slider.Track className="bg-gray-200 relative grow rounded-full h-1">
+            <Slider.Range 
+              className="absolute bg-[#0a472e] rounded-full h-full"
+              style={{ width: `${percentage}%` }}
+            />
+          </Slider.Track>
+          <Slider.Thumb 
+            className="block w-5 h-5 bg-[#0a472e] border-2 border-white rounded-full shadow-lg hover:bg-[#0a472e]/90 focus:outline-none focus:ring-2 focus:ring-[#0a472e] focus:ring-offset-2 cursor-grab active:cursor-grabbing"
+            aria-label="Suwak"
+          />
+        </Slider.Root>
       </div>
 
       {/* Przycisk plus */}
@@ -56,7 +64,7 @@ export function CustomSlider({ value, onChange, min, max, step }: CustomSliderPr
         type="button"
         onClick={handleIncrease}
         disabled={value >= max}
-        className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-[#0a472e] text-[#0a472e] hover:bg-[#0a472e] hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 transition-colors duration-200 flex items-center justify-center font-bold"
+        className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-[#0a472e] text-[#0a472e] hover:bg-[#0a472e] hover:text-white disabled:border-gray-300 disabled:text-gray-300 disabled:hover:bg-transparent disabled:hover:text-gray-300 transition-colors duration-200 flex items-center justify-center font-bold focus:outline-none focus:ring-2 focus:ring-[#0a472e] focus:ring-offset-2"
         aria-label="Zwiększ wartość"
       >
         +

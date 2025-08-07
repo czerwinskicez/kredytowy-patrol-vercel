@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getLoanOffers, getDepositOffers, getTreasuryBondOffers } from '@/lib/google-sheets';
+import { getLoanOffers, getDepositOffers } from '@/lib/google-sheets';
 import { sheetNameMapping } from '@/lib/google-sheets';
 
 const siteUrl = 'https://www.kredytowypatrol.pl';
@@ -45,6 +45,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const loanTypes = Object.keys(sheetNameMapping);
+
+  const loanCategoryRoutes = loanTypes.map(type => ({
+    url: `${siteUrl}/kredyty/${type}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
   const loanOffersPromises = loanTypes.map(type => getLoanOffers(type));
   const allLoanOffers = await Promise.all(loanOffersPromises);
 
@@ -63,9 +71,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  const dynamicRoutes = [...loanRoutes, ...depositRoutes];
+  const dynamicRoutes = [...loanCategoryRoutes, ...loanRoutes, ...depositRoutes];
 
   const routes = [...staticRoutes, ...dynamicRoutes];
 
   return routes;
-} 
+}

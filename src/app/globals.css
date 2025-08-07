@@ -26,33 +26,10 @@ html{
   font-family: var(--font-sarala);
 }
 
-/* Style dla naszego własnego komponentu suwaka */
-.slider-thumb::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background-color: #0a472e;
-  border-radius: 50%;
-  cursor: grab;
-  border: 2px solid white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  margin-top: -5px; /* Kompensacja, aby kciuk był na środku paska */
-}
-
-.slider-thumb::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background-color: #0a472e;
-  border-radius: 50%;
-  cursor: grab;
-  border: 2px solid white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.slider-thumb:active::-webkit-slider-thumb,
-.slider-thumb:active::-moz-range-thumb {
-  cursor: grabbing;
+/* Radix UI Slider styles - custom focus states */
+[data-radix-slider-thumb]:focus-visible {
+  outline: 2px solid #0a472e;
+  outline-offset: 2px;
 }
 
 /* Tooltip Styles */
