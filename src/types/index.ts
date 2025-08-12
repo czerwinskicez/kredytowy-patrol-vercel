@@ -128,6 +128,7 @@ export type SanityImage = {
     _ref: string;
     _type: 'reference';
   };
+  alt?: string;
 };
 
 export type SanitySlug = {

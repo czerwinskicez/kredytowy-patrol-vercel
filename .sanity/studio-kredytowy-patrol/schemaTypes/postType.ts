@@ -79,7 +79,19 @@ export default defineType({
       description: 'Główna zawartość Twojego wpisu. Możesz tu formatować tekst, dodawać nagłówki, listy i zdjęcia.',
       of: [
         {type: 'block'},
-        {type: 'image', options: {hotspot: true}},
+        {
+          type: 'image', 
+          options: {hotspot: true},
+          fields: [
+            {
+              name: 'alt',
+              title: 'Tekst alternatywny (ALT)',
+              type: 'string',
+              description: 'Krótki opis obrazka. Bardzo ważne dla SEO!',
+              validation: (Rule) => Rule.required(),
+            },
+          ]
+        },
       ],
     }),
     defineField({
