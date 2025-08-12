@@ -42,7 +42,7 @@ const categories = [{
   id: 'savings',
   name: 'Konta oszczędnościowe',
   icon: <FaPiggyBank />,
-  href: '#'
+  href: '/konto-oszczednosciowe'
 }, ];
 export function ProductCategories() {
   return <div className="py-16 relative z-10">

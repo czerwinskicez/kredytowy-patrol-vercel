@@ -1,6 +1,6 @@
 import 'server-only';
 import { google } from 'googleapis';
-import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer } from '@/types';
+import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer, SavingsAccountOffer } from '@/types';
 
 const sheets = google.sheets('v4');
 
@@ -410,6 +410,95 @@ export async function getTreasuryBondOffers(): Promise<TreasuryBondOffer[]> {
     return [];
   } catch (error) {
     console.error('API Error fetching treasury bond offers:', error);
+    return [];
+  }
+}
+
+export async function getSavingsAccountOffers(): Promise<SavingsAccountOffer[]> {
+  try {
+    const auth = await getAuth();
+    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    const sheetName = 'Konto_Oszczędnościowe';
+
+    if (!spreadsheetId || !sheetName) {
+      console.error('Spreadsheet ID or Sheet Name is missing.');
+      return [];
+    }
+
+    const logos = await getLogos();
+    const logoMap = new Map(logos.map(logo => [logo.provider, logo.logoURL]));
+
+    const headerResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A1:G1`,
+    });
+
+    const headers = headerResponse.data.values?.[0];
+    if (!headers) {
+      console.error('Sheet headers are missing.');
+      return [];
+    }
+
+    const columnIndex: { [key: string]: number } = {};
+    headers.forEach((header, index) => {
+      columnIndex[header] = index;
+    });
+
+    const requiredColumns = ['provider', 'baseInterestRate', 'name', 'maxDepositValue', 'period', 'accNeed', 'url'];
+    for (const col of requiredColumns) {
+      if (columnIndex[col] === undefined) {
+        console.error(`Missing required column: ${col}`);
+        return [];
+      }
+    }
+
+    const response = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A2:G`,
+    });
+
+    const rows = response.data.values;
+    if (rows && rows.length) {
+      return rows.map(row => {
+        const provider = row[columnIndex['provider']];
+        const logoUrl = logoMap.get(provider) || '/trust.jpg';
+        
+        const promoted = row[columnIndex['promoted']] === 'TRUE';
+        const hidden = row[columnIndex['hidden']] === 'TRUE';
+
+        const parseNumericValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const cleaned = value.toString().replace(',', '.');
+          const parsed = parseFloat(cleaned);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        const parseIntValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const parsed = parseInt(value, 10);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        return {
+          provider: provider,
+          logo: logoUrl,
+          name: row[columnIndex['name']] || '',
+          baseInterestRate: parseNumericValue(row[columnIndex['baseInterestRate']], 0),
+          maxDepositValue: parseIntValue(row[columnIndex['maxDepositValue']], 0),
+          period: parseIntValue(row[columnIndex['period']], 0),
+          accNeed: row[columnIndex['accNeed']] === 'tak',
+          url: row[columnIndex['url']] || '/#',
+          promoted,
+          hidden,
+        }
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.error('API Error fetching savings account offers:', error);
     return [];
   }
 }

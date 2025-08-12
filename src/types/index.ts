@@ -120,6 +120,24 @@ export type CalculatedTreasuryBondOffer = TreasuryBondOffer & {
   duration: number; // w latach
 }; 
 
+export type SavingsAccountOffer = {
+  provider: string;
+  logo: string;
+  name: string;
+  baseInterestRate: number;
+  maxDepositValue: number;
+  period: number; // in days, 0 for indefinite
+  accNeed: boolean;
+  url: string;
+  promoted: boolean;
+  hidden: boolean;
+};
+
+export type CalculatedSavingsAccountOffer = SavingsAccountOffer & {
+  profit: number;
+  totalReturn: number;
+};
+
 // --- Sanity Blog Types ---
 
 export type SanityImage = {
