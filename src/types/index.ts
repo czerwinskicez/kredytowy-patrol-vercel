@@ -164,7 +164,6 @@ export type Post = {
   publishedAt: string;
   excerpt: string;
   body: any[]; // Portable Text
-  status: 'draft' | 'published';
   seo?: {
     metaTitle?: string;
     metaDescription?: string;

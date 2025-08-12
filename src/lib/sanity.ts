@@ -21,9 +21,7 @@ export const client = createClient({
 })
 
 export async function getPosts(): Promise<Post[]> {
-  // UWAGA: Tymczasowo dodano status 'draft', aby ułatwić dewelopment.
-  // Docelowo zapytanie powinno pobierać tylko status 'published'.
-  const query = groq`*[_type == "post" && (status == 'published' || status == 'draft')] | order(publishedAt desc) {
+  const query = groq`*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
     _id,
     title,
     slug,
@@ -49,8 +47,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getPostsByCategory(categoryId: string): Promise<Post[]> {
-  // UWAGA: Tymczasowo dodano status 'draft', aby ułatwić dewelopment.
-  const query = groq`*[_type == "post" && (status == 'published' || status == 'draft') && references($categoryId)] | order(publishedAt desc) {
+  const query = groq`*[_type == "post" && !(_id in path("drafts.**")) && references($categoryId)] | order(publishedAt desc) {
     _id,
     title,
     slug,

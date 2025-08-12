@@ -95,19 +95,6 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'status',
-      title: 'Status publikacji',
-      type: 'string',
-      description: 'Wybierz "Szkic", jeśli wpis jest jeszcze w trakcie tworzenia. Zmień na "Opublikowany", aby pojawił się na stronie.',
-      options: {
-        list: [
-          {title: 'Szkic', value: 'draft'},
-          {title: 'Opublikowany', value: 'published'},
-        ],
-      },
-      initialValue: 'draft',
-    }),
-    defineField({
       name: 'seo',
       title: 'Ustawienia SEO (pozycjonowanie w Google)',
       type: 'object',
