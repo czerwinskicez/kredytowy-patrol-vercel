@@ -45,3 +45,5 @@ next-env.d.ts
 
 # Service Worker build artifacts
 public/sw-version.json
+
+/.sanity/node_modules

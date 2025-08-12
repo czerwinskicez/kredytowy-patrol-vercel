@@ -22,6 +22,11 @@ Aplikacja została zoptymalizowana pod kątem wydajności, SEO i doświadczenia 
 - **Analityka użytkowników** z pełną zgodnością GDPR
 - **Automatyczne aktualizacje** danych z Google Sheets
 
+### 📝 Nowość: Blog FinanSowa
+- **Zarządzanie treścią przez CMS**: Wpisy na blogu są zarządzane przez intuicyjny panel Sanity.io, dostępny online dla redaktorów.
+- **Wysoka wydajność i SEO**: Posty są generowane statycznie (SSG) dla maksymalnej szybkości i optymalizacji pod wyszukiwarki.
+- **Bogata treść**: Obsługa formatowania tekstu, obrazów, kategorii i informacji o autorach.
+
 ## 🛠️ Stos Technologiczny
 
 ### Frontend
@@ -31,7 +36,8 @@ Aplikacja została zoptymalizowana pod kątem wydajności, SEO i doświadczenia 
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - framework CSS
 
 ### Backend & API
-- **[Google Sheets API](https://developers.google.com/sheets/api)** - źródło danych
+- **[Sanity.io](https://www.sanity.io/)**: Headless CMS do zarządzania treścią bloga "FinanSowa".
+- **[Google Sheets API](https://developers.google.com/sheets/api)** - źródło danych dla ofert finansowych
 - **[Vercel](https://vercel.com/)** - hosting i deployment
 - **[Server-Side Rendering (SSR)](https://nextjs.org/docs/app/building-your-application/rendering/server-components)** - optymalizacja SEO
 
@@ -45,6 +51,7 @@ Aplikacja została zoptymalizowana pod kątem wydajności, SEO i doświadczenia 
 
 ```
 kredytowy-patrol-vercel/
+├── .sanity/                # Konfiguracja i lokalne studio Sanity.io
 ├── docs/                    # Dokumentacja projektu
 ├── public/                  # Zasoby statyczne
 │   ├── logos/              # Logo banków
@@ -121,6 +128,12 @@ kredytowy-patrol-vercel/
 Utwórz plik `.env.local` z następującymi zmiennymi:
 
 ```bash
+# Sanity.io (dla bloga FinanSowa)
+NEXT_PUBLIC_SANITY_PROJECT_ID="6yfusasm"
+NEXT_PUBLIC_SANITY_DATASET="production"
+NEXT_PUBLIC_SANITY_API_VERSION="2024-06-10" # Użyj aktualnej daty
+SANITY_API_READ_TOKEN="... Twój token tylko do odczytu ..."
+
 # Google Sheets API
 GOOGLE_SHEETS_SPREADSHEET_ID=your_spreadsheet_id
 GOOGLE_SHEETS_CLIENT_EMAIL=your_service_account_email
