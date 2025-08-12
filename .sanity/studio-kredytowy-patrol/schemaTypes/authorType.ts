@@ -3,19 +3,20 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'author',
-  title: 'Author',
+  title: 'Autor',
   type: 'document',
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Imię i nazwisko (lub pseudonim)',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Link (slug)',
       type: 'slug',
+      description: 'Unikalny identyfikator autora w linku URL. Kliknij "Generate".',
       options: {
         source: 'name',
         maxLength: 96,
@@ -24,7 +25,7 @@ export default defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Image',
+      title: 'Zdjęcie (awatar)',
       type: 'image',
       options: {
         hotspot: true,
@@ -33,19 +34,20 @@ export default defineType({
         {
           name: 'alt',
           type: 'string',
-          title: 'Alternative text',
+          title: 'Tekst alternatywny (ALT)',
+          description: 'np. "Zdjęcie profilowe Jan Kowalski". Ważne dla SEO.',
           validation: (Rule) => Rule.required(),
         }
       ]
     }),
     defineField({
       name: 'bio',
-      title: 'Bio',
+      title: 'Notka biograficzna',
+      description: 'Krótki opis autora, który może pojawić się na stronie pod jego wpisami.',
       type: 'array',
       of: [{type: 'block'}],
     }),
   ],
-
   preview: {
     select: {
       title: 'name',

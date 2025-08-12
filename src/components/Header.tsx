@@ -23,9 +23,8 @@ const dropdowns = [
   {
     label: 'FinanSowa',
     items: [
-      { name: 'Blog finansowy', href: '#' },
-      { name: 'Porady', href: '#' },
-      { name: 'Aktualności', href: '#' },
+      { name: 'Aktualności', href: '/finansowa/aktualnosci' },
+      { name: 'Kategorie', href: '/finansowa/kategorie' },
     ],
     isBlog: true,
   },

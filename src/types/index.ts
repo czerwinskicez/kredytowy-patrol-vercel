@@ -119,3 +119,52 @@ export type CalculatedTreasuryBondOffer = TreasuryBondOffer & {
   profit: number;
   duration: number; // w latach
 }; 
+
+// --- Sanity Blog Types ---
+
+export type SanityImage = {
+  _type: 'image';
+  asset: {
+    _ref: string;
+    _type: 'reference';
+  };
+};
+
+export type SanitySlug = {
+  _type: 'slug';
+  current: string;
+};
+
+export type Author = {
+  _type: 'author';
+  name: string;
+  slug: SanitySlug;
+  image: SanityImage;
+  bio: any[]; // Portable Text
+};
+
+export type Category = {
+  _type: 'category';
+  _id: string;
+  title: string;
+  description?: string;
+};
+
+export type Post = {
+  _type: 'post';
+  _id: string;
+  title: string;
+  slug: SanitySlug;
+  author: Author;
+  mainImage: SanityImage;
+  categories: Category[];
+  publishedAt: string;
+  excerpt: string;
+  body: any[]; // Portable Text
+  status: 'draft' | 'published';
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: SanityImage;
+  };
+}; 

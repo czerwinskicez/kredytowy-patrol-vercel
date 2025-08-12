@@ -3,22 +3,23 @@ import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'category',
-  title: 'Category',
+  title: 'Kategoria',
   type: 'document',
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Nazwa kategorii',
       type: 'string',
+      description: 'Główna nazwa kategorii, np. "Kredyty hipoteczne" lub "Oszczędzanie".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
-      title: 'Description',
+      title: 'Opis kategorii',
       type: 'text',
+      description: 'Opcjonalny, krótki opis, który może wyjaśniać, czego dotyczą artykuły w tej kategorii.',
     }),
   ],
-
   preview: {
     select: {
       title: 'title',
