@@ -81,6 +81,11 @@ const nextConfig: NextConfig = {
         source: '/lokaty',
         destination: '/lokata',
         permanent: true,
+      },
+      {
+        source: '/finansowa',
+        destination: '/finansowa/aktualnosci',
+        permanent: true,
       }
     ];
   },

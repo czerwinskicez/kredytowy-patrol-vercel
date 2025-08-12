@@ -6,6 +6,7 @@ import imageUrlBuilder from '@sanity/image-url';
 import { client } from '@/lib/sanity';
 import { SanityImage } from "@/types";
 import { Metadata } from "next";
+import Link from "next/link";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: SanityImage) {
@@ -47,8 +48,17 @@ export default async function PostPage({ params }: Props) {
         <article className="container mx-auto px-4 lg:max-w-4xl">
           <header className="mb-8">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{post.title}</h1>
-            <div className="text-gray-600 text-sm">
-              <span>{new Date(post.publishedAt).toLocaleDateString('pl-PL')}</span> / <span>by {post.author.name}</span>
+            <div className="flex items-center text-gray-600 text-sm space-x-4">
+              <span>{new Date(post.publishedAt).toLocaleDateString('pl-PL')}</span>
+              {post.author && <span>| {post.author.name}</span>}
+              <div className="flex space-x-2">
+                <span>| Kategorie:</span>
+                {post.categories?.map((category) => (
+                  <Link key={category._id} href={`/finansowa/kategorie/${category.slug.current}`} className="text-[#0a472e] hover:underline">
+                    {category.title}
+                  </Link>
+                ))}
+              </div>
             </div>
             {post.mainImage && (
               <img

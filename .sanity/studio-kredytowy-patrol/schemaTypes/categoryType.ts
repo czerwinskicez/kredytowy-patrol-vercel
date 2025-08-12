@@ -14,6 +14,35 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'slug',
+      title: 'Link (slug)',
+      type: 'slug',
+      description: 'Unikalny identyfikator kategorii w linku URL. Kliknij "Generate".',
+      options: {
+        source: 'title',
+        maxLength: 96,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'image',
+      title: 'Obrazek wyróżniający',
+      type: 'image',
+      description: 'Obrazek, który będzie reprezentował tę kategorię na liście.',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Tekst alternatywny (ALT)',
+          description: 'Krótki opis obrazka, ważny dla SEO.',
+          validation: (Rule) => Rule.required(),
+        }
+      ]
+    }),
+    defineField({
       name: 'description',
       title: 'Opis kategorii',
       type: 'text',

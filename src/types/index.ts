@@ -147,6 +147,8 @@ export type Category = {
   _type: 'category';
   _id: string;
   title: string;
+  slug: SanitySlug;
+  image?: SanityImage;
   description?: string;
 };
 

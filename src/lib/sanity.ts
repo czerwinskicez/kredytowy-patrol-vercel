@@ -41,13 +41,16 @@ export async function getCategories(): Promise<Category[]> {
   const query = groq`*[_type == "category"] {
     _id,
     title,
+    slug,
+    image,
     description
   }`;
   return client.fetch(query);
 }
 
 export async function getPostsByCategory(categoryId: string): Promise<Post[]> {
-  const query = groq`*[_type == "post" && status == 'published' && references($categoryId)] | order(publishedAt desc) {
+  // UWAGA: Tymczasowo dodano status 'draft', aby ułatwić dewelopment.
+  const query = groq`*[_type == "post" && (status == 'published' || status == 'draft') && references($categoryId)] | order(publishedAt desc) {
     _id,
     title,
     slug,
@@ -67,7 +70,7 @@ export async function getPost(slug: string): Promise<Post> {
     slug,
     author->{name, slug, image},
     mainImage,
-    categories[]->{title},
+    categories[]->{_id, title, slug},
     publishedAt,
     excerpt,
     body,

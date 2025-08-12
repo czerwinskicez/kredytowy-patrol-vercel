@@ -31,17 +31,17 @@ export function PostCard({ post }: PostCardProps) {
         </div>
       )}
       <div className="p-6 md:w-2/3 flex flex-col">
-        <div>
+        <div className="flex-grow">
           <h2 className="text-2xl font-bold text-gray-800 group-hover:text-[#0a472e] transition-colors duration-300">
             <Link href={`/finansowa/aktualnosci/${post.slug.current}`}>{post.title}</Link>
           </h2>
           <p className="text-sm text-gray-500 mt-2">
             {new Date(post.publishedAt).toLocaleDateString('pl-PL')}
-            {post.author && ` by ${post.author.name}`}
+            {post.author && ` | ${post.author.name}`}
           </p>
-          <p className="mt-4 text-gray-700 flex-grow">{post.excerpt}</p>
+          <p className="mt-4 text-gray-700">{post.excerpt}</p>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 text-center md:text-right">
           <Link href={`/finansowa/aktualnosci/${post.slug.current}`} className="inline-block bg-[#f0c14b] text-[#0a472e] font-bold py-2 px-6 rounded-lg hover:bg-[#0a472e] hover:text-white transition-colors duration-300">
             Czytaj dalej
           </Link>

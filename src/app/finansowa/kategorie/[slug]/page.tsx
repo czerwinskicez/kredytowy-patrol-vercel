@@ -6,7 +6,7 @@ import { PostCard } from "@/components/PostCard";
 export default async function KategoriaSlugPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const categories = await getCategories();
-  const category = categories.find(cat => cat.title.toLowerCase().replace(/ /g, '-') === slug);
+  const category = categories.find(cat => cat.slug && cat.slug.current === slug);
   
   if (!category) {
     // Można tu zwrócić 404
