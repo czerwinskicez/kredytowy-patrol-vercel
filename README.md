@@ -65,7 +65,6 @@ kredytowy-patrol-vercel/
 └── package.json            # Zależności i skrypty
 ```
 
-
 ## 📚 Dokumentacja Szczegółowa
 
 ### Architektura i Struktura
