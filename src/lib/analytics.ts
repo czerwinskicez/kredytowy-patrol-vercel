@@ -97,10 +97,9 @@ export const updateGTMConsent = (consentSettings: ConsentSettings) => {
 
   safelyExecute(() => {
     const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
-    window.dataLayer?.push({
-      event: 'gtm_consent_update',
-      gtm_consent_update: googleConsentSettings
-    });
+    
+    // Użyj standardowego eventu 'consent' z 'update' dla GTM i GA4
+    window.gtag?.('consent', 'update', googleConsentSettings);
     
     logAnalyticsEvent('GTM', 'Consent updated', googleConsentSettings);
   }, 'GTM consent update');

@@ -71,25 +71,29 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       const savedConsentRaw = localStorage.getItem(CONSENT_STORAGE_KEY);
       const savedConsent = savedConsentRaw ? JSON.parse(savedConsentRaw) : null;
       
-      const googleConsent = window.dataLayer?.find((item: any) => item[0] === 'consent' && item[1] === 'default');
+      const consentEvents = window.dataLayer?.filter((item: any) => Array.isArray(item) && item[0] === 'consent') || [];
+      const lastConsentEvent = consentEvents.length > 0 ? consentEvents[consentEvents.length - 1] : null;
+      const googleConsentState = lastConsentEvent ? lastConsentEvent[2] : {};
 
-      const consentStatus = {
-        'Local Storage': {
-          'Stored': !!savedConsent,
-          'Consent': savedConsent ? savedConsent.consent : 'Not Found',
-          'Version': savedConsent ? savedConsent.version : 'N/A',
-          'Timestamp': savedConsent ? new Date(savedConsent.timestamp).toLocaleString() : 'N/A',
+      const status = {
+        'Local Storage Consent': {
+          'Source': 'Browser Storage',
+          'Analytics': savedConsent?.consent?.analytics ?? 'N/A',
+          'Marketing': savedConsent?.consent?.marketing ?? 'N/A',
+          'Preferences': savedConsent?.consent?.preferences ?? 'N/A',
         },
-        'Google Consent Mode (dataLayer)': {
-          'ad_storage': googleConsent ? googleConsent[2].ad_storage : 'Not Found',
-          'analytics_storage': googleConsent ? googleConsent[2].analytics_storage : 'Not Found',
-          'ad_user_data': googleConsent ? googleConsent[2].ad_user_data : 'Not Found',
-          'ad_personalization': googleConsent ? googleConsent[2].ad_personalization : 'Not Found',
+        'Google Consent Mode': {
+          'Source': 'dataLayer (Current)',
+          'analytics_storage': googleConsentState?.analytics_storage ?? 'Not Found',
+          'ad_storage': googleConsentState?.ad_storage ?? 'Not Found',
+          'ad_user_data': googleConsentState?.ad_user_data ?? 'Not Found',
+          'ad_personalization': googleConsentState?.ad_personalization ?? 'Not Found',
         }
       };
 
       console.log('--- Consent Status ---');
-      console.table(consentStatus);
+      console.table(status);
+      console.log('This table shows the consent stored locally and the most recent consent state sent to Google.');
       console.log('--------------------');
     };
   }, []);
