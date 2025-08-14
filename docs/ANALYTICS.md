@@ -103,6 +103,10 @@ const {
   trackBankClick,          // Bank link clicks
   trackFilterUsage,        // Filter interactions
   trackCalculator,         // Calculator usage
+  trackDepositInterest,    // Deposit detail views
+  trackSavingsAccount,     // Savings account interactions
+  trackTreasuryBond,       // Treasury bond interactions
+  trackBlogInteraction,    // Blog engagement
 } = useAnalytics();
 ```
 
@@ -148,6 +152,54 @@ trackCalculator('loan_calculator', {
 });
 // Tracks: calculator_usage
 // Data: { calculator_type, amount, term, interest_rate }
+```
+
+### **Deposit & Savings Events**
+
+#### **Deposit Interest Tracking**
+```typescript
+trackDepositInterest('Lokata PLN', 'PKO BP', 10000, 12);
+// Tracks: deposit_interest
+// Data: { deposit_type, bank_name, amount, period, interest_rate }
+```
+
+#### **Currency Deposit Tracking**
+```typescript
+trackCurrencyDeposit('EUR', 'Santander', 5000, 6);
+// Tracks: currency_deposit
+// Data: { currency, bank_name, amount, period, interest_rate }
+```
+
+#### **Savings Account Tracking**
+```typescript
+trackSavingsAccount('Konto Oszczędnościowe', 'mBank', 0.5);
+// Tracks: savings_account
+// Data: { account_type, bank_name, interest_rate, features }
+```
+
+### **Treasury Bond Events**
+
+#### **Bond Interest Tracking**
+```typescript
+trackTreasuryBond('OS0424', 6.25, 2);
+// Tracks: treasury_bond
+// Data: { bond_symbol, interest_rate, duration, risk_level }
+```
+
+### **Blog & Content Events**
+
+#### **Blog Engagement Tracking**
+```typescript
+trackBlogInteraction('post_view', 'finanse-osobiste', 'Jak oszczędzać pieniądze');
+// Tracks: blog_interaction
+// Data: { interaction_type, category, post_title, author }
+```
+
+#### **Content Category Tracking**
+```typescript
+trackContentCategory('finanse-osobiste', 'kredyty', 5);
+// Tracks: content_category
+// Data: { category, subcategory, post_count, engagement_level }
 ```
 
 ### **Custom Event Tracking**
@@ -199,366 +251,595 @@ const {
   updateConsent,     // Update specific consent
   acceptAll,         // Accept all categories
   rejectAll,         // Reject optional categories
-  showPreferences    // Show consent preferences
+  resetConsent       // Reset to default state
 } = useConsent();
+
+// Check if user has consented to analytics
+if (hasConsent('analytics')) {
+  // Initialize analytics tracking
+  initializeAnalytics();
+}
+
+// Update specific consent
+updateConsent('marketing', true);
 ```
 
-### **Google Consent Mode v2**
-
-Our implementation automatically handles Google Consent Mode v2:
+### **Cookie Banner Implementation**
 
 ```typescript
-// Automatically set based on user consent
-{
-  ad_storage: 'denied',           // Marketing consent
-  ad_user_data: 'denied',         // Marketing consent  
-  ad_personalization: 'denied',   // Marketing consent
-  analytics_storage: 'granted',   // Analytics consent
-  functionality_storage: 'granted', // Preferences consent
-  personalization_storage: 'granted', // Preferences consent
-  security_storage: 'granted'     // Always granted
+// src/components/CookieBanner.tsx
+export function CookieBanner() {
+  const { consent, hasConsent, acceptAll, rejectAll, updateConsent } = useConsent();
+
+  if (hasConsent) return null;
+
+  return (
+    <div className="cookie-banner">
+      <div className="cookie-content">
+        <h3>Używamy plików cookie</h3>
+        <p>Używamy plików cookie do analizy ruchu i personalizacji treści.</p>
+        
+        <div className="cookie-options">
+          <label>
+            <input
+              type="checkbox"
+              checked={consent.analytics}
+              onChange={(e) => updateConsent('analytics', e.target.checked)}
+            />
+            Analityka (Google Analytics, Clarity)
+          </label>
+          
+          <label>
+            <input
+              type="checkbox"
+              checked={consent.marketing}
+              onChange={(e) => updateConsent('marketing', e.target.checked)}
+            />
+            Marketing (Facebook Pixel)
+          </label>
+        </div>
+        
+        <div className="cookie-actions">
+          <button onClick={acceptAll}>Akceptuj wszystkie</button>
+          <button onClick={rejectAll}>Odrzuć opcjonalne</button>
+          <button onClick={() => updateConsent('necessary', true)}>Tylko niezbędne</button>
+        </div>
+      </div>
+    </div>
+  );
 }
 ```
 
 ---
 
-## 🔍 **Analytics Tools Guide**
+## 🔍 **Event Tracking Implementation**
 
-### **1. Google Tag Manager (GTM)**
+### **Google Analytics 4 Events**
 
-**Purpose**: Central tag management and event orchestration
-
-**Key Features**:
-- DataLayer event tracking
-- Tag firing conditions
-- Built-in variables
-- Custom triggers
-
-**Access**: [Google Tag Manager](https://tagmanager.google.com)
-- Container ID: `GTM-MW24LXJ9`
-
-**Best Practices**:
-- Use dataLayer for all custom events
-- Test in Preview mode before publishing
-- Version control your container changes
-- Document trigger conditions
-
-### **2. Google Analytics 4 (GA4)**
-
-**Purpose**: User behavior analysis and conversion tracking
-
-**Key Features**:
-- Enhanced ecommerce tracking
-- Custom conversions
-- Audience building
-- Attribution reporting
-
-**Access**: [Google Analytics](https://analytics.google.com)
-- Measurement ID: `G-8FTK6PSJBW`
-
-**Key Reports**:
-- **Realtime**: Live user activity
-- **Events**: Custom event analysis
-- **Conversions**: Goal completions
-- **Audiences**: User segmentation
-
-### **3. Microsoft Clarity**
-
-**Purpose**: User session recordings and heatmap analysis
-
-**Key Features**:
-- Session recordings
-- Heatmaps (click, scroll, attention)
-- Rage clicks detection
-- Dead clicks identification
-
-**Access**: [Microsoft Clarity](https://clarity.microsoft.com)
-- Project ID: `skicu6w8b7`
-
-**Insights for Financial Services**:
-- How users interact with loan comparison tables
-- Scroll patterns on product pages
-- Form abandonment points
-- Mobile vs desktop behavior differences
-
-### **4. Facebook Pixel**
-
-**Purpose**: Social media advertising and remarketing
-
-**Key Features**:
-- Custom audience creation
-- Conversion tracking
-- Lookalike audiences
-- Cross-device tracking
-
-**Setup**: Configure in Facebook Business Manager
-
-### **5. Cloudflare Analytics**
-
-**Purpose**: Privacy-first traffic analysis
-
-**Key Features**:
-- No cookies required
-- GDPR compliant by default
-- Bot traffic filtering
-- Geographic insights
-
-### **6. Vercel Analytics**
-
-**Purpose**: Performance monitoring and Core Web Vitals
-
-**Key Features**:
-- Real User Monitoring (RUM)
-- Core Web Vitals tracking
-- Page performance insights
-- Automatic integration
-
----
-
-## 🛠️ **Development & Debugging**
-
-### **Analytics Debugger (Development)**
-
-In development mode, a debugging tool is automatically available:
-
-```javascript
-// Available in browser console
-window.analyticsDebugger = {
-  config: ANALYTICS_CONFIG,           // Current configuration
-  healthCheck: checkAnalyticsHealth,  // Check service status
-  testEvent: (name, params) => {...}, // Test event firing
-  testPageView: (url) => {...},      // Test page view
-  clearDataLayer: () => {...}        // Clear GTM dataLayer
-};
-```
-
-### **Health Check**
-
-Monitor analytics service status:
-
+#### **Enhanced Ecommerce Tracking**
 ```typescript
-import { checkAnalyticsHealth } from '@/lib/analytics';
+// Track loan product views
+gtag('event', 'view_item', {
+  currency: 'PLN',
+  value: 50000,
+  items: [{
+    item_id: 'kredyt_gotowkowy_pko_bp',
+    item_name: 'Kredyt Gotówkowy PKO BP',
+    item_category: 'Kredyty',
+    item_brand: 'PKO BP',
+    price: 0,
+    quantity: 1
+  }]
+});
 
-const healthStatus = checkAnalyticsHealth();
-// Returns: { gtm_loaded, ga4_loaded, facebook_loaded, clarity_loaded, cloudflare_loaded }
-```
-
-### **Console Logging**
-
-In development, all analytics events are logged:
-
-```
-🔍 [GTM DataLayer] loan_comparison { loan_type: 'gotowkowy', banks_compared: ['PKO', 'mBank'] }
-🔍 [GA4] loan_comparison { loan_type: 'gotowkowy', banks_compared: ['PKO', 'mBank'] }
-🔍 [Facebook Pixel] loan_comparison { loan_type: 'gotowkowy', banks_compared: ['PKO', 'mBank'] }
-```
-
-### **Testing Analytics**
-
-#### **1. GTM Preview Mode**
-1. Open [Google Tag Manager](https://tagmanager.google.com)
-2. Click **Preview** in your container
-3. Enter your site URL
-4. Navigate and watch tag firing in real-time
-
-#### **2. GA4 DebugView**
-1. Open Google Analytics 4
-2. Go to **Configure > DebugView**
-3. Enable debug mode in your browser
-4. See events in real-time
-
-#### **3. Browser Developer Tools**
-```javascript
-// Check GTM dataLayer
-console.log(window.dataLayer);
-
-// Check GA4 availability
-console.log(window.gtag);
-
-// Test manual event
-dataLayer.push({
-  event: 'test_event',
-  test_parameter: 'hello'
+// Track loan comparisons
+gtag('event', 'add_to_cart', {
+  currency: 'PLN',
+  value: 0,
+  items: [{
+    item_id: 'kredyt_porownanie',
+    item_name: 'Porównanie Kredytów',
+    item_category: 'Kredyty',
+    price: 0,
+    quantity: 1
+  }]
 });
 ```
 
----
-
-## 📈 **Key Performance Indicators (KPIs)**
-
-### **Traffic Metrics**
-- Unique visitors
-- Page views
-- Bounce rate
-- Session duration
-- Traffic sources
-
-### **Engagement Metrics**
-- Loan comparison interactions
-- Filter usage frequency
-- Calculator usage
-- Bank link click-through rates
-- Time spent on comparison pages
-
-### **Conversion Metrics**
-- Bank application clicks
-- Email signups
-- Contact form submissions
-- Loan detail page views
-- Comparison to application conversion rate
-
-### **Technical Metrics**
-- Page load times
-- Core Web Vitals (LCP, FID, CLS)
-- Error rates
-- Analytics loading performance
-
----
-
-## 🚀 **Performance Optimizations**
-
-### **Script Loading Strategy**
-
+#### **Custom Dimensions & Metrics**
 ```typescript
-// Analytics scripts use afterInteractive strategy
-<Script strategy="afterInteractive" />
+// Set custom dimensions
+gtag('config', 'G-XXXXXXXXXX', {
+  custom_map: {
+    'custom_map_1': 'loan_type',
+    'custom_map_2': 'bank_name',
+    'custom_map_3': 'amount_range',
+    'custom_map_4': 'user_segment'
+  }
+});
+
+// Track with custom dimensions
+gtag('event', 'loan_interest', {
+  loan_type: 'gotowkowy',
+  bank_name: 'PKO BP',
+  amount_range: '50000-100000',
+  user_segment: 'new_user'
+});
 ```
 
-### **Error Handling**
+### **Google Tag Manager Events**
 
-All analytics functions include error handling:
-
+#### **Data Layer Events**
 ```typescript
-const safelyExecute = (fn: () => void, context: string) => {
-  try {
-    fn();
-  } catch (error) {
-    console.error(`❌ Analytics error in ${context}:`, error);
-    // Track analytics failures in GA4
+// Push events to data layer
+window.dataLayer = window.dataLayer || [];
+
+window.dataLayer.push({
+  event: 'loan_interest',
+  loan_type: 'gotowkowy',
+  bank_name: 'PKO BP',
+  amount: 50000,
+  currency: 'PLN',
+  interest_rate: 5.5,
+  rrso: 6.2
+});
+
+window.dataLayer.push({
+  event: 'deposit_interest',
+  deposit_type: 'Lokata PLN',
+  bank_name: 'mBank',
+  amount: 10000,
+  period: 12,
+  interest_rate: 4.5
+});
+```
+
+#### **GTM Triggers & Tags**
+```typescript
+// GTM Configuration
+const gtmConfig = {
+  id: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID,
+  dataLayer: {
+    page_title: document.title,
+    page_location: window.location.href,
+    user_consent: consent
   }
 };
 ```
 
-### **Performance Monitoring**
+### **Microsoft Clarity Events**
 
-Analytics initialization is monitored:
-
+#### **Custom Events**
 ```typescript
-const startTime = performance.now();
-// ... initialize analytics ...
-const endTime = performance.now();
-logAnalyticsEvent('Analytics', 'Initialization completed', {
-  duration: `${(endTime - startTime).toFixed(2)}ms`
-});
+// Track custom events in Clarity
+if (window.clarity) {
+  window.clarity('set', 'loan_type', 'gotowkowy');
+  window.clarity('set', 'bank_name', 'PKO BP');
+  window.clarity('set', 'amount_range', '50000-100000');
+  
+  // Track specific interactions
+  window.clarity('event', 'loan_calculator_used');
+  window.clarity('event', 'comparison_started');
+  window.clarity('event', 'bank_link_clicked');
+}
 ```
 
 ---
 
-## ✅ **Best Practices**
+## 📊 **Performance Monitoring**
 
-### **Event Naming**
+### **Vercel Analytics Integration**
 
-Use consistent naming conventions:
-- Use snake_case for event names: `loan_comparison`
-- Use descriptive parameter names: `loan_type`, `bank_name`
-- Include category for organization: `event_category: 'engagement'`
-
-### **Data Quality**
-
+#### **Core Web Vitals Tracking**
 ```typescript
-// Always validate event data
-const validateEventData = (eventName, parameters) => {
-  if (!eventName || typeof eventName !== 'string') return false;
-  if (parameters && typeof parameters !== 'object') return false;
-  return true;
+// Vercel Analytics automatically tracks:
+// - LCP (Largest Contentful Paint)
+// - FID (First Input Delay)
+// - CLS (Cumulative Layout Shift)
+// - FCP (First Contentful Paint)
+// - TTFB (Time to First Byte)
+
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+export default function Layout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
+}
+```
+
+#### **Custom Performance Metrics**
+```typescript
+// Track custom performance metrics
+const trackPerformance = (metric: string, value: number) => {
+  if (window.gtag) {
+    gtag('event', 'custom_performance', {
+      metric_name: metric,
+      metric_value: value,
+      event_category: 'performance'
+    });
+  }
+};
+
+// Track loan calculation performance
+const trackLoanCalculation = (startTime: number) => {
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+  
+  trackPerformance('loan_calculation_duration', duration);
 };
 ```
 
-### **Privacy & Security**
+### **Cloudflare Analytics**
 
-- Never track PII (personal identifiable information)
-- Use hashed user IDs when necessary
-- Respect user consent choices
-- Regular consent banner testing
-- GDPR compliance auditing
+#### **Privacy-First Tracking**
+```typescript
+// Cloudflare Analytics - no cookies required
+const cloudflareAnalytics = {
+  token: process.env.NEXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN,
+  script: 'https://static.cloudflareinsights.com/beacon.min.js'
+};
 
-### **Performance**
-
-- Load analytics scripts after page interaction
-- Use error boundaries for analytics code
-- Monitor analytics loading impact
-- Implement fallbacks for failed services
+// Automatically tracks:
+// - Page views
+// - User sessions
+// - Performance metrics
+// - Geographic data
+// - Device information
+```
 
 ---
 
-## 🆘 **Troubleshooting**
+## 🎯 **Conversion Tracking**
+
+### **Loan Application Funnels**
+
+#### **Funnel Steps**
+1. **Landing Page** - User arrives on loan comparison page
+2. **Product View** - User views specific loan details
+3. **Comparison** - User compares multiple loans
+4. **Calculator** - User uses loan calculator
+5. **Bank Click** - User clicks on bank link
+6. **Application** - User applies for loan (external)
+
+#### **Funnel Tracking Implementation**
+```typescript
+// Track funnel progression
+const trackFunnelStep = (step: string, stepNumber: number, data: any) => {
+  gtag('event', 'funnel_step', {
+    funnel_name: 'loan_application',
+    step_name: step,
+    step_number: stepNumber,
+    ...data
+  });
+};
+
+// Example usage
+trackFunnelStep('product_view', 2, {
+  loan_type: 'gotowkowy',
+  bank_name: 'PKO BP',
+  amount: 50000
+});
+
+trackFunnelStep('comparison', 3, {
+  loans_compared: ['PKO BP', 'mBank', 'ING'],
+  comparison_duration: 45
+});
+```
+
+### **Deposit & Savings Funnels**
+
+#### **Deposit Funnel**
+1. **Landing** - User arrives on deposit page
+2. **Product View** - User views deposit details
+3. **Calculator** - User calculates potential returns
+4. **Bank Click** - User clicks on bank link
+
+#### **Savings Account Funnel**
+1. **Landing** - User arrives on savings page
+2. **Product View** - User views account details
+3. **Feature Comparison** - User compares features
+4. **Bank Click** - User clicks on bank link
+
+---
+
+## 📱 **Mobile & Cross-Device Tracking**
+
+### **Device Detection**
+```typescript
+// Detect device type and capabilities
+const getDeviceInfo = () => {
+  const userAgent = navigator.userAgent;
+  const isMobile = /Mobile|Android|iPhone|iPad/.test(userAgent);
+  const isTablet = /iPad|Android(?=.*\bMobile\b)(?=.*\bSafari\b)/.test(userAgent);
+  
+  return {
+    device_type: isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop',
+    user_agent: userAgent,
+    screen_resolution: `${screen.width}x${screen.height}`,
+    viewport: `${window.innerWidth}x${window.innerHeight}`
+  };
+};
+
+// Track device-specific interactions
+const trackDeviceInteraction = (event: string, data: any) => {
+  const deviceInfo = getDeviceInfo();
+  
+  track(event, {
+    ...data,
+    device_type: deviceInfo.device_type,
+    screen_resolution: deviceInfo.screen_resolution
+  });
+};
+```
+
+### **Cross-Device User Journey**
+```typescript
+// Track user journey across devices
+const trackCrossDeviceJourney = (journeyId: string, step: string, data: any) => {
+  // Store journey data in localStorage or sessionStorage
+  const journey = JSON.parse(localStorage.getItem('user_journey') || '{}');
+  
+  journey[journeyId] = {
+    ...journey[journeyId],
+    [step]: {
+      timestamp: new Date().toISOString(),
+      device: getDeviceInfo(),
+      data: data
+    }
+  };
+  
+  localStorage.setItem('user_journey', JSON.stringify(journey));
+  
+  // Track in analytics
+  track('cross_device_journey', {
+    journey_id: journeyId,
+    step: step,
+    device_type: getDeviceInfo().device_type,
+    ...data
+  });
+};
+```
+
+---
+
+## 🔒 **Data Privacy & Security**
+
+### **Data Anonymization**
+```typescript
+// Anonymize sensitive data before tracking
+const anonymizeData = (data: any) => {
+  const anonymized = { ...data };
+  
+  // Remove or hash sensitive information
+  if (anonymized.email) {
+    anonymized.email = anonymized.email.replace(/(.{2}).*@/, '$1***@');
+  }
+  
+  if (anonymized.phone) {
+    anonymized.phone = anonymized.phone.replace(/(\d{3})\d{3}(\d{3})/, '$1***$2');
+  }
+  
+  return anonymized;
+};
+
+// Use anonymized data for tracking
+const trackWithPrivacy = (event: string, data: any) => {
+  const anonymizedData = anonymizeData(data);
+  track(event, anonymizedData);
+};
+```
+
+### **Data Retention Policies**
+```typescript
+// Implement data retention policies
+const cleanupOldData = () => {
+  const retentionDays = 90; // Keep data for 90 days
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+  
+  // Clean up old analytics data
+  const oldData = localStorage.getItem('analytics_data');
+  if (oldData) {
+    const data = JSON.parse(oldData);
+    const filtered = data.filter(item => 
+      new Date(item.timestamp) > cutoffDate
+    );
+    localStorage.setItem('analytics_data', JSON.stringify(filtered));
+  }
+};
+
+// Run cleanup periodically
+setInterval(cleanupOldData, 24 * 60 * 60 * 1000); // Daily
+```
+
+---
+
+## 📈 **Reporting & Insights**
+
+### **Custom Dashboards**
+
+#### **Financial Product Performance**
+- **Loan Conversion Rates** by type and bank
+- **Deposit Interest** by period and amount
+- **Savings Account** engagement metrics
+- **Treasury Bond** performance tracking
+
+#### **User Behavior Analysis**
+- **Page Performance** by product category
+- **Calculator Usage** patterns
+- **Comparison Tool** effectiveness
+- **Mobile vs Desktop** behavior differences
+
+#### **Content Performance**
+- **Blog Engagement** by category and author
+- **Content Discovery** through search and navigation
+- **User Journey** through financial education content
+
+### **Automated Reports**
+```typescript
+// Generate automated reports
+const generateWeeklyReport = async () => {
+  const report = {
+    period: 'weekly',
+    start_date: getWeekStart(),
+    end_date: getWeekEnd(),
+    metrics: {
+      total_users: await getTotalUsers(),
+      loan_interactions: await getLoanInteractions(),
+      deposit_interactions: await getDepositInteractions(),
+      blog_engagement: await getBlogEngagement(),
+      conversion_rate: await getConversionRate()
+    }
+  };
+  
+  // Send report via email or API
+  await sendReport(report);
+};
+
+// Schedule weekly reports
+setInterval(generateWeeklyReport, 7 * 24 * 60 * 60 * 1000);
+```
+
+---
+
+## 🚀 **Advanced Analytics Features**
+
+### **Predictive Analytics**
+```typescript
+// Predict user behavior based on historical data
+const predictUserBehavior = (userData: any) => {
+  // Analyze user patterns
+  const patterns = analyzeUserPatterns(userData);
+  
+  // Predict next likely action
+  const prediction = {
+    next_action: patterns.most_likely_action,
+    confidence: patterns.confidence_score,
+    recommended_content: patterns.recommended_content
+  };
+  
+  return prediction;
+};
+
+// Use predictions for personalization
+const personalizeExperience = (userData: any) => {
+  const prediction = predictUserBehavior(userData);
+  
+  if (prediction.confidence > 0.7) {
+    // Show personalized content
+    showPersonalizedContent(prediction.recommended_content);
+  }
+};
+```
+
+### **A/B Testing Integration**
+```typescript
+// A/B testing for financial products
+const runABTest = (testName: string, variants: string[]) => {
+  const variant = variants[Math.floor(Math.random() * variants.length)];
+  
+  // Track test assignment
+  track('ab_test_assignment', {
+    test_name: testName,
+    variant: variant,
+    user_id: getUserId()
+  });
+  
+  return variant;
+};
+
+// Example: Test different loan comparison layouts
+const layoutVariant = runABTest('loan_comparison_layout', ['table', 'cards', 'list']);
+```
+
+---
+
+## 🔧 **Troubleshooting & Debugging**
 
 ### **Common Issues**
 
 #### **Analytics Not Loading**
-1. Check environment variables
-2. Verify script loading in Network tab
-3. Check console for JavaScript errors
-4. Ensure consent is granted
+```typescript
+// Check if analytics scripts are loaded
+const checkAnalyticsStatus = () => {
+  const status = {
+    gtag: typeof window !== 'undefined' && window.gtag,
+    gtm: typeof window !== 'undefined' && window.dataLayer,
+    clarity: typeof window !== 'undefined' && window.clarity,
+    cloudflare: typeof window !== 'undefined' && window.cloudflare
+  };
+  
+  console.log('Analytics Status:', status);
+  return status;
+};
+```
 
-#### **Events Not Firing**
-1. Check consent settings
-2. Verify event validation
-3. Use GTM Preview mode
-4. Check dataLayer contents
+#### **Event Tracking Issues**
+```typescript
+// Debug event tracking
+const debugEventTracking = (eventName: string, data: any) => {
+  console.log('Tracking Event:', eventName, data);
+  
+  // Check if analytics is ready
+  if (!window.gtag) {
+    console.warn('Google Analytics not ready');
+    return;
+  }
+  
+  // Track event
+  gtag('event', eventName, data);
+  
+  // Verify tracking
+  console.log('Event tracked successfully');
+};
+```
 
-#### **Consent Issues**
-1. Clear localStorage and test fresh
-2. Check consent version compatibility
-3. Verify consent categories mapping
+### **Development vs Production**
+```typescript
+// Different tracking in development
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-### **Debug Commands**
-
-```javascript
-// Check analytics health
-window.analyticsDebugger.healthCheck()
-
-// Test event tracking
-window.analyticsDebugger.testEvent('test_event', { test: true })
-
-// Clear dataLayer
-window.analyticsDebugger.clearDataLayer()
-
-// Check configuration
-window.analyticsDebugger.config
+const trackEvent = (eventName: string, data: any) => {
+  if (isDevelopment) {
+    console.log('DEV - Event:', eventName, data);
+    return;
+  }
+  
+  // Production tracking
+  gtag('event', eventName, data);
+};
 ```
 
 ---
 
-## 📞 **Support & Maintenance**
+## 📚 **Best Practices**
 
-### **Regular Tasks**
+### **Event Naming Conventions**
+- **Consistent Format**: `object_action` (e.g., `loan_view`, `deposit_calculate`)
+- **Descriptive Names**: Clear and specific event names
+- **Lowercase**: Use lowercase with underscores
+- **No Spaces**: Avoid spaces in event names
 
-- **Weekly**: Review GA4 real-time reports
-- **Monthly**: Analyze Clarity session recordings
-- **Quarterly**: Audit consent banner compliance
-- **Annually**: Update consent version and re-prompt users
+### **Data Structure Standards**
+- **Consistent Properties**: Use same property names across events
+- **Data Types**: Ensure consistent data types (string, number, boolean)
+- **Required Fields**: Define required vs optional fields
+- **Validation**: Validate data before sending
 
-### **Monitoring Alerts**
-
-Set up alerts for:
-- Analytics loading failures
-- Conversion rate drops
-- High error rates
-- Performance degradation
-
----
-
-## 📚 **Additional Resources**
-
-- [Google Analytics 4 Documentation](https://support.google.com/analytics)
-- [Google Tag Manager Guide](https://support.google.com/tagmanager)
-- [Microsoft Clarity Help Center](https://docs.microsoft.com/en-us/clarity/)
-- [Facebook Pixel Documentation](https://developers.facebook.com/docs/facebook-pixel)
-- [GDPR Compliance Guide](https://gdpr.eu/)
+### **Performance Considerations**
+- **Batch Events**: Group related events when possible
+- **Async Tracking**: Don't block UI for analytics
+- **Error Handling**: Handle analytics errors gracefully
+- **Rate Limiting**: Avoid overwhelming analytics services
 
 ---
 
-**Last Updated**: $(date)
-**Version**: 2.0
-**Status**: ✅ Production Ready 
+**Kredytowy Patrol** - Comprehensive Analytics for Financial Products 🏦 

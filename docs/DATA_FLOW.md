@@ -1,69 +1,211 @@
-## Data Flow
-This document outlines the data flow within the Kredytowy Patrol application, from data sources to the components that display the information.
+# Przepływ Danych
 
-### Data Sources
-The primary data source for loan and deposit offers is **Google Sheets**. This allows for easy updates and management of financial product data without requiring code changes.
+Ten dokument opisuje przepływ danych w aplikacji Kredytowy Patrol, od źródeł danych po komponenty wyświetlające informacje.
 
-- **Spreadsheet ID**: Stored in `process.env.GOOGLE_SHEETS_SPREADSHEET_ID`
-- **Authentication**: Uses a service account with credentials stored in environment variables (`GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`).
+## 🔄 **Źródła Danych**
 
-### Blog Content: "FinanSowa" (via Sanity.io)
+### **Google Sheets - Produkty Finansowe**
+Główne źródło danych dla ofert kredytowych, lokat i innych produktów finansowych. Pozwala na łatwe aktualizacje i zarządzanie danymi bez wymagania zmian w kodzie.
+
+- **Spreadsheet ID**: Przechowywane w `process.env.GOOGLE_SHEETS_SPREADSHEET_ID`
+- **Authentication**: Używa konta serwisowego z credentials w zmiennych środowiskowych (`GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`)
+- **Access**: Tylko do odczytu (read-only)
+
+### **Sanity.io CMS - Blog "FinanSowa"**
 Treści na bloga "FinanSowa" są zarządzane za pomocą headless CMS **Sanity.io**. Takie podejście oddziela zarządzanie treścią od kodu aplikacji, co umożliwia osobom nietechnicznym łatwe dodawanie i edytowanie postów przez dedykowany panel (Sanity Studio).
 
-- **URL do Studio**: Dostępny pod adresem `https://[nazwa-projektu].sanity.studio` (po wdrożeniu).
-- **Authentication**: Dostęp do Sanity Studio jest chroniony i wymaga logowania (np. przez Google lub email), co zapewnia bezpieczeństwo.
-- **Struktura Danych (Schematy)**: Zdefiniowano następujące typy danych w Sanity:
-  - **`Post`**: Główny typ treści. Zawiera pola takie jak `title`, `slug`, `author`, `mainImage`, `categories`, `publishedAt`, treść wpisu (`body` w formacie Portable Text) oraz metadane SEO.
-  - **`Author`**: Definiuje autora wpisów, włączając `name`, `slug`, `image` i `bio`.
-  - **`Category`**: Pozwala na kategoryzację postów.
+- **URL do Studio**: `https://finansowa.sanity.studio/structure`
+- **Authentication**: Dostęp do Sanity Studio jest chroniony i wymaga logowania
+- **API Access**: Token tylko do odczytu (`SANITY_API_READ_TOKEN`)
 
-### Data Fetching
+## 📊 **Struktura Danych Google Sheets**
 
-#### Oferty Finansowe (Google Sheets)
-Data is fetched on the server-side using the `googleapis` library. The core logic is located in `src/lib/google-sheets.ts`.
+### **Arkusze Kredytów**
+- **`Kredyt_Gotówkowy`** - oferty kredytów gotówkowych
+- **`Kredyt_Hipoteczny`** - oferty kredytów hipotecznych  
+- **`Kredyt_Konsolidacyjny`** - oferty kredytów konsolidacyjnych
 
-#### 1. **`getLogos()`**
+### **Arkusze Lokat**
+- **`Lokata`** - lokaty standardowe w PLN
+- **`Lokaty_Walutowe`** - lokaty w walutach obcych (EUR, USD, GBP, CHF)
+
+### **Inne Produkty**
+- **`Konto_Oszczędnościowe`** - konta oszczędnościowe
+- **`Obligacje_Skarbowe`** - obligacje skarbowe
+
+### **Arkusze Pomocnicze**
+- **`Logo`** - logo banków i instytucji finansowych
+
+## 🔍 **Pobieranie Danych**
+
+### **Oferty Finansowe (Google Sheets)**
+Dane są pobierane po stronie serwera za pomocą biblioteki `googleapis`. Główna logika znajduje się w `src/lib/google-sheets.ts`.
+
+#### **1. `getLogos()`**
 - **Sheet**: `Logo`
-- **Function**: Fetches a list of provider names and their corresponding logo URLs. This data is used to enrich the offer data with visual branding.
+- **Function**: Pobiera listę nazw dostawców i odpowiadające im URL-e logo
+- **Usage**: Dane są używane do wzbogacenia ofert o branding wizualny
 
-#### 2. **`getLoanOffers(loanType: string)`**
+#### **2. `getLoanOffers(loanType: string)`**
 - **Sheets**: `Kredyt_Gotówkowy`, `Kredyt_Hipoteczny`, `Kredyt_Konsolidacyjny`
-- **Function**: Fetches loan offers for a specific loan type. It maps the `loanType` parameter to the corresponding sheet name.
-- **Enrichment**: Merges loan data with logos from `getLogos()`.
+- **Function**: Pobiera oferty kredytowe dla określonego typu kredytu
+- **Mapping**: Parametr `loanType` jest mapowany na odpowiadającą nazwę arkusza
+- **Enrichment**: Łączy dane kredytowe z logo z `getLogos()`
 
-#### Blog "FinanSowa" (Sanity.io)
+#### **3. `getDepositOffers()`**
+- **Sheet**: `Lokata`
+- **Function**: Pobiera standardowe oferty lokat (w PLN)
+- **Enrichment**: Łączy dane lokat z logo
+
+#### **4. `getCurrencyDepositOffers()`**
+- **Sheet**: `Lokaty_Walutowe`
+- **Function**: Pobiera oferty lokat walutowych
+- **Enrichment**: Łączy dane lokat z logo
+
+#### **5. `getSavingsAccountOffers()`**
+- **Sheet**: `Konto_Oszczędnościowe`
+- **Function**: Pobiera oferty kont oszczędnościowych
+- **Enrichment**: Łączy dane z logo
+
+#### **6. `getTreasuryBondOffers()`**
+- **Sheet**: `Obligacje_Skarbowe`
+- **Function**: Pobiera oferty obligacji skarbowych
+- **Enrichment**: Łączy dane z logo
+
+### **Blog "FinanSowa" (Sanity.io)**
 Dane z Sanity.io są pobierane po stronie serwera za pomocą biblioteki `next-sanity`. Logika zapytań znajduje się w `src/lib/sanity.ts`. Zapytania są pisane w języku GROQ.
 
-- **`getPosts()`**: Pobiera listę wszystkich opublikowanych postów, posortowaną po dacie.
-- **`getPost(slug)`**: Pobiera pojedynczy post na podstawie jego `slug`.
-- **`getCategories()` / `getAuthors()`**: Pobiera listy kategorii i autorów.
+#### **Główne Funkcje**
+- **`getPosts()`**: Pobiera listę wszystkich opublikowanych postów, posortowaną po dacie
+- **`getPost(slug)`**: Pobiera pojedynczy post na podstawie jego `slug`
+- **`getCategories()`**: Pobiera listę kategorii
+- **`getPostsByCategory(categoryId)`**: Pobiera posty z określonej kategorii
 
-#### 3. **`getDepositOffers()`**
-- **Sheet**: `Lokata`
-- **Function**: Fetches standard deposit offers (in PLN).
-- **Enrichment**: Merges deposit data with logos.
+## 🏗️ **Struktura Danych Sanity.io**
 
-#### 4. **`getCurrencyDepositOffers()`**
-- **Sheet**: `Lokaty_Walutowe`
-- **Function**: Fetches currency deposit offers (EUR, USD, etc.).
-- **Enrichment**: Merges deposit data with logos.
+### **Typy Dokumentów**
+- **`Post`**: Główny typ treści zawierający:
+  - `title`, `slug`, `author`, `mainImage`
+  - `categories`, `publishedAt`, `excerpt`
+  - `body` (w formacie Portable Text)
+  - `seo` (metadane SEO)
 
-### Data Display
-The fetched data is passed as props to server components, which then render the information.
+- **`Author`**: Definiuje autora wpisów:
+  - `name`, `slug`, `image`, `bio`
 
-- **Loan Offers**: Displayed in `Ranking.tsx`, which uses `LoanCard.tsx` to render individual offers.
-- **Deposit Offers**: Displayed in `DepositRanking.tsx`, using `DepositCard.tsx`.
-- **Currency Deposit Offers**: Displayed in `CurrencyDepositRanking.tsx`, using `CurrencyDepositCard.tsx` for each offer. This component includes advanced filtering by currency, amount, and period.
-- **Blog Posts**: Wyświetlane na dedykowanych stronach:
-  - `/finansowa`: Lista wszystkich postów (komponent `BlogList`).
-  - `/finansowa/[slug]`: Widok pojedynczego posta (komponent `BlogPost`).
+- **`Category`**: Pozwala na kategoryzację postów:
+  - `title`, `slug`, `image`, `description`
 
-### Revalidation
-- **On-Demand Revalidation**: The application uses Next.js's on-demand revalidation feature to update the cache when data in Google Sheets changes.
-- **Endpoint**: `api/revalidate`
-- **Trigger**: A secure webhook or manual request to this endpoint triggers a revalidation of the specified pages (`revalidateTag`).
-- **Cache Tags**: Functions in `google-sheets.ts` use cache tags (e.g., `loans`, `deposits`) to control which data gets revalidated.
+## 📱 **Wyświetlanie Danych**
 
+Pobrane dane są przekazywane jako props do server components, które następnie renderują informacje.
+
+### **Produkty Finansowe**
+- **Kredyty**: Wyświetlane w `Ranking.tsx` z użyciem `LoanCard.tsx`
+- **Lokaty**: Wyświetlane w `DepositRanking.tsx` z użyciem `DepositCard.tsx`
+- **Lokaty Walutowe**: Wyświetlane w `CurrencyDepositRanking.tsx` z użyciem `CurrencyDepositCard.tsx`
+- **Konta Oszczędnościowe**: Wyświetlane w `SavingsAccountRanking.tsx` z użyciem `SavingsAccountCard.tsx`
+- **Obligacje Skarbowe**: Wyświetlane w `TreasuryBondOffers.tsx` z użyciem `TreasuryBondCard.tsx`
+
+### **Blog Posts**
+Wyświetlane na dedykowanych stronach:
+- **`/finansowa`**: Lista wszystkich postów (komponent `BlogList`)
+- **`/finansowa/[slug]`**: Widok pojedynczego posta (komponent `BlogPost`)
+- **`/finansowa/kategorie/[slug]`**: Posty z określonej kategorii
+
+## 🔄 **Rewalidacja i Cache'owanie**
+
+### **On-Demand Revalidation**
+Aplikacja używa funkcji Next.js on-demand revalidation do aktualizacji cache'u gdy dane w Google Sheets się zmieniają.
+
+- **Endpoint**: `/api/revalidate`
+- **Trigger**: Bezpieczny webhook lub ręczne żądanie do tego endpointu
+- **Action**: Wywołuje `revalidateTag` dla określonych stron
+- **Cache Tags**: Funkcje w `google-sheets.ts` używają tagów cache (np. `loans`, `deposits`, `savings`, `bonds`)
+
+### **Sanity.io Revalidation**
 Zmiany w Sanity.io mogą również wyzwalać rewalidację strony bloga za pomocą webhooków, co zapewnia, że treści są zawsze aktualne bez konieczności przebudowywania całej aplikacji.
 
-This data flow ensures that the application displays up-to-date information while maintaining high performance through server-side rendering and caching.
+## 📊 **Przykłady Struktur Danych**
+
+### **LoanOffer**
+```typescript
+type LoanOffer = {
+  provider: string;
+  logo: string;
+  name: string;
+  baseInterestRate: number;
+  commission: number;
+  rrso: number;
+  maxLoanValue: number;
+  maxLoanTime: number;
+  representativeExample: string;
+  promoted: boolean;
+  hidden: boolean;
+  extraLabel: string;
+};
+```
+
+### **DepositOffer**
+```typescript
+type DepositOffer = {
+  provider: string;
+  logo: string;
+  name: string;
+  baseInterestRate: number;
+  minDepositValue: number;
+  maxDepositValue: number;
+  period: number;
+  new: boolean;
+  newMoney: boolean;
+  isOnline: boolean;
+  inApp: boolean;
+  accNeed: boolean;
+  capitalization: string;
+  brakeUp: boolean;
+  safety: string;
+  promoted: boolean;
+  hidden: boolean;
+};
+```
+
+### **Post (Sanity.io)**
+```typescript
+type Post = {
+  _id: string;
+  title: string;
+  slug: SanitySlug;
+  author: Author;
+  mainImage: SanityImage;
+  categories: Category[];
+  publishedAt: string;
+  excerpt: string;
+  body: any[]; // Portable Text
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    ogImage?: SanityImage;
+  };
+};
+```
+
+## 🚀 **Optymalizacja Wydajności**
+
+### **Server-Side Rendering**
+- Dane są pobierane na serwerze podczas renderowania
+- Eliminuje potrzebę dodatkowych requestów po stronie klienta
+- Poprawia SEO i Core Web Vitals
+
+### **Intelligent Caching**
+- Next.js automatycznie cache'uje dane na poziomie frameworka
+- Service Worker cache'uje zasoby po stronie klienta
+- Vercel CDN cache'uje statyczne zasoby globalnie
+
+### **Data Prefetching**
+- Dane są pobierane równolegle za pomocą `Promise.all`
+- Optymalizuje czas ładowania strony
+- Redukuje waterfall requests
+
+---
+
+**Kredytowy Patrol** - Efektywny przepływ danych dla produktów finansowych 🏦
