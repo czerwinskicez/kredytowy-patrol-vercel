@@ -2,40 +2,15 @@ import { Metadata } from 'next';
 
 const siteUrl = 'https://www.kredytowypatrol.pl';
 const siteName = 'Kredytowy Patrol';
-const siteDescription = 'Znajdź najlepsze oferty kredytów hipotecznych, gotówkowych, samochodowych i oszczędności w Polsce. Porównaj setki ofert banków i wybierz najkorzystniejszą. Kredytowy Patrol - Twój przewodnik po świecie finansów.';
+const siteDescription = 'Kredytowy Patrol to Twoja niezależna porównywarka finansowa. Znajdź i porównaj najlepsze oferty kredytów hipotecznych, gotówkowych, konsolidacyjnych i samochodowych. Sprawdź aktualne rankingi lokat bankowych, kont oszczędnościowych i kart kredytowych. Użyj naszych kalkulatorów, aby wybrać najkorzystniejszą ofertę. Kredytowy Patrol - Twój ekspert i przewodnik po świecie finansów w Polsce.';
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${siteName} - Porównywarka Kredytów i Oszczędności w Polsce`,
+    default: `Porównywarka Kredytów, Lokat i Kont Oszczędnościowych | ${siteName}`,
     template: `%s | ${siteName}`,
   },
   description: siteDescription,
-  keywords: [
-    'kredyt hipoteczny',
-    'kredyt gotówkowy', 
-    'kredyt samochodowy',
-    'kredyt konsolidacyjny',
-    'lokaty bankowe',
-    'konta oszczędnościowe',
-    'porównywarka kredytów',
-    'porównywarka lokat',
-    'najlepsze kredyty',
-    'najlepsze lokaty',
-    'oprocentowanie kredytu',
-    'oprocentowanie lokaty',
-    'banki w Polsce',
-    'oferty bankowe',
-    'kredyt online',
-    'pożyczka',
-    'finanse osobiste',
-    'oszczędzanie',
-    'inwestowanie',
-    'stopy procentowe',
-    'RRSO',
-    'kredyt dla firm',
-    'leasing'
-  ],
   authors: [{ name: 'Kredytowy Patrol' }],
   creator: 'Kredytowy Patrol',
   publisher: 'Kredytowy Patrol',
@@ -55,7 +30,7 @@ export const baseMetadata: Metadata = {
     locale: 'pl_PL',
     url: siteUrl,
     siteName,
-    title: `${siteName} - Najlepsze Kredyty i Lokaty w Polsce`,
+    title: `${siteName} - Porównywarka Kredytów i Produktów Finansowych`,
     description: siteDescription,
     images: [
       {
@@ -92,8 +67,8 @@ export const baseMetadata: Metadata = {
     card: 'summary_large_image',
     site: '@kredytowypatrol', // Dodaj po utworzeniu konta Twitter
     creator: '@kredytowypatrol',
-    title: `${siteName} - Porównywarka Finansowa`,
-    description: 'Znajdź najlepsze kredyty i lokaty w Polsce. Szybko i łatwo.',
+    title: `${siteName} - Porównywarka Kredytów i Produktów Finansowych`,
+    description: siteDescription,
     images: [
       `${siteUrl}/screenshot_wide.jpg`,
       `${siteUrl}/screenshot_narrow_vertical.jpg`,
@@ -183,9 +158,9 @@ export const financialServiceJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FinancialService',
   name: siteName,
-  description: 'Porównywarka kredytów i produktów oszczędnościowych',
+  description: 'Porównywarka kredytów hipotecznych, gotówkowych, konsolidacyjnych, lokat bankowych, kont oszczędnościowych i kart kredytowych.',
   url: siteUrl,
-  serviceType: ['Loan Comparison', 'Financial Comparison', 'Banking Comparison'],
+  serviceType: ['Loan Comparison', 'Financial Comparison', 'Banking Comparison', 'Mortgage Calculator', 'Credit Card Comparison'],
   areaServed: {
     '@type': 'Country',
     name: 'Poland',

@@ -20,20 +20,17 @@ export function HeroSection() {
                 <div className="w-2 h-2 rounded-full bg-[#f0c14b] mr-1"></div>
                 <div className="w-2 h-2 rounded-full bg-[#f0c14b] mr-2"></div>
                 <span className="text-[#f0c14b] text-lg">
-                  Porównaj, wybierz, oszczędź!
+                  Porównywarka kredytów, lokat i kont oszczędnościowych
                 </span>
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Kredytowy Patrol na
+              Znajdź Najlepszy Kredyt
               <br />
-              tropie najlepszych okazji!
+              i Oszczędności w Jednym Miejscu
             </h1>
             <p className="text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-8">
-              Znajdź najlepsze oferty kredytowe i oszczędnościowe w Polsce! 
-              Nasz ekspert - Kredytowy Patrol - przeanalizuje setki ofert banków 
-              i pomoże Ci wybrać produkt idealny dla Twoich potrzeb. 
-              Oszczędź czas, pieniądze i nerwy dzięki naszemu porównaniu.
+              Skorzystaj z naszej porównywarki kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najwyżej oprocentowane lokaty bankowe i konta oszczędnościowe. Nasz ekspert kredytowy pomoże Ci wybrać najlepszą ofertę i zaoszczędzić pieniądze.
             </p>
           </div>
         </div>

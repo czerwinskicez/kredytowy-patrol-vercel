@@ -1,7 +1,7 @@
 {
   "name": "Kredytowy Patrol - Porównywarka Kredytów i Oszczędności",
   "short_name": "Kredytowy Patrol",
-  "description": "Znajdź najlepsze oferty kredytów i oszczędności w Polsce. Porównaj setki ofert banków i wybierz najkorzystniejszą.",
+  "description": "Porównywarka kredytów gotówkowych, hipotecznych, lokat bankowych i kont oszczędnościowych. Znajdź najlepsze oferty i oszczędzaj.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#053320",
@@ -60,6 +60,13 @@
       "short_name": "Lokaty",
       "description": "Porównaj lokaty bankowe",
       "url": "/lokata",
+      "icons": [{ "src": "/favicon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Konta oszczędnościowe",
+      "short_name": "Konta",
+      "description": "Porównaj konta oszczędnościowe",
+      "url": "/konto-oszczednosciowe",
       "icons": [{ "src": "/favicon-96x96.png", "sizes": "96x96" }]
     }
   ]

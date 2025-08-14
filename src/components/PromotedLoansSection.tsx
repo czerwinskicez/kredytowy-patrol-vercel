@@ -30,10 +30,10 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl">
-            Promowane Kredyty
+            Ranking Kredytów i Pożyczek
           </h2>
           <p className="mt-4 text-base font-normal leading-7 text-gray-600 sm:mt-6">
-            Sprawdź najlepsze oferty wybrane przez naszych ekspertów.
+            Sprawdź nasz ranking kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najlepszą ofertę dopasowaną do swoich potrzeb.
           </p>
         </div>
 
@@ -70,7 +70,7 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
                         href={`/kredyty/${tab.slug}`}
                         className="inline-block bg-[#0a472e] text-white font-bold text-lg py-3 px-8 rounded-lg hover:bg-[#0c5a3a] transition-colors duration-300 shadow-md hover:shadow-lg"
                       >
-                        Pokaż wszystkie
+                        Pokaż pełny ranking
                       </Link>
                     </div>
                   </>

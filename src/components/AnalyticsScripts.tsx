@@ -102,6 +102,68 @@ export function AnalyticsScripts() {
           </noscript>
         </>
       )}
+
+      {/* --- OW Analytics Status Function --- */}
+      <Script id="ow-analytics-status" strategy="afterInteractive">
+        {`
+          (function() {
+            window.ow = window.ow || {};
+            window.ow.analytics = window.ow.analytics || {};
+            window.ow.analytics.status = function() {
+              const getClarityStatus = () => {
+                if (typeof window.clarity !== 'function') return 'Not Found';
+                const clarityCookie = document.cookie.split(';').some(c => c.trim().startsWith('_clck=') || c.trim().startsWith('_clsk='));
+                return clarityCookie ? 'Tracking Active (Cookie found)' : 'Initialized, but tracking might be blocked';
+              };
+              
+              const getFbPixelStatus = () => {
+                if (typeof window.fbq !== 'function') return 'Not Found';
+                if (window.fbq.getState) {
+                   const state = window.fbq.getState();
+                   if (state && state.pixels && state.pixels.length > 0) {
+                     return 'Initialized (ID: ' + state.pixels[0].id + ')';
+                   }
+                   return 'Initialized, but no pixel data found';
+                }
+                return 'Initialized (getState not available)';
+              };
+
+              const getGtmStatus = () => {
+                if (!window.dataLayer) return 'Not Found';
+                const gtmLoaded = window.dataLayer.some(e => e.event === 'gtm.js' || e.event === 'gtm.load');
+                return gtmLoaded ? 'Loaded and Executed' : 'Initialized, but not fully loaded';
+              };
+
+              const status = {
+                'Google Tag Manager': {
+                  'State': !!window.google_tag_manager,
+                  'Status': getGtmStatus(),
+                  'Config ID': '${ANALYTICS_CONFIG.GTM_CONTAINER_ID || 'Not set'}'
+                },
+                'Google Analytics (gtag.js)': {
+                  'State': typeof window.gtag === 'function',
+                  'Status': typeof window.gtag === 'function' ? 'Initialized' : 'Not Found',
+                  'Config ID': '${ANALYTICS_CONFIG.GA_MEASUREMENT_ID || 'Not set'}'
+                },
+                'Microsoft Clarity': {
+                  'State': typeof window.clarity === 'function',
+                  'Status': getClarityStatus(),
+                  'Config ID': '${ANALYTICS_CONFIG.CLARITY_PROJECT_ID || 'Not set'}'
+                },
+                'Facebook Pixel': {
+                  'State': typeof window.fbq === 'function',
+                  'Status': getFbPixelStatus(),
+                  'Config ID': '${ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID || 'Not set'}'
+                }
+              };
+
+              console.log('--- Detailed Analytics Status ---');
+              console.table(status);
+              console.log('-------------------------------');
+            }
+          })();
+        `}
+      </Script>
     </>
   );
 } 

@@ -63,6 +63,35 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
     } else {
       setShowBanner(true);
     }
+
+    // --- OW Analytics Consent Function ---
+    window.ow = window.ow || {};
+    window.ow.analytics = window.ow.analytics || {};
+    window.ow.analytics.consent = () => {
+      const savedConsentRaw = localStorage.getItem(CONSENT_STORAGE_KEY);
+      const savedConsent = savedConsentRaw ? JSON.parse(savedConsentRaw) : null;
+      
+      const googleConsent = window.dataLayer?.find((item: any) => item[0] === 'consent' && item[1] === 'default');
+
+      const consentStatus = {
+        'Local Storage': {
+          'Stored': !!savedConsent,
+          'Consent': savedConsent ? savedConsent.consent : 'Not Found',
+          'Version': savedConsent ? savedConsent.version : 'N/A',
+          'Timestamp': savedConsent ? new Date(savedConsent.timestamp).toLocaleString() : 'N/A',
+        },
+        'Google Consent Mode (dataLayer)': {
+          'ad_storage': googleConsent ? googleConsent[2].ad_storage : 'Not Found',
+          'analytics_storage': googleConsent ? googleConsent[2].analytics_storage : 'Not Found',
+          'ad_user_data': googleConsent ? googleConsent[2].ad_user_data : 'Not Found',
+          'ad_personalization': googleConsent ? googleConsent[2].ad_personalization : 'Not Found',
+        }
+      };
+
+      console.log('--- Consent Status ---');
+      console.table(consentStatus);
+      console.log('--------------------');
+    };
   }, []);
 
   const saveConsent = (newConsent: ConsentSettings) => {
