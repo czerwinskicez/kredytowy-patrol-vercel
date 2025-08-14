@@ -65,13 +65,15 @@ export const initializeGTM = (consentSettings: ConsentSettings) => {
   safelyExecute(() => {
     // Initialize dataLayer for GTM
     window.dataLayer = window.dataLayer || [];
+    window.gtag = function() {
+      window.dataLayer?.push(arguments);
+    };
     
     // Set default consent state for GTM
     const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
-    window.dataLayer.push({
-      event: 'gtm_consent_default',
-      gtm_consent_default: googleConsentSettings
-    });
+    window.gtag('consent', 'default', googleConsentSettings);
+    
+    logAnalyticsEvent('GTM', 'Default consent set', googleConsentSettings);
 
     // Initialize GTM
     window.dataLayer.push({
@@ -105,37 +107,10 @@ export const updateGTMConsent = (consentSettings: ConsentSettings) => {
   }, 'GTM consent update');
 };
 
-// Google Analytics 4
-export const initializeGA = (consentSettings: ConsentSettings) => {
-  if (!ANALYTICS_CONFIG.GA_MEASUREMENT_ID || typeof window === 'undefined') return;
-
-  safelyExecute(() => {
-    // Initialize dataLayer
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
-      window.dataLayer?.push(arguments);
-    };
-
-    // Set default consent state using type-safe GoogleConsentSettings
-    const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
-    window.gtag('consent', 'default', googleConsentSettings);
-
-    // Initialize GA4
-    window.gtag('js', new Date());
-    window.gtag('config', ANALYTICS_CONFIG.GA_MEASUREMENT_ID, {
-      page_title: document.title,
-      page_location: window.location.href,
-    });
-    
-    logAnalyticsEvent('GA4', 'Initialized', { measurementId: ANALYTICS_CONFIG.GA_MEASUREMENT_ID });
-  }, 'GA4 initialization');
-};
-
 // Update Google Consent Mode
 export const updateGoogleConsent = (consentSettings: ConsentSettings) => {
   if (typeof window === 'undefined') return;
 
-  // Use type-safe GoogleConsentSettings for consent updates
   const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
   
   // Update GTM consent if available
@@ -143,11 +118,11 @@ export const updateGoogleConsent = (consentSettings: ConsentSettings) => {
     updateGTMConsent(consentSettings);
   }
   
-  // Update direct GA4 consent if available
+  // Update direct GA4 consent is now handled by GTM
   if (window.gtag) {
     safelyExecute(() => {
       window.gtag?.('consent', 'update', googleConsentSettings);
-      logAnalyticsEvent('GA4', 'Consent updated', googleConsentSettings);
+      logAnalyticsEvent('GA4', 'Consent updated via GTM', googleConsentSettings);
     }, 'GA4 consent update');
   }
 };
@@ -313,11 +288,6 @@ export const initializeAnalytics = (consentSettings: ConsentSettings) => {
   // Initialize GTM if available
   if (ANALYTICS_CONFIG.GTM_CONTAINER_ID) {
     initializeGTM(consentSettings);
-  }
-
-  // Initialize direct GA4 if available (runs alongside GTM)
-  if (ANALYTICS_CONFIG.GA_MEASUREMENT_ID) {
-    initializeGA(consentSettings);
   }
 
   // Initialize Facebook Pixel only if marketing consent is given

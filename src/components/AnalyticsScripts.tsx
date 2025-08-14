@@ -32,36 +32,6 @@ export function AnalyticsScripts() {
         </>
       )}
 
-      {/* Google Analytics 4 - Direct implementation (runs alongside GTM) */}
-      {ANALYTICS_CONFIG.GA_MEASUREMENT_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS_CONFIG.GA_MEASUREMENT_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              
-              // Set default consent before initialization
-              gtag('consent', 'default', {
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                analytics_storage: 'denied',
-                functionality_storage: 'denied',
-                personalization_storage: 'denied',
-                security_storage: 'granted'
-              });
-              
-              gtag('config', '${ANALYTICS_CONFIG.GA_MEASUREMENT_ID}');
-            `}
-          </Script>
-        </>
-      )}
-
       {/* Microsoft Clarity */}
       {ANALYTICS_CONFIG.CLARITY_PROJECT_ID && (
         <Script id="microsoft-clarity" strategy="afterInteractive">

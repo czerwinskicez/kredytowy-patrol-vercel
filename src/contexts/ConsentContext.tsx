@@ -71,7 +71,7 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       const savedConsentRaw = localStorage.getItem(CONSENT_STORAGE_KEY);
       const savedConsent = savedConsentRaw ? JSON.parse(savedConsentRaw) : null;
       
-      const consentEvents = window.dataLayer?.filter((item: any) => Array.isArray(item) && item[0] === 'consent') || [];
+      const consentEvents = window.dataLayer?.filter((item: any) => item && item[0] === 'consent') || [];
       const lastConsentEvent = consentEvents.length > 0 ? consentEvents[consentEvents.length - 1] : null;
       const googleConsentState = lastConsentEvent ? lastConsentEvent[2] : {};
 
