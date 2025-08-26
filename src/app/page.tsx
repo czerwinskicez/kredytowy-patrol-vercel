@@ -41,16 +41,13 @@ export default async function Home() {
   ]);
 
   const promotedCashLoans = cashLoans
-    .filter(loan => loan.promoted && !loan.hidden)
-    .map(calculateOffer);
+    .filter(loan => loan.promoted && !loan.hidden);
   
   const promotedMortgageLoans = mortgageLoans
-    .filter(loan => loan.promoted && !loan.hidden)
-    .map(calculateOffer);
+    .filter(loan => loan.promoted && !loan.hidden);
 
   const promotedConsolidationLoans = consolidationLoans
-    .filter(loan => loan.promoted && !loan.hidden)
-    .map(calculateOffer);
+    .filter(loan => loan.promoted && !loan.hidden);
 
   return (
     <PageWrapper>

@@ -4,7 +4,7 @@
 
 1. Niniejszy regulamin (dalej: **„Regulamin”**) określa zasady korzystania z serwisu internetowego **kredytowypatrol.pl** (dalej: **„Serwis”**) przez jego użytkowników (dalej: **„Użytkownicy”**). Regulamin jest regulaminem świadczenia usług drogą elektroniczną w rozumieniu art. 8 ust. 1 pkt 1 ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.
 
-2. Właścicielem i podmiotem prowadzącym Serwis jest **TIME TM Cezary Czerwiński**, NIP: **845-199-6253**, REGON: **386592961** (dalej: **„Usługodawca”**). *(**Uwaga:** dane spółki zostaną uzupełnione po jej rejestracji.)*
+2. Właścicielem i podmiotem prowadzącym Serwis jest **TIME TM Cezary Czerwiński**, NIP: **845-199-6253**, REGON: **386592961** (dalej: **„Usługodawca”**).
 
 3. Kontakt z Usługodawcą możliwy jest poprzez adres e-mail: **kontakt@kredytowypatrol.pl** oraz ewentualnie inne kanały podane w Serwisie.
 

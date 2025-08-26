@@ -7,11 +7,13 @@ import type { LoanOffer, CalculatedLoanOffer } from '@/types';
 type RankingProps = {
   initialLoanOffers: LoanOffer[];
   title: string;
+  initialAmount?: number;
+  initialMonths?: number;
 };
 
-export function Ranking({ initialLoanOffers, title }: RankingProps) {
-  const [amount, setAmount] = useState(50000);
-  const [months, setMonths] = useState(48);
+export function Ranking({ initialLoanOffers, title, initialAmount, initialMonths }: RankingProps) {
+  const [amount, setAmount] = useState(initialAmount ?? 50000);
+  const [months, setMonths] = useState(initialMonths ?? 48);
 
   const maxPossibleAmount = useMemo(() => {
     if (!initialLoanOffers || initialLoanOffers.length === 0) {

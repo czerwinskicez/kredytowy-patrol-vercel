@@ -37,6 +37,15 @@ export default async function KredytPage({ params }: { params: { slug: string } 
   const loanOffers = await getLoanOffers(slug);
   const details = loanTypeDetails[slug] || { name: 'Ranking Kredytów', description: 'Porównaj oferty kredytowe.' };
 
+  // Ustal wartości inicjalizacyjne tak, aby wszystkie promowane oferty były widoczne
+  const promoted = loanOffers.filter(o => o.promoted && !o.hidden);
+  const initialAmount = promoted.length > 0
+    ? Math.max(5000, Math.min(...promoted.map(o => o.maxLoanValue)))
+    : 50000;
+  const initialMonths = promoted.length > 0
+    ? Math.max(12, Math.min(...promoted.map(o => o.maxLoanTime)))
+    : 48;
+
   return (
     <PageWrapper>
       <div className="container mx-auto px-4 py-12 lg:max-w-6xl">
@@ -45,6 +54,8 @@ export default async function KredytPage({ params }: { params: { slug: string } 
         <ComparisonSection
           initialLoanOffers={loanOffers}
           title={`Porównaj ${details.name.toLowerCase()}`}
+          initialAmount={initialAmount}
+          initialMonths={initialMonths}
         />
       </div>
     </PageWrapper>

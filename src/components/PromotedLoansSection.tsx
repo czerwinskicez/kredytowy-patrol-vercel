@@ -1,15 +1,15 @@
 // src/components/PromotedLoansSection.tsx
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import type { CalculatedLoanOffer } from '@/types';
+import type { CalculatedLoanOffer, LoanOffer } from '@/types';
 import { LoanCard } from './LoanCard';
 
 interface PromotedLoansSectionProps {
-  promotedCashLoans: CalculatedLoanOffer[];
-  promotedMortgageLoans: CalculatedLoanOffer[];
-  promotedConsolidationLoans: CalculatedLoanOffer[];
+  promotedCashLoans: LoanOffer[];
+  promotedMortgageLoans: LoanOffer[];
+  promotedConsolidationLoans: LoanOffer[];
 }
 
 const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
@@ -19,11 +19,72 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('cash');
 
+  function calculateForAmountMonths(offer: LoanOffer, amount: number, months: number): CalculatedLoanOffer {
+    const principal = amount;
+    const commissionAmount = principal * ((offer.commission || 0) / 100);
+    const totalPrincipal = principal + commissionAmount;
+    const monthlyInterestRate = (offer.baseInterestRate || 0) / 100 / 12;
+
+    let monthlyRate = 0;
+    let totalAmount = 0;
+
+    if (monthlyInterestRate > 0) {
+      monthlyRate =
+        totalPrincipal *
+        (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, months)) /
+        (Math.pow(1 + monthlyInterestRate, months) - 1);
+      totalAmount = monthlyRate * months;
+    } else {
+      // Jeśli oprocentowanie wynosi 0, rata to po prostu kwota podzielona przez liczbę miesięcy
+      monthlyRate = totalPrincipal / months;
+      totalAmount = totalPrincipal;
+    }
+
+    return {
+      provider: offer.provider || '',
+      logo: offer.logo || '/trust.jpg',
+      name: offer.name || '',
+      totalAmount: isFinite(totalAmount) && totalAmount > 0 ? totalAmount : 0,
+      commission: offer.commission || 0,
+      rrso: offer.rrso || 0,
+      monthlyRate: isFinite(monthlyRate) && monthlyRate > 0 ? monthlyRate : 0,
+      representativeExample: offer.representativeExample || '',
+      promoted: offer.promoted || false,
+      hidden: offer.hidden || false,
+      extraLabel: offer.extraLabel || '',
+      acceptsBik: true,
+      acceptsKrd: false,
+      age: { min: 18, max: 80 },
+      requiredDocuments: [
+        'Dokument tożsamości',
+        'Zaświadczenie o dochodach',
+      ],
+    };
+  }
+
   const tabs = [
     { id: 'cash', label: 'Gotówkowe', loans: promotedCashLoans, slug: 'gotowkowy' },
     { id: 'mortgage', label: 'Hipoteczne', loans: promotedMortgageLoans, slug: 'hipoteczny' },
     { id: 'consolidation', label: 'Konsolidacyjne', loans: promotedConsolidationLoans, slug: 'konsolidacyjny' },
-  ];
+  ] as const;
+
+  const sharedByTab = useMemo(() => {
+    const computeShared = (offers: LoanOffer[]) => {
+      if (!offers || offers.length === 0) {
+        return { amount: 50000, months: 48 };
+      }
+      const maxAmounts = offers.map(o => o.maxLoanValue);
+      const maxMonths = offers.map(o => o.maxLoanTime);
+      const amount = Math.max(5000, Math.min(...maxAmounts));
+      const months = Math.max(12, Math.min(...maxMonths));
+      return { amount, months };
+    };
+    return {
+      cash: computeShared(promotedCashLoans),
+      mortgage: computeShared(promotedMortgageLoans),
+      consolidation: computeShared(promotedConsolidationLoans),
+    };
+  }, [promotedCashLoans, promotedMortgageLoans, promotedConsolidationLoans]);
 
   return (
     <section className="py-12 bg-gray-50 sm:py-16 lg:py-20">
@@ -60,10 +121,24 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
               <div key={tab.id} className={activeTab === tab.id ? 'block' : 'hidden'}>
                 {tab.loans.length > 0 ? (
                   <>
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-sm text-gray-600">
+                        Pokazujemy promowane oferty dla kwoty
+                        {' '}<span className="font-bold text-[#0a472e]">{sharedByTab[tab.id as 'cash'|'mortgage'|'consolidation'].amount.toLocaleString('pl-PL')} zł</span>
+                        {' '}na{' '}
+                        <span className="font-bold text-[#0a472e]">{sharedByTab[tab.id as 'cash'|'mortgage'|'consolidation'].months}</span>
+                        {' '}miesięcy
+                      </p>
+                    </div>
                     <div className="space-y-6">
-                      {tab.loans.map((loan, index) => (
-                        <LoanCard key={index} loan={loan} rank={index + 1} isPromoted />
-                      ))}
+                      {tab.loans.map((loan, index) => {
+                        const a = sharedByTab[tab.id as 'cash'|'mortgage'|'consolidation'].amount;
+                        const m = sharedByTab[tab.id as 'cash'|'mortgage'|'consolidation'].months;
+                        const calc = calculateForAmountMonths(loan, a, m);
+                        return (
+                          <LoanCard key={index} loan={calc} rank={index + 1} isPromoted />
+                        );
+                      })}
                     </div>
                     <div className="mt-10 text-center">
                       <Link 

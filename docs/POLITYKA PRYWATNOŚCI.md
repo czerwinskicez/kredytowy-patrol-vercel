@@ -12,8 +12,8 @@
 
    ### **Administrator Danych Osobowych**
 
-1. Administratorem Twoich danych osobowych (dalej: „**Administrator**”) jest **\[Kredytowy Patrol Spółka\]** z siedzibą w \[●\], adres: \[●\], wpisaną do rejestru przedsiębiorców KRS pod numerem \[●\], NIP: \[●\], REGON: \[●\] (dalej: „**Usługodawca**”).  
-2. W sprawach związanych z przetwarzaniem Twoich danych osobowych oraz w celu realizacji przysługujących Ci praw, możesz skontaktować się z nami za pośrednictwem poczty elektronicznej pod adresem: **\[kontakt@kredytowypatrol.pl\]**.
+1. Administratorem Twoich danych osobowych (dalej: „**Administrator**”) jest **TIME TM Cezary Czerwiński**, NIP: **845-199-6253**, REGON: **386592961** (dalej: „**Usługodawca**”).  
+2. W sprawach związanych z przetwarzaniem Twoich danych osobowych oraz w celu realizacji przysługujących Ci praw, możesz skontaktować się z nami za pośrednictwem poczty elektronicznej pod adresem: **kontakt@kredytowypatrol.pl**.
 
    ### **§3** 
 

@@ -65,19 +65,19 @@ export function LoanCard({ loan, rank, isPromoted = false }: LoanCardProps) {
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center md:text-left">
                     <div>
                       <p className="text-sm text-gray-500">Miesięczna rata</p>
-                      <p className="text-xl font-bold text-[#0a472e]">{loan.monthlyRate.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                      <p className="text-xl font-bold text-[#0a472e]">{(loan.monthlyRate || 0).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">RRSO</p>
-                      <p className="text-lg font-bold text-gray-800">{loan.rrso.toFixed(2)} %</p>
+                      <p className="text-lg font-bold text-gray-800">{(loan.rrso || 0).toFixed(2)} %</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Prowizja</p>
-                      <p className="text-lg font-bold text-gray-800">{loan.commission} %</p>
+                      <p className="text-lg font-bold text-gray-800">{loan.commission || 0} %</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Całkowita kwota</p>
-                      <p className="text-lg font-bold text-gray-800">{loan.totalAmount.toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
+                      <p className="text-lg font-bold text-gray-800">{(loan.totalAmount || 0).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' })}</p>
                     </div>
                   </div>
                 </div>

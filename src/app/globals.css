@@ -117,3 +117,14 @@ input[type="checkbox"]:checked::before {
     margin-left: 0;
   }
 }
+
+/* Custom Selection Styles */
+::selection {
+  background-color: #0a472e; /* Dark Green */
+  color: #ffffff; /* White */
+}
+
+::-moz-selection { /* Firefox */
+  background-color: #0a472e;
+  color: #ffffff;
+}

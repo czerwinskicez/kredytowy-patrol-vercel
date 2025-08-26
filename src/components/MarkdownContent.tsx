@@ -29,6 +29,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ filePath }) => {
             strong: ({...props}) => <strong className="font-semibold" {...props} />,
             ol: ({...props}) => <ol className="list-decimal pl-6 space-y-2" {...props} />,
             ul: ({...props}) => <ul className="list-disc pl-6 space-y-2" {...props} />,
+            p: ({...props}) => (
+              <p
+                className="my-4 text-gray-700 first:mt-0 first:text-lg first:leading-8 first:text-gray-900 last:mb-0 last:text-gray-800"
+                {...props}
+              />
+            ),
         }}
       >
         {processedContent}

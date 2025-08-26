@@ -34,7 +34,7 @@ export function NewsletterSection() {
             />
             <button
               type="submit"
-              className="bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-2 px-8 rounded-lg transition-colors"
+              className="bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-8 text-lg rounded-lg transition-colors"
               aria-label="Zapisz się do newslettera"
             >
               Zapisz się

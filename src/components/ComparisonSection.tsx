@@ -26,13 +26,17 @@ const ClientRanking = dynamic(() => import('./Ranking').then(mod => ({ default: 
 type ComparisonSectionProps = {
   initialLoanOffers: LoanOffer[];
   title?: string;
+  initialAmount?: number;
+  initialMonths?: number;
 };
 
-export function ComparisonSection({ initialLoanOffers, title = "Dopasuj kredyt do swoich potrzeb" }: ComparisonSectionProps) {
+export function ComparisonSection({ initialLoanOffers, title = "Dopasuj kredyt do swoich potrzeb", initialAmount, initialMonths }: ComparisonSectionProps) {
   return (
     <ClientRanking
       initialLoanOffers={initialLoanOffers}
       title={title}
+      initialAmount={initialAmount}
+      initialMonths={initialMonths}
     />
   );
 }
