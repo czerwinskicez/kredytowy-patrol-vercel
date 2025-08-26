@@ -1,8 +1,7 @@
 import { DepositComparisonSection } from '@/components/DepositComparisonSection';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { getDepositOffers } from '@/lib/google-sheets';
 import { Metadata } from 'next';
+import { PageWrapper } from '@/components/PageWrapper';
 
 export const metadata: Metadata = {
   title: 'Najlepsze Lokaty Bankowe - Porównywarka i Ranking Lokat',
@@ -13,9 +12,8 @@ export default async function LokataPage() {
   const depositOffers = await getDepositOffers();
 
   return (
-    <div>
-      <Header />
-      <main className="container mx-auto px-4 py-12 lg:max-w-6xl">
+    <PageWrapper>
+      <div className="container mx-auto px-4 py-12 lg:max-w-6xl">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Ranking Lokat Bankowych</h1>
         <p className="text-lg text-gray-600 mb-8">
           Skorzystaj z naszej porównywarki, aby znaleźć najwyżej oprocentowane lokaty terminowe i online. Wybierz najlepszą ofertę i zacznij oszczędzać!
@@ -24,8 +22,7 @@ export default async function LokataPage() {
           initialDepositOffers={depositOffers}
           title="Porównaj lokaty"
         />
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageWrapper>
   );
 } 

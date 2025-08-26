@@ -1,6 +1,5 @@
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
 import { NewsletterSection } from '@/components/NewsletterSection';
+import { PageWrapper } from '@/components/PageWrapper';
 
 // Placeholder data for credit cards
 const creditCardOffers = [
@@ -27,9 +26,8 @@ const creditCardOffers = [
 
 export default function CreditCardsPage() {
   return (
-    <div>
-      <Header />
-      <main className="container mx-auto px-4 py-8">
+    <PageWrapper>
+      <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-center mb-8">Najlepsze Karty Kredytowe - Ranking</h1>
         <p className="text-lg text-center text-gray-600 mb-12">
           Porównaj oferty kart kredytowych i wybierz tę, która najlepiej pasuje do Twoich potrzeb. Sprawdź oprocentowanie, opłaty i dodatkowe korzyści.
@@ -71,9 +69,8 @@ export default function CreditCardsPage() {
             </div>
           ))}
         </div>
-      </main>
+      </div>
       <NewsletterSection />
-      <Footer />
-    </div>
+    </PageWrapper>
   );
 }

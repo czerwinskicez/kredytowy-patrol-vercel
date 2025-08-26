@@ -1,15 +1,13 @@
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { getPosts } from "@/lib/sanity";
 import { PostCard } from "@/components/PostCard";
+import { PageWrapper } from "@/components/PageWrapper";
 
 export default async function AktualnosciPage() {
   const posts = await getPosts();
 
   return (
-    <div>
-      <Header />
-      <main className="bg-gray-50 py-12">
+    <PageWrapper>
+      <div className="bg-gray-50 py-12">
         <div className="container mx-auto px-4 lg:max-w-6xl">
           <header className="mb-12 text-center">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-800">FinanSowa - Aktualności</h1>
@@ -22,8 +20,7 @@ export default async function AktualnosciPage() {
             ))}
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageWrapper>
   );
 }

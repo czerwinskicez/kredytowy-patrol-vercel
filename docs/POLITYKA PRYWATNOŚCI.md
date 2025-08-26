@@ -1,8 +1,8 @@
 # **Polityka prywatności kredytowypatrol.pl**
 
-### **§1**
+   ### **§1**
 
-### **Postanowienia ogólne**
+   ### **Postanowienia ogólne**
 
 1. Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych Użytkowników w związku z korzystaniem z serwisu internetowego **kredytowypatrol.pl** (dalej: „**Serwis**”).  
 2. Dokument ten jest zgodny z przepisami Rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych), zwanego dalej „**RODO**”.  
@@ -60,7 +60,7 @@ W związku z przetwarzaniem Twoich danych osobowych przysługują Ci następują
 7. **Prawo do cofnięcia zgody** – jeśli przetwarzamy dane na podstawie Twojej zgody (np. w przypadku newslettera), możesz ją wycofać w dowolnym momencie. Cofnięcie zgody nie wpływa na zgodność z prawem przetwarzania, którego dokonano przed jej wycofaniem.  
 8. **Prawo do wniesienia skargi do organu nadzorczego** – jeśli uważasz, że przetwarzamy Twoje dane niezgodnie z prawem, możesz wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).
 
-Aby skorzystać z powyższych praw, skontaktuj się z nami pod adresem e-mail: **\[kontakt@kredytowypatrol.pl\]**.
+Aby skorzystać z powyższych praw, skontaktuj się z nami pod adresem e-mail: **[kontakt@kredytowypatrol.pl]**.
 
 ### **§5** 
 
@@ -97,9 +97,9 @@ Twoje dane osobowe przechowujemy przez okres niezbędny do realizacji celów, dl
 
 Serwis zawiera linki (odnośniki) do stron internetowych naszych Partnerów (np. banków, instytucji finansowych). Po kliknięciu w taki link zostajesz przekierowany na zewnętrzną stronę, na której niniejsza Polityka Prywatności nie obowiązuje. Nie ponosimy odpowiedzialności za zasady ochrony prywatności stosowane przez właścicieli tych stron. Zalecamy zapoznanie się z polityką prywatności każdej odwiedzanej witryny.
 
-### **§9** 
+   ### **§9** 
 
-### **Zmiany w Polityce Prywatności**
+   ### **Zmiany w Polityce Prywatności**
 
 1. Zastrzegamy sobie prawo do wprowadzania zmian w niniejszej Polityce Prywatności, w szczególności w przypadku zmiany przepisów prawa lub technologii.  
 2. Aktualna wersja Polityki Prywatności będzie zawsze dostępna w Serwisie, z podaną datą jej wejścia w życie.  

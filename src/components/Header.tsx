@@ -133,9 +133,9 @@ export function Header() {
                 )}
               </div>
             ))}
-            <a href="#" className="hover:text-[#f0c14b]">
+            <Link href="/kontakt" className="hover:text-[#f0c14b]">
               Kontakt
-            </a>
+            </Link>
           </nav>
           <button 
             id="mobile-menu-button"
@@ -206,9 +206,9 @@ export function Header() {
                 )}
               </div>
             ))}
-            <a href="#" className="hover:text-[#f0c14b]">
+            <Link href="/kontakt" className="hover:text-[#f0c14b]">
               Kontakt
-            </a>
+            </Link>
           </nav>
         </div>
       )}

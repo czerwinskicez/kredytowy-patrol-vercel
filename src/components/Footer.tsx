@@ -49,7 +49,7 @@ export function Footer() {
               <h4 className="font-semibold mb-4 text-[#f0c14b]">Informacje</h4>
               <ul>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">O nas</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kontakt</a></li>
+                <li className="mb-2"><Link href="/kontakt" className="hover:text-[#f0c14b] transition-colors">Kontakt</Link></li>
                 <li className="mb-2"><Link href="/polityka-prywatnosci" className="hover:text-[#f0c14b] transition-colors">Polityka prywatności</Link></li>
                 <li className="mb-2"><Link href="/regulamin" className="hover:text-[#f0c14b] transition-colors">Regulamin</Link></li>
                 <li className="mb-2">

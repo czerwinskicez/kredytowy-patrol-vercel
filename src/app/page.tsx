@@ -1,12 +1,11 @@
 import { AboutSection } from '@/components/AboutSection';
-import { Footer } from '@/components/Footer';
-import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { NewsletterSection } from '@/components/NewsletterSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { getLoanOffers } from '@/lib/google-sheets';
 import PromotedLoansSection from '@/components/PromotedLoansSection';
 import type { LoanOffer, CalculatedLoanOffer } from '@/types';
+import { PageWrapper } from '@/components/PageWrapper';
 
 function calculateOffer(loan: LoanOffer): CalculatedLoanOffer {
   const principal = loan.maxLoanValue;
@@ -54,8 +53,7 @@ export default async function Home() {
     .map(calculateOffer);
 
   return (
-    <main>
-      <Header />
+    <PageWrapper>
       <HeroSection />
       <PromotedLoansSection 
         promotedCashLoans={promotedCashLoans}
@@ -65,7 +63,6 @@ export default async function Home() {
       <AboutSection />
       <TestimonialsSection />
       <NewsletterSection />
-      <Footer />
-    </main>
+    </PageWrapper>
   );
 }

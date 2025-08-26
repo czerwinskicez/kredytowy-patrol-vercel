@@ -1,12 +1,12 @@
 # **Regulamin serwisu kredytowypatrol.pl**
 
-## **§1** **Postanowienia ogólne**
+   ## **§1** **Postanowienia ogólne**
 
 1. Niniejszy regulamin (dalej: **„Regulamin”**) określa zasady korzystania z serwisu internetowego **kredytowypatrol.pl** (dalej: **„Serwis”**) przez jego użytkowników (dalej: **„Użytkownicy”**). Regulamin jest regulaminem świadczenia usług drogą elektroniczną w rozumieniu art. 8 ust. 1 pkt 1 ustawy z dnia 18 lipca 2002 r. o świadczeniu usług drogą elektroniczną.
 
-2. Właścicielem i podmiotem prowadzącym Serwis jest **\[Kredytowy Patrol Spółka\] z siedzibą w \[●\], adres: \[●\], wpisaną do rejestru przedsiębiorców KRS pod numerem \[●\], NIP: \[●\], REGON: \[●\], o kapitale zakładowym \[●\] zł w całości opłaconym** (dalej: **„Usługodawca”**). *(**Uwaga:** dane spółki zostaną uzupełnione po jej rejestracji.)*
+2. Właścicielem i podmiotem prowadzącym Serwis jest **TIME TM Cezary Czerwiński**, NIP: **845-199-6253**, REGON: **386592961** (dalej: **„Usługodawca”**). *(**Uwaga:** dane spółki zostaną uzupełnione po jej rejestracji.)*
 
-3. Kontakt z Usługodawcą możliwy jest poprzez adres e-mail: **\[●\]** (np. kontakt@kredytowypatrol.pl) oraz ewentualnie inne kanały podane w Serwisie.
+3. Kontakt z Usługodawcą możliwy jest poprzez adres e-mail: **kontakt@kredytowypatrol.pl** oraz ewentualnie inne kanały podane w Serwisie.
 
 4. Serwis świadczy na rzecz Użytkowników nieodpłatne usługi drogą elektroniczną polegające na udostępnianiu platformy internetowej umożliwiającej wyszukiwanie, porównywanie i prezentację ofert produktów finansowych różnych podmiotów. Korzystanie z Serwisu jest bezpłatne i nie wymaga zakładania konta ani rejestracji przez Użytkownika. Rozpoczęcie korzystania z Serwisu jest równoznaczne z akceptacją niniejszego Regulaminu.
 
@@ -134,5 +134,5 @@
 
 7. Niniejszy Regulamin jest dostępny nieodpłatnie na stronie internetowej Serwisu (w formie umożliwiającej jego pobranie, utrwalenie i wydrukowanie).
 
-8. Regulamin wchodzi w życie z dniem **\[●\]** (dniem opublikowania na stronie Serwisu).  
+8. Regulamin wchodzi w życie z dniem **[●]** (dniem opublikowania na stronie Serwisu).  
    

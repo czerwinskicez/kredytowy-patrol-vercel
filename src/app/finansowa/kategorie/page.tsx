@@ -1,11 +1,10 @@
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { getCategories } from "@/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
 import imageUrlBuilder from '@sanity/image-url';
 import { client } from '@/lib/sanity';
 import type { SanityImage } from "@/types";
+import { PageWrapper } from "@/components/PageWrapper";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: SanityImage) {
@@ -16,9 +15,8 @@ export default async function KategoriePage() {
   const categories = await getCategories();
 
   return (
-    <div>
-      <Header />
-      <main className="bg-gray-50 py-12">
+    <PageWrapper>
+      <div className="bg-gray-50 py-12">
         <div className="container mx-auto px-4 lg:max-w-6xl">
           <header className="mb-12 text-center">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-800">Kategorie Artykułów</h1>
@@ -51,8 +49,7 @@ export default async function KategoriePage() {
             ))}
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageWrapper>
   );
 }

@@ -1,5 +1,3 @@
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { getPost } from "@/lib/sanity";
 import { PostBody } from "@/components/PostBody";
 import imageUrlBuilder from '@sanity/image-url';
@@ -7,6 +5,7 @@ import { client } from '@/lib/sanity';
 import { SanityImage } from "@/types";
 import { Metadata } from "next";
 import Link from "next/link";
+import { PageWrapper } from "@/components/PageWrapper";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: SanityImage) {
@@ -42,9 +41,8 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <div>
-      <Header />
-      <main className="bg-white py-12">
+    <PageWrapper>
+      <div className="bg-white py-12">
         <article className="container mx-auto px-4 lg:max-w-4xl">
           <header className="mb-8">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{post.title}</h1>
@@ -70,8 +68,7 @@ export default async function PostPage({ params }: Props) {
           </header>
           <PostBody body={post.body} />
         </article>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageWrapper>
   );
 }

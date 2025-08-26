@@ -1,9 +1,8 @@
 import { ComparisonSection } from '@/components/ComparisonSection';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { getLoanOffers } from '@/lib/google-sheets';
 import type { LoanOffer } from '@/types';
 import { Metadata } from 'next';
+import { PageWrapper } from '@/components/PageWrapper';
 
 const loanTypeDetails: { [key: string]: { name: string; description: string, title: string } } = {
   'gotowkowy': {
@@ -39,18 +38,16 @@ export default async function KredytPage({ params }: { params: { slug: string } 
   const details = loanTypeDetails[slug] || { name: 'Ranking Kredytów', description: 'Porównaj oferty kredytowe.' };
 
   return (
-    <div>
-      <Header />
-      <main className="container mx-auto px-4 py-12 lg:max-w-6xl">
+    <PageWrapper>
+      <div className="container mx-auto px-4 py-12 lg:max-w-6xl">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">{details.name}</h1>
         <p className="text-lg text-gray-600 mb-8">{details.description}</p>
         <ComparisonSection
           initialLoanOffers={loanOffers}
           title={`Porównaj ${details.name.toLowerCase()}`}
         />
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageWrapper>
   );
 }
 
