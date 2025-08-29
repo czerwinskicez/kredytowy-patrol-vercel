@@ -1,33 +1,40 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
-import { parseBody } from 'next-sanity/webhook'
 
-export async function POST(req: NextRequest) {
-  // --- Obsługa Webhooka z Sanity ---
-  if (req.headers.has('sanity-hook-signature')) {
+/**
+ * Endpoint do rewalidacji treści z Sanity.
+ * Wywoływany przez webhook z Sanity za pomocą metody GET.
+ * Autoryzacja odbywa się przez parametry `secret` i `tag` w URL.
+ * Przykład: /api/revalidate?tag=sanity&secret=...
+ */
+export async function GET(req: NextRequest) {
+  const secret = req.nextUrl.searchParams.get('secret')
+  const tag = req.nextUrl.searchParams.get('tag')
+
+  if (tag === 'sanity' && secret === process.env.SANITY_REVALIDATE_SECRET) {
     try {
-      const { body, isValidSignature } = await parseBody<{ _type: string }>(
-        req,
-        process.env.SANITY_REVALIDATE_SECRET
-      )
-      if (!isValidSignature) {
-        return new Response('Invalid Sanity Signature', { status: 401 })
-      }
-
-      if (body?._type) {
-        revalidateTag('sanity')
-        return NextResponse.json({ revalidated: true, source: 'Sanity', now: Date.now(), type: body._type })
-      }
-
-      return NextResponse.json({ revalidated: false, source: 'Sanity', now: Date.now(), message: 'Missing body type' })
+      console.log("Revalidating 'sanity' tag based on GET request.")
+      revalidateTag('sanity')
+      return NextResponse.json({ revalidated: true, source: 'Sanity (via GET)', now: Date.now() })
     } catch (error: any) {
-      console.error('Error handling Sanity webhook:', error)
-      return new Response(error.message, { status: 500 })
+      console.error('Error handling Sanity GET webhook:', error)
+      return NextResponse.json({ message: 'Error revalidating from Sanity', error: error.message }, { status: 500 });
     }
   }
 
-  // --- Obsługa rewalidacji z Google Sheets ---
+  return NextResponse.json({ message: 'Invalid secret or tag for GET request' }, { status: 401 })
+}
+
+
+/**
+ * Endpoint do rewalidacji treści z Google Sheets.
+ * Wywoływany przez Google Apps Script za pomocą metody POST.
+ * Autoryzacja odbywa się przez parametr `secret` w URL.
+ * W ciele (`body`) żądania przekazywana jest nazwa edytowanego arkusza.
+ */
+export async function POST(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get('secret')
+
   if (secret === process.env.REVALIDATE_SECRET) {
     try {
       const body = await req.json()
@@ -69,6 +76,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // --- Brak autoryzacji ---
-  return NextResponse.json({ message: 'Invalid secret or signature' }, { status: 401 })
+  return NextResponse.json({ message: 'Invalid secret for POST request' }, { status: 401 })
 } 

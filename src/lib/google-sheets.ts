@@ -1,6 +1,8 @@
 import 'server-only';
 import { google } from 'googleapis';
 import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer, SavingsAccountOffer } from '@/types';
+import { cache } from 'react';
+import { unstable_cache as noStore } from 'next/cache';
 
 const sheets = google.sheets('v4');
 
@@ -27,7 +29,7 @@ async function getAuth() {
   return auth;
 }
 
-export async function getLogos(): Promise<Logo[]> {
+export const getLogos = cache(async (): Promise<Logo[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -51,9 +53,10 @@ export async function getLogos(): Promise<Logo[]> {
     console.error('API Error fetching logos:', error);
     return [];
   }
-}
+});
 
-export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
+export const getLoanOffers = noStore(
+  async (loanType: string): Promise<LoanOffer[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -144,9 +147,15 @@ export async function getLoanOffers(loanType: string): Promise<LoanOffer[]> {
     console.error('API Error:', error);
     return [];
   }
-} 
+},
+['loanOffers', 'sheets'],
+{
+  tags: ['loanOffers', 'sheets'],
+}
+); 
 
-export async function getDepositOffers(): Promise<DepositOffer[]> {
+export const getDepositOffers = noStore(
+  async (): Promise<DepositOffer[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -247,9 +256,15 @@ export async function getDepositOffers(): Promise<DepositOffer[]> {
     console.error('API Error:', error);
     return [];
   }
+},
+['depositOffers', 'sheets'],
+{
+  tags: ['depositOffers', 'sheets'],
 }
+);
 
-export async function getCurrencyDepositOffers(): Promise<CurrencyDepositOffer[]> {
+export const getCurrencyDepositOffers = noStore(
+  async (): Promise<CurrencyDepositOffer[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -338,9 +353,15 @@ export async function getCurrencyDepositOffers(): Promise<CurrencyDepositOffer[]
     console.error('API Error fetching currency deposit offers:', error);
     return [];
   }
+},
+['currencyDepositOffers', 'sheets'],
+{
+  tags: ['currencyDepositOffers', 'sheets'],
 }
+);
 
-export async function getTreasuryBondOffers(): Promise<TreasuryBondOffer[]> {
+export const getTreasuryBondOffers = noStore(
+  async (): Promise<TreasuryBondOffer[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -412,9 +433,15 @@ export async function getTreasuryBondOffers(): Promise<TreasuryBondOffer[]> {
     console.error('API Error fetching treasury bond offers:', error);
     return [];
   }
+},
+['treasuryBondOffers', 'sheets'],
+{
+  tags: ['treasuryBondOffers', 'sheets'],
 }
+);
 
-export async function getSavingsAccountOffers(): Promise<SavingsAccountOffer[]> {
+export const getSavingsAccountOffers = noStore(
+  async (): Promise<SavingsAccountOffer[]> => {
   try {
     const auth = await getAuth();
     const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
@@ -501,4 +528,9 @@ export async function getSavingsAccountOffers(): Promise<SavingsAccountOffer[]> 
     console.error('API Error fetching savings account offers:', error);
     return [];
   }
+},
+['savingsAccountOffers', 'sheets'],
+{
+  tags: ['savingsAccountOffers', 'sheets'],
 }
+);

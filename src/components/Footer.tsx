@@ -32,7 +32,6 @@ export function Footer() {
               <ul>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt hipoteczny</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt gotówkowy</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt samochodowy</a></li>
                 <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Kredyt konsolidacyjny</a></li>
               </ul>
             </div>
