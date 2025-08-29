@@ -58,7 +58,7 @@ export default async function Home() {
         promotedConsolidationLoans={promotedConsolidationLoans}
       />
       <AboutSection />
-      <TestimonialsSection />
+      {/* <TestimonialsSection/> */}
       <NewsletterSection />
     </PageWrapper>
   );
