@@ -17,8 +17,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
-  const post = await getPost(slug);
+  const post = await getPost(params.slug);
   if (!post) return {};
 
   return {
@@ -33,8 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PostPage({ params }: Props) {
-  const { slug } = params;
-  const post = await getPost(slug);
+  const post = await getPost(params.slug);
 
   if (!post) {
     return <div>Post not found</div>;
@@ -60,7 +58,7 @@ export default async function PostPage({ params }: Props) {
             </div>
             {post.mainImage && (
               <img
-                src={urlFor(post.mainImage).width(1200).height(630).url()}
+                src={urlFor(post.mainImage).width(1200).url()}
                 alt={post.title}
                 className="w-full h-auto object-cover rounded-lg mt-6"
               />

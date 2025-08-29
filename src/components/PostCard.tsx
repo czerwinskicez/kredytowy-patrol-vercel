@@ -16,12 +16,12 @@ type PostCardProps = {
 
 export function PostCard({ post }: PostCardProps) {
   return (
-    <article className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group md:flex">
+    <article className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group max-w-xl mx-auto lg:max-w-none lg:flex">
       {post.mainImage && (
-        <div className="relative h-48 w-full md:w-1/3 md:h-auto">
+        <div className="relative w-full lg:w-1/3 aspect-[3/2]">
           <Link href={`/finansowa/aktualnosci/${post.slug.current}`} className="block h-full">
             <Image
-              src={urlFor(post.mainImage).width(400).height(400).url()}
+              src={urlFor(post.mainImage).width(400).url()}
               alt={`Obrazek wyróżniający dla posta ${post.title}`}
               fill
               style={{objectFit: "cover"}}
@@ -30,7 +30,7 @@ export function PostCard({ post }: PostCardProps) {
           </Link>
         </div>
       )}
-      <div className="p-6 md:w-2/3 flex flex-col">
+      <div className="p-6 lg:w-2/3 flex flex-col">
         <div className="flex-grow">
           <h2 className="text-2xl font-bold text-gray-800 group-hover:text-[#0a472e] transition-colors duration-300">
             <Link href={`/finansowa/aktualnosci/${post.slug.current}`}>{post.title}</Link>
@@ -41,7 +41,7 @@ export function PostCard({ post }: PostCardProps) {
           </p>
           <p className="mt-4 text-gray-700">{post.excerpt}</p>
         </div>
-        <div className="mt-6 text-center md:text-right">
+        <div className="mt-6 text-center lg:text-right">
           <Link href={`/finansowa/aktualnosci/${post.slug.current}`} className="inline-block bg-[#f0c14b] text-[#0a472e] font-bold py-2 px-6 rounded-lg hover:bg-[#0a472e] hover:text-white transition-colors duration-300">
             Czytaj dalej
           </Link>

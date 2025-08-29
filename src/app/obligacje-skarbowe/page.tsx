@@ -63,7 +63,7 @@ export default async function TreasuryBondsPage() {
         <div className="container mx-auto px-4 py-12 lg:max-w-6xl">
           <div className="text-center mb-12">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-              Obligacje Skarbowe 2025
+              Obligacje Skarbowe - wrzesień 2025
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Porównaj wszystkie dostępne obligacje Skarbu Państwa. Sprawdź oprocentowanie, 
