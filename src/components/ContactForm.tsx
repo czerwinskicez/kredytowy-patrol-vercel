@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Turnstile } from 'next-turnstile';
+// import { Turnstile } from 'next-turnstile';
 
 interface FormData {
   name: string;
@@ -22,7 +22,7 @@ export function ContactForm() {
     message: '',
     consent: false,
   });
-  const [token, setToken] = useState<string>('');
+  // const [token, setToken] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
@@ -73,10 +73,10 @@ export function ContactForm() {
       return;
     }
 
-    if (!token) {
-      setMessage({ type: 'error', text: 'Proszę zweryfikować, że nie jesteś robotem.' });
-      return;
-    }
+    // if (!token) {
+    //   setMessage({ type: 'error', text: 'Proszę zweryfikować, że nie jesteś robotem.' });
+    //   return;
+    // }
 
     setIsSubmitting(true);
     setMessage({ type: 'info', text: 'Wysyłanie wiadomości...' });
@@ -102,7 +102,7 @@ export function ContactForm() {
           message: formData.message.trim(),
           consent: formData.consent,
           clientMetadata,
-          token,
+          // token,
         }),
       });
 
@@ -280,13 +280,13 @@ export function ContactForm() {
             </label>
           </div>
           
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <Turnstile
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
               onVerify={setToken}
               theme="light"
             />
-          </div>
+          </div> */
 
           <div className="text-center">
             <button
