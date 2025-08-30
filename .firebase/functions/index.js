@@ -49,7 +49,7 @@ exports.subscribeNewsletter = onRequest(
             });
           }
 
-          const {email, serviceAccountKey, metadata} = req.body;
+          const {email, name, serviceAccountKey, metadata} = req.body;
 
           // Validate required fields
           if (!email || !serviceAccountKey || !metadata) {
@@ -94,6 +94,7 @@ exports.subscribeNewsletter = onRequest(
           // Add new subscription
           const subscriptionData = {
             email: email.toLowerCase(),
+            name: name ? name.trim() : null,
             subscribed: true,
             metadata: {
               ...metadata,
@@ -287,6 +288,7 @@ exports.onNewsletterCreated = onDocumentCreated({
     const headers = metadata.headers || {};
     const rowData = [
       new Date().toISOString(), // Timestamp
+      data.name || "",
       data.email || "",
       metadata.ip || "",
       metadata.vercelIpCountry || "",

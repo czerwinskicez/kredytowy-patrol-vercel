@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, clientMetadata } = body;
+    const { email, name, clientMetadata } = body;
 
     // Validate email
     if (!email || typeof email !== 'string') {
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         email,
+        name,
         serviceAccountKey,
         metadata
       }),

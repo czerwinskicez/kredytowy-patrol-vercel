@@ -44,6 +44,7 @@ export function NewsletterSection() {
         },
         body: JSON.stringify({ 
           email: email.trim(),
+          name: firstName.trim(),
           clientMetadata 
         }),
       });
