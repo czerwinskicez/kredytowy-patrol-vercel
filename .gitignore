@@ -47,3 +47,5 @@ next-env.d.ts
 public/sw-version.json
 
 /.sanity/node_modules
+/.firebase/node_modules
+**/node_modules
