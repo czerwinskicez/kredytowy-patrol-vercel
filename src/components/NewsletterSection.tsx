@@ -2,12 +2,11 @@
 'use client';
 
 import React, { useState } from 'react';
-// import { Turnstile } from 'next-turnstile';
 
 export function NewsletterSection() {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
-  // const [token, setToken] = useState<string>('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
@@ -28,10 +27,7 @@ export function NewsletterSection() {
       return;
     }
 
-    // if (!token) {
-    //   setMessage({ type: 'error', text: 'Proszę zweryfikować, że nie jesteś robotem.' });
-    //   return;
-    // }
+
 
     setIsSubmitting(true);
     setMessage({ type: 'info', text: 'Zapisywanie do newslettera...' });
@@ -53,7 +49,7 @@ export function NewsletterSection() {
           email: email.trim(),
           name: firstName.trim(),
           clientMetadata,
-          // token,
+
         }),
       });
 
@@ -144,13 +140,7 @@ export function NewsletterSection() {
               required
               disabled={isSubmitting}
             />
-            {/* <div className="flex justify-center my-4">
-              <Turnstile
-                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-                onVerify={setToken}
-                theme="light"
-              />
-            </div> */
+
             <button
               type="submit"
               disabled={isSubmitting}

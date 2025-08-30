@@ -1,25 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import { validateTurnstileToken } from 'next-turnstile';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, subject, message, consent, clientMetadata } = body; // , token
+    const { name, email, phone, subject, message, consent, clientMetadata } = body;
 
-    // Validate Turnstile token
-    // if (!token) {
-    //   return NextResponse.json(
-    //     { success: false, error: 'Weryfikacja Cloudflare Turnstile nie powiodła się.' },
-    //     { status: 400 }
-    //   );
-    // }
-    // const turnstileVerified = await validateTurnstileToken(token);
-    // if (!turnstileVerified.success) {
-    //   return NextResponse.json(
-    //     { success: false, error: 'Weryfikacja Cloudflare Turnstile nie powiodła się.' },
-    //     { status: 401 }
-    //   );
-    // }
+
 
     // Validate required fields
     if (!name || !email || !subject || !message || !consent) {
