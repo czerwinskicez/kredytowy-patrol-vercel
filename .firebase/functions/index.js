@@ -1,8 +1,10 @@
 const {setGlobalOptions} = require("firebase-functions");
 const {onRequest} = require("firebase-functions/v2/https");
+const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 const cors = require("cors");
+const {google} = require("googleapis");
 
 setGlobalOptions({maxInstances: 10});
 
@@ -214,3 +216,166 @@ exports.submitContactForm = onRequest(
         }
       });
     });
+
+// Google Sheets configuration and helpers
+const SPREADSHEET_ID = "1oOlhHgZt03_8z_MVRZTvDGm6dRr82kU-P6ZJDW20q4c";
+
+/**
+ * Get authenticated Google Sheets client using ADC
+ * @return {object} Google Sheets API client
+ */
+function getSheetsClient() {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
+    return google.sheets({version: "v4", auth});
+  } catch (error) {
+    logger.error("Error creating Google Sheets client:", error);
+    throw error;
+  }
+}
+
+/**
+ * Append a row to specific Google Sheets tab
+ * @param {string} sheetName - Name of the sheet tab
+ * @param {Array} values - Array of values to append
+ */
+async function appendRowToSheet(sheetName, values) {
+  try {
+    const sheets = getSheetsClient();
+    const result = await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheetName}!A1`,
+      valueInputOption: "RAW",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: {
+        values: [values],
+      },
+    });
+    logger.info(`Row appended to ${sheetName}`, {
+      range: result.data.updates.updatedRange,
+      rows: result.data.updates.updatedRows,
+    });
+    return result;
+  } catch (error) {
+    logger.error(`Error appending to ${sheetName}:`, error);
+    // Don't throw - let the function continue even if Sheets fails
+    return null;
+  }
+}
+
+// Firestore trigger: Newsletter subscription created
+exports.onNewsletterCreated = onDocumentCreated({
+  document: "newsletter_subscriptions/{docId}",
+  region: "europe-central2",
+}, async (event) => {
+  try {
+    const snapshot = event.data;
+    if (!snapshot) {
+      logger.warn("No data in newsletter document");
+      return;
+    }
+
+    const data = snapshot.data();
+    logger.info("Newsletter subscription trigger fired",
+        {docId: event.params.docId},
+    );
+
+    // Prepare row data for Google Sheets
+    const metadata = data.metadata || {};
+    const headers = metadata.headers || {};
+    const rowData = [
+      new Date().toISOString(), // Timestamp
+      data.email || "",
+      metadata.ip || "",
+      metadata.vercelIpCountry || "",
+      headers["accept-language"] || "",
+      headers.host || "",
+      data.type || "newsletter",
+      "NEW", // Status
+    ];
+
+    // Append to Newsletter sheet
+    const sheetsResult = await appendRowToSheet("Newsletter", rowData);
+
+    // Mark as synced to sheets
+    const updateData = {
+      sheetSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+    if (sheetsResult) {
+      updateData.sheetsSyncSuccess = true;
+    } else {
+      updateData.sheetsSyncSuccess = false;
+    }
+    await snapshot.ref.update(updateData);
+
+    logger.info("Newsletter subscription synced to Google Sheets", {
+      docId: event.params.docId,
+      email: data.email,
+    });
+  } catch (error) {
+    logger.error("Error in onNewsletterCreated:", error);
+    // Don't throw - we don't want to fail the trigger
+  }
+});
+
+// Firestore trigger: Contact form submission created
+exports.onContactCreated = onDocumentCreated({
+  document: "contact_submissions/{docId}",
+  region: "europe-central2",
+}, async (event) => {
+  try {
+    const snapshot = event.data;
+    if (!snapshot) {
+      logger.warn("No data in contact document");
+      return;
+    }
+
+    const data = snapshot.data();
+    logger.info("Contact submission trigger fired",
+        {docId: event.params.docId},
+    );
+
+    // Prepare row data for Google Sheets
+    const metadata = data.metadata || {};
+    const headers = metadata.headers || {};
+    const rowData = [
+      new Date().toISOString(), // Timestamp
+      data.name || "",
+      data.email || "",
+      data.phone || "",
+      data.subject || "",
+      data.message || "",
+      data.consent ? "TRUE" : "FALSE",
+      metadata.ip || "",
+      metadata.vercelIpCountry || "",
+      headers["accept-language"] || "",
+      headers.host || "",
+      data.status || "new",
+    ];
+
+    // Append to Kontakt sheet
+    const sheetsResult = await appendRowToSheet("Kontakt", rowData);
+
+    // Mark as synced to sheets
+    const updateData = {
+      sheetSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+    if (sheetsResult) {
+      updateData.sheetsSyncSuccess = true;
+    } else {
+      updateData.sheetsSyncSuccess = false;
+    }
+    await snapshot.ref.update(updateData);
+
+    logger.info("Contact submission synced to Google Sheets", {
+      docId: event.params.docId,
+      email: data.email,
+      subject: data.subject,
+    });
+  } catch (error) {
+    logger.error("Error in onContactCreated:", error);
+    // Don't throw - we don't want to fail the trigger
+  }
+});

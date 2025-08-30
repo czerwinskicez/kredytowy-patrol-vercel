@@ -32,11 +32,17 @@ npm run dev
 src/
 ├── app/                    # App Router (Next.js 15)
 │   ├── api/               # Endpointy API
+│   │   ├── newsletter/    # Newsletter subscription
+│   │   ├── contact/       # Formularz kontaktowy
+│   │   └── revalidate/    # Cache revalidation
 │   ├── finansowa/         # Blog FinanSowa
 │   ├── kredyty/           # Strony kredytów
 │   ├── lokata/            # Strony lokat
 │   └── [inne-sekcje]/     # Pozostałe sekcje
 ├── components/             # Komponenty React
+│   ├── ContactForm.tsx    # Formularz kontaktowy
+│   ├── NewsletterSection.tsx # Newsletter signup
+│   └── [inne-komponenty]/ # Pozostałe komponenty
 ├── lib/                    # Logika biznesowa
 │   ├── google-sheets.ts   # Integracja z Google Sheets
 │   ├── sanity.ts          # CMS Sanity.io
@@ -52,6 +58,15 @@ src/
 GOOGLE_SHEETS_SPREADSHEET_ID=your_spreadsheet_id
 GOOGLE_SHEETS_CLIENT_EMAIL=your_service_account_email
 GOOGLE_SHEETS_PRIVATE_KEY=your_private_key
+
+# Firebase Backend
+FIREBASE_FUNCTIONS_URL=https://europe-central2-PROJECT-ID.cloudfunctions.net
+FIREBASE_PROJECT_ID=twoj-project-id
+FIREBASE_PRIVATE_KEY_ID=klucz-prywatny-id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@projekt.iam.gserviceaccount.com
+FIREBASE_CLIENT_ID=client-id
+FIREBASE_CLIENT_X509_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/...
+FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n
 
 # Sanity.io CMS
 NEXT_PUBLIC_SANITY_PROJECT_ID=6yfusasm
@@ -71,6 +86,7 @@ NEXT_PUBLIC_CLARITY_PROJECT_ID=your_clarity_id
 - **[Architektura](docs/ARCHITECTURE.md)** - struktura projektu, decyzje technologiczne
 - **[Komponenty](docs/COMPONENTS.md)** - przegląd komponentów React
 - **[Przepływ Danych](docs/DATA_FLOW.md)** - źródła danych i ich przepływ
+- **[Firebase API](docs/FIREBASE.md)** - dokumentacja backendu i API
 - **[Brand Guide](docs/brandguide.md)** - identyfikacja wizualna
 
 ### Optymalizacja i SEO
@@ -126,16 +142,27 @@ npm run lint         # ESLint
 
 ## 🚀 **Deployment**
 
+### Frontend (Vercel)
 - **Platforma**: Vercel
 - **CI/CD**: Automatyczny przy push do `main`
 - **Service Worker**: Automatyczna aktualizacja przy każdym buildzie
 - **Rewalidacja**: On-demand przez `/api/revalidate`
+
+### Backend (Firebase)
+- **Firebase Functions**: region `europe-central2` (Warszawa)
+- **Firestore**: baza danych NoSQL
+- **Security Rules**: dostęp tylko przez Admin SDK
+- **Deploy**: `firebase deploy --only functions`
 
 ## 🔒 **Bezpieczeństwo**
 
 - Pełna zgodność z RODO/GDPR
 - Zgoda na cookies z wyborem
 - Bezpieczne zarządzanie kluczami API
+- Firebase Security Rules
+- Service Account authentication
+- CORS protection
+- Input validation i sanitization
 - Szyfrowanie w transporcie
 
 ## 📞 **Wsparcie**
