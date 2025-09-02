@@ -36,7 +36,7 @@ export default defineType({
       name: 'mainImage',
       title: 'Główne zdjęcie wpisu',
       type: 'image',
-      description: 'Zdjęcie, które będzie wyświetlane na górze artykułu i na liście wpisów. Najważniejszy element wizualny.',
+      description: 'Główne zdjęcie artykułu wyświetlane na górze wpisu i na liście. Jeśli nie zostanie dodany dedykowany obraz OG w sekcji SEO, to zdjęcie będzie użyte do social media.',
       options: {
         hotspot: true,
       },
@@ -98,7 +98,7 @@ export default defineType({
       name: 'seo',
       title: 'Ustawienia SEO (pozycjonowanie w Google)',
       type: 'object',
-      description: 'Te pola mają ogromny wpływ na to, jak Twój artykuł będzie wyglądał w wynikach wyszukiwania Google. Wypełnij je starannie!',
+      description: 'Ustawienia wpływające na wyświetlanie artykułu w wynikach wyszukiwania Google i social media.',
       fields: [
         defineField({
           name: 'metaTitle',
@@ -115,12 +115,24 @@ export default defineType({
           description: 'Ten opis pojawi się pod tytułem w Google. Ma zachęcić do kliknięcia. Optymalna długość to ok. 155 znaków.',
           validation: (Rule) => Rule.max(160).warning('Opis jest za długi! Staraj się nie przekraczać 160 znaków.'),
         }),
+
         defineField({
           name: 'ogImage',
           title: 'Obrazek do social media (Open Graph)',
           type: 'image',
-          description: 'Specjalny obrazek, który pojawi się, gdy ktoś udostępni link do tego artykułu na Facebooku, Twitterze itp. Jeśli go nie ustawisz, użyte zostanie główne zdjęcie wpisu.',
-          options: {hotspot: true},
+          description: 'Wymiary: 1200 × 630 pikseli (proporcja 1.91:1). Obraz wyświetlany przy udostępnianiu artykułu na social media. Jeśli nie zostanie dodany, użyte będzie główne zdjęcie wpisu.',
+          options: {
+            hotspot: true,
+            accept: 'image/*'
+          },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Tekst alternatywny dla OG Image',
+              description: 'Krótki opis obrazka dla social media (opcjonalne, ale zalecane dla dostępności)',
+            }
+          ]
         }),
       ],
     }),

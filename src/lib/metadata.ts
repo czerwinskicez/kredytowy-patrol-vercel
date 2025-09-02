@@ -1,4 +1,7 @@
 import { Metadata } from 'next';
+import imageUrlBuilder from '@sanity/image-url';
+import { client } from '@/lib/sanity';
+import type { SanityImage, Post } from '@/types';
 
 const siteUrl = 'https://www.kredytowypatrol.pl';
 const siteName = 'Kredytowy Patrol';
@@ -182,4 +185,116 @@ export const breadcrumbJsonLd = {
       item: siteUrl,
     },
   ],
-}; 
+};
+
+// Helper functions for OG images
+const builder = imageUrlBuilder(client);
+
+/**
+ * Generates optimized Sanity image URL with proper OG dimensions
+ * ZALECANE WYMIARY: 1200 x 630 pikseli (proporcja 1.91:1)
+ * Te wymiary są optymalne dla Facebook, LinkedIn i większości platform społecznościowych
+ */
+export function getOptimizedOGImageUrl(image: SanityImage): string {
+  if (!image || !image.asset) {
+    console.warn('⚠️ Pusty lub nieprawidłowy obraz przekazany do getOptimizedOGImageUrl');
+    return `${siteUrl}/screenshot_wide.jpg`;
+  }
+
+  try {
+    return builder
+      .image(image)
+      .width(1200)
+      .height(630)
+      .fit('crop') // Zapewnia dokładne wymiary poprzez przycięcie
+      .format('jpg') // JPG dla lepszej kompresji obrazów OG
+      .quality(85) // Dobra jakość z rozsądną kompresją
+      .url();
+  } catch (error) {
+    console.error('❌ Błąd podczas generowania URL obrazu OG:', error);
+    return `${siteUrl}/screenshot_wide.jpg`;
+  }
+}
+
+/**
+ * Validates OG image and provides recommendations for users
+ * UWAGA: Ta funkcja jest używana głównie do debugowania i logowania
+ */
+export function validateOGImage(image: SanityImage, context: string = 'nieznany'): boolean {
+  if (!image || !image.asset) {
+    console.warn(`📝 SANITY OG IMAGE: Brak obrazu OG dla: ${context}`);
+    console.warn('💡 ZALECENIE: Dodaj dedykowany obraz OG o wymiarach 1200x630px w sekcji SEO');
+    return false;
+  }
+
+  // Informacje dla deweloperów o tym że obraz zostanie zoptymalizowany
+  console.log(`✅ SANITY OG IMAGE: Obraz znaleziony dla: ${context}`);
+  console.log('🔧 AUTOMATYCZNA OPTYMALIZACJA: Obraz zostanie przeskalowany do 1200x630px');
+  
+  return true;
+}
+
+/**
+ * Generates metadata for blog posts with proper OG image handling
+ * Preferuje dedykowany obraz OG, fallback na mainImage, a na końcu domyślny obraz
+ */
+export function generatePostMetadata(post: Post): Metadata {
+  const title = post.seo?.metaTitle || post.title;
+  const description = post.seo?.metaDescription || post.excerpt;
+  
+  // Określanie obrazu OG w kolejności priorytetów z walidacją:
+  // 1. Dedykowany obraz OG z Sanity (najwyższy priorytet)
+  // 2. Główny obraz postu (mainImage)
+  // 3. Domyślny obraz strony
+  let ogImageUrl = `${siteUrl}/screenshot_wide.jpg`; // fallback domyślny
+  let imageSource = 'domyślny';
+  
+  if (post.seo?.ogImage && validateOGImage(post.seo.ogImage, `Post: ${post.title} - dedykowany OG image`)) {
+    // Użyj dedykowanego obrazu OG jeśli jest dostępny i prawidłowy
+    ogImageUrl = getOptimizedOGImageUrl(post.seo.ogImage);
+    imageSource = 'dedykowany OG';
+  } else if (post.mainImage && validateOGImage(post.mainImage, `Post: ${post.title} - main image jako fallback`)) {
+    // Fallback na główny obraz postu
+    ogImageUrl = getOptimizedOGImageUrl(post.mainImage);
+    imageSource = 'główny obraz postu';
+  } else {
+    console.warn(`⚠️ Post "${post.title}" nie ma obrazu OG ani głównego obrazu - używam domyślnego`);
+    console.warn('💡 ZALECENIE: Dodaj dedykowany obraz OG (1200x630px) w sekcji SEO w Sanity');
+  }
+  
+  console.log(`🖼️ OG IMAGE dla "${post.title}": używam ${imageSource}`);
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `${siteUrl}/finansowa/aktualnosci/${post.slug.current}`,
+      siteName,
+      locale: 'pl_PL',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${title} - ${siteName}`,
+          type: 'image/jpeg',
+        },
+      ],
+      publishedTime: post.publishedAt,
+      authors: post.author ? [post.author.name] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+      creator: '@kredytowypatrol',
+    },
+    alternates: {
+      canonical: `${siteUrl}/finansowa/aktualnosci/${post.slug.current}`,
+    },
+  };
+} 

@@ -61,7 +61,7 @@ export function DepositCard({ deposit, rank, isPromoted = false }: DepositCardPr
             {/* Combined Info and Details */}
             <div className="md:col-span-10">
               <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                <div className="flex-shrink-0 w-24 h-10 flex items-center justify-center">
+                <div className="flex-shrink-0 w-40 h-16 md:w-24 md:h-10 flex items-center justify-center">
                   <img 
                     src={deposit.logo} 
                     alt={`${deposit.provider} logo`} 
@@ -97,9 +97,14 @@ export function DepositCard({ deposit, rank, isPromoted = false }: DepositCardPr
 
             {/* Action Buttons */}
             <div className="md:col-span-2 flex flex-col items-center md:items-end space-y-2">
-              <button className="w-full md:w-auto bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-6 rounded-lg transition-colors">
+              <a 
+                href={deposit.url !== '/#' ? deposit.url : '#'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full md:w-auto text-center bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
                 Wybierz
-              </button>
+              </a>
               <button 
                 onClick={() => setIsModalOpen(true)}
                 className="w-full md:w-auto text-sm font-semibold text-[#0a472e] hover:underline"

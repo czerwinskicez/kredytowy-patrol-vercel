@@ -40,7 +40,7 @@ export function SavingsAccountCard({ offer, rank, isPromoted = false }: SavingsA
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
             <div className="md:col-span-10">
               <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                <div className="flex-shrink-0 w-24 h-10 flex items-center justify-center">
+                <div className="flex-shrink-0 w-40 h-16 md:w-24 md:h-10 flex items-center justify-center">
                   <img 
                     src={offer.logo} 
                     alt={`${offer.provider} logo`} 

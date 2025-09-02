@@ -71,7 +71,11 @@ export async function getPost(slug: string): Promise<Post> {
     publishedAt,
     excerpt,
     body,
-    seo
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage
+    }
   }`;
   return client.fetch(query, { slug });
 }

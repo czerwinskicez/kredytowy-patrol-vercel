@@ -6,6 +6,7 @@ import { SanityImage } from "@/types";
 import { Metadata } from "next";
 import Link from "next/link";
 import { PageWrapper } from "@/components/PageWrapper";
+import { generatePostMetadata } from "@/lib/metadata";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: SanityImage) {
@@ -20,15 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(params.slug);
   if (!post) return {};
 
-  return {
-    title: post.seo?.metaTitle || post.title,
-    description: post.seo?.metaDescription || post.excerpt,
-    openGraph: {
-      title: post.seo?.metaTitle || post.title,
-      description: post.seo?.metaDescription || post.excerpt,
-      images: post.seo?.ogImage ? [urlFor(post.seo.ogImage).width(1200).height(630).url()] : (post.mainImage ? [urlFor(post.mainImage).width(1200).height(630).url()] : []),
-    },
-  };
+  return generatePostMetadata(post);
 }
 
 export default async function PostPage({ params }: Props) {

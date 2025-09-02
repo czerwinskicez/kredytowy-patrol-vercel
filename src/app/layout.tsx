@@ -62,6 +62,8 @@ export default function RootLayout({
       ${fontSarala.variable}
     `}>
       <head>
+        <meta name="mylead-verification" content="976678ce69b37a1ee1ec89b1b20f7e9d" />
+        {/* mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d */}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
       </head>
       <body className="antialiased font-body">
@@ -74,6 +76,9 @@ export default function RootLayout({
         <PageSpeedOptimizer />
         <VercelAnalytics />
         <VercelSpeedInsights />
+        <>
+        &lt;!-- mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d --&gt;
+        </>
       </body>
     </html>
   );

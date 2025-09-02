@@ -73,7 +73,7 @@ export const getLoanOffers = noStore(
     const headerResponse = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A1:K1`,
+      range: `${sheetName}!A1:M1`,
     });
 
     const headers = headerResponse.data.values?.[0];
@@ -87,7 +87,7 @@ export const getLoanOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'baseInterestRate', 'rrso', 'comission', 'name', 'maxLoanValue', 'maxLoanTime', 'representativeExample'];
+    const requiredColumns = ['provider', 'baseInterestRate', 'rrso', 'comission', 'name', 'maxLoanValue', 'maxLoanTime', 'representativeExample', 'url'];
     for (const col of requiredColumns) {
       if (columnIndex[col] === undefined) {
         console.error(`Missing required column: ${col}`);
@@ -98,7 +98,7 @@ export const getLoanOffers = noStore(
     const response = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A2:K`, 
+      range: `${sheetName}!A2:M`, 
     });
 
     const rows = response.data.values;
@@ -138,6 +138,7 @@ export const getLoanOffers = noStore(
           promoted,
           hidden,
           extraLabel,
+          url: row[columnIndex['url']] || '/#',
         }
       });
     }
@@ -172,7 +173,7 @@ export const getDepositOffers = noStore(
     const headerResponse = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A1:P1`,
+      range: `${sheetName}!A1:R1`,
     });
 
     const headers = headerResponse.data.values?.[0];
@@ -186,7 +187,7 @@ export const getDepositOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'baseInterestRate', 'name', 'minDepositValue', 'maxDepositValue', 'period'];
+    const requiredColumns = ['provider', 'baseInterestRate', 'name', 'minDepositValue', 'maxDepositValue', 'period', 'url'];
     for (const col of requiredColumns) {
       if (columnIndex[col] === undefined) {
         console.error(`Missing required column: ${col}`);
@@ -197,7 +198,7 @@ export const getDepositOffers = noStore(
     const response = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A2:P`, 
+      range: `${sheetName}!A2:R`, 
     });
 
     const rows = response.data.values;
@@ -247,6 +248,7 @@ export const getDepositOffers = noStore(
           logo: logoUrl,
           promoted,
           hidden,
+          url: row[columnIndex['url']] || '/#',
         }
       });
     }

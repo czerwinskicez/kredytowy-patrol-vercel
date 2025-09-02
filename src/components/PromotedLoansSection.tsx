@@ -52,6 +52,7 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
       promoted: offer.promoted || false,
       hidden: offer.hidden || false,
       extraLabel: offer.extraLabel || '',
+      url: offer.url || '/#',
       acceptsBik: true,
       acceptsKrd: false,
       age: { min: 18, max: 80 },

@@ -11,6 +11,7 @@ export type LoanOffer = {
   promoted: boolean;
   hidden: boolean;
   extraLabel: string;
+  url: string;
 };
 
 export type Logo = {
@@ -30,6 +31,7 @@ export type CalculatedLoanOffer = {
   promoted: boolean;
   hidden: boolean;
   extraLabel: string;
+  url: string;
   acceptsBik: boolean;
   acceptsKrd: boolean;
   age: {
@@ -57,6 +59,7 @@ export type DepositOffer = {
   safety: string;
   promoted: boolean;
   hidden: boolean;
+  url: string;
 };
 
 export type CurrencyDepositOffer = {
@@ -99,6 +102,7 @@ export type CalculatedDepositOffer = {
   profit: number;
   promoted: boolean;
   hidden: boolean;
+  url: string;
 };
 
 export type TreasuryBondOffer = {

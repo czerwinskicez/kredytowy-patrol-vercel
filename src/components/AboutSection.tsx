@@ -9,9 +9,9 @@ export function AboutSection() {
         <div className="flex flex-col lg:flex-row items-center mb-16">
           <div className="lg:w-1/3 mb-12 lg:mb-0 flex justify-center">
             <img 
-              src="/trust.jpg" 
+              src="/kredytowy_team.png" 
               alt="Ekspert finansowy analizujący dane" 
-              className="max-w-md w-full h-auto rounded-lg shadow-lg"
+              className="max-w-md w-full h-auto"
               loading="lazy"
             />
           </div>
