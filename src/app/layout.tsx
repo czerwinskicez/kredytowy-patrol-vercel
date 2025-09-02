@@ -89,9 +89,7 @@ export default function RootLayout({
         <PageSpeedOptimizer />
         <VercelAnalytics />
         <VercelSpeedInsights />
-        <>
-        &lt;!-- mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d --&gt;
-        </>
+        <div dangerouslySetInnerHTML={{__html: '<!-- mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d -->'}} />
       </body>
     </html>
   );
