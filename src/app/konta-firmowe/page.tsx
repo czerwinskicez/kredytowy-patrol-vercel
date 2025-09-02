@@ -2,6 +2,7 @@ import { BusinessAccountComparisonSection } from '@/components/BusinessAccountCo
 import { getBusinessAccountOffers } from '@/lib/google-sheets';
 import { Metadata } from 'next';
 import { PageWrapper } from '@/components/PageWrapper';
+import { Faq } from '@/components/Faq';
 
 export const metadata: Metadata = {
   title: 'Najlepsze Konta Firmowe - Ranking i Porównywarka 2024',
@@ -15,6 +16,19 @@ export const metadata: Metadata = {
     canonical: '/konta-firmowe',
   },
 };
+
+const faqItems = [
+    { question: 'Czy muszę mieć „konto firmowe”?', answer: 'Przepisy nie nakazują wprost odrębnego rachunku, ale transakcje B2B > 15 000 zł muszą iść przez rachunek płatniczy; praktycznie oznacza to potrzebę konta w banku.' },
+    { question: 'Czy mogę używać prywatnego konta do firmy (JDG)?', answer: 'Dopuszczalne, ale ryzykowne podatkowo: dla faktur > 15 000 zł płatność musi iść na rachunek z białej listy VAT (jeśli kontrahent jest czynnym VAT-owcem), inaczej grożą sankcje podatkowe.' },
+    { question: 'Co to biała lista VAT i czemu jest ważna?', answer: 'To wykaz rachunków VAT-owców; przy płatnościach > 15 000 zł zapłata na rachunek poza wykazem może pozbawić kosztu podatkowego i włączyć odpowiedzialność solidarną.' },
+    { question: 'Jakie dokumenty do otwarcia konta firmowego?', answer: 'Zwykle: CEIDG/KRS, NIP, REGON (jeśli nadane), dokument tożsamości; spółki cywilne zgłaszają zmiany rachunku w US (NIP-2).' },
+    { question: 'Czym jest mechanizm podzielonej płatności (MPP) i kiedy jest obowiązkowy?', answer: 'Dla faktur > 15 000 zł brutto na towary/usługi z załącznika 15 VAT, płatność musi być w MPP (część na rachunek VAT).' },
+    { question: 'Czy do MPP potrzebny jest specjalny rachunek?', answer: 'Bank otwiera rachunek VAT powiązany z Twoim rachunkiem firmowym; MPP działa tylko przelewem w PLN między podatnikami VAT.' },
+    { question: 'Na jaki rachunek płacę podatki?', answer: 'Na mikrorachunek podatkowy — indywidualny numer do PIT/CIT/VAT.' },
+    { question: 'Jakie opłaty warto sprawdzić w koncie firmowym?', answer: 'Prowadzenie rachunku, przelewy (Elixir/SORBNET/expresy), karta/ATM, wpłaty/wypłaty gotówkowe, konto walutowe, subkonta VAT, integracje księgowe, terminale. (Zakres wg banku).' },
+    { question: 'Czy limit 15 000 zł dotyczy pojedynczej płatności czy całej transakcji?', answer: 'Całej transakcji (bez względu na liczbę płatności).' },
+    { question: 'Co jeśli zapłacę na rachunek spoza białej listy?', answer: 'Możliwe negatywne skutki (PIT/CIT/VAT); można je ograniczyć składając ZAW-NR do US w terminie.' },
+];
 
 export default async function BusinessAccountsPage() {
   const businessAccountOffers = await getBusinessAccountOffers();
@@ -47,7 +61,7 @@ export default async function BusinessAccountsPage() {
           title="Porównaj konta firmowe"
         />
 
-        <div className="mt-12 bg-gray-50 rounded-xl p-6">
+        {/* <div className="mt-12 bg-gray-50 rounded-xl p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Co warto wiedzieć o kontach firmowych?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -70,8 +84,9 @@ export default async function BusinessAccountsPage() {
               </ul>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
+      <Faq title="Najczęściej zadawane pytania o konta firmowe" items={faqItems} />
     </PageWrapper>
   );
 }

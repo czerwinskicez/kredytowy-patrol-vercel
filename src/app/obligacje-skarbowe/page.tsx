@@ -3,6 +3,7 @@ import { TreasuryBondOffers } from '@/components/TreasuryBondOffers';
 import { TreasuryBondOffer } from '@/types';
 import { Metadata } from 'next';
 import { PageWrapper } from '@/components/PageWrapper';
+import { Faq } from '@/components/Faq';
 
 const title = 'Obligacje Skarbowe - Porównaj i Wybierz Najlepsze';
 const description = 'Znajdź najlepsze obligacje skarbowe. Porównaj oprocentowanie OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD. Interaktywny kalkulator zysków.';
@@ -22,6 +23,19 @@ export const metadata: Metadata = {
     canonical: url,
   },
 };
+
+const faqItems = [
+    { question: 'Jakie są rodzaje obligacji detalicznych i od jakiej kwoty?', answer: 'W ofercie są m.in. 3M (OTS), 1Y (ROR), 2Y (DOR), 3Y (TOS), 4Y (COI), 10Y (EDO); kupujesz zwykle od 100 zł. Sprzedaż co miesiąc.' },
+    { question: 'Czym różnią się COI/EDO od TOS/DOR/ROR?', answer: 'COI/EDO są indeksowane inflacją (inflacja + marża od 2. roku), TOS ma stałe oprocentowanie, DOR/ROR — zmienne wg listu emisyjnego.' },
+    { question: 'Jak działa indeksacja inflacyjna?', answer: 'Od 2. roku oprocentowanie to inflacja (CPI) + stała marża; w EDO odsetki kapitalizują się co roku.' },
+    { question: 'Kiedy dostaję odsetki?', answer: 'W EDO przy wykupie (po kapitalizacji rocznej); w COI — co roku; w ROR/DOR — zwykle co miesiąc; w TOS — rocznie.' },
+    { question: 'Czy mogę zakończyć inwestycję wcześniej i ile to kosztuje?', answer: 'Tak — jest opłata za przedterminowy wykup (od 0 zł dla OTS do 3 zł za EDO; COI/ROS 2 zł, DOR 0,70 zł, ROR 0,50 zł za sztukę — aktualne stawki w FAQ MF).' },
+    { question: 'Gdzie i jak kupić obligacje detaliczne?', answer: 'Przez PKO BP (agent emisji) — online, telefonicznie lub w oddziale; sprzedaż prowadzona co miesiąc.' },
+    { question: 'Czy podlegają podatkowi Belki?', answer: 'Tak — 19% od zysków kapitałowych. (Podatek dotyczy m.in. obligacji; pobór zgodnie z ustawą o PIT).' },
+    { question: 'Czy można zamienić jedne obligacje na inne?', answer: 'Tak — zamiana starych serii na nowe jest możliwa wg zasad MF (inne dla OTS vs pozostałych).' },
+    { question: 'Jaka jest minimalna jednostka i cena?', answer: 'Standardowo 100 zł za sztukę (rynek detaliczny).' },
+    { question: 'Jak wybierać serię (horyzont/ryzyko/oprocentowanie)?', answer: 'Krótki horyzont → OTS/ROR/DOR/TOS; dłuższy i ochrona realnej wartości → COI/EDO (inflacja + marża, kapitalizacja). Sprawdź bieżącą ofertę MF.' },
+];
 
 export default async function TreasuryBondsPage() {
   const treasuryBondOffers: TreasuryBondOffer[] = await getTreasuryBondOffers();
@@ -141,6 +155,7 @@ export default async function TreasuryBondsPage() {
             </p>
           </section>
         </div>
+        <Faq title="Najczęściej zadawane pytania o obligacje skarbowe" items={faqItems} />
       </>
     </PageWrapper>
   );
