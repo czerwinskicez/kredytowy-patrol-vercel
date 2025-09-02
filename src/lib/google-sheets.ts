@@ -1,6 +1,6 @@
 import 'server-only';
 import { google } from 'googleapis';
-import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer, SavingsAccountOffer } from '@/types';
+import type { LoanOffer, Logo, DepositOffer, CurrencyDepositOffer, TreasuryBondOffer, SavingsAccountOffer, BusinessAccountOffer } from '@/types';
 import { cache } from 'react';
 import { unstable_cache as noStore } from 'next/cache';
 
@@ -87,12 +87,10 @@ export const getLoanOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'baseInterestRate', 'rrso', 'comission', 'name', 'maxLoanValue', 'maxLoanTime', 'representativeExample', 'url'];
-    for (const col of requiredColumns) {
-      if (columnIndex[col] === undefined) {
-        console.error(`Missing required column: ${col}`);
-        return [];
-      }
+    // Check for essential columns, but don't require all
+    if (columnIndex['provider'] === undefined) {
+      console.error('Missing essential column: provider');
+      return [];
     }
 
     const response = await sheets.spreadsheets.values.get({
@@ -138,7 +136,7 @@ export const getLoanOffers = noStore(
           promoted,
           hidden,
           extraLabel,
-          url: row[columnIndex['url']] || '/#',
+          url: row[columnIndex['url']] || '#',
         }
       });
     }
@@ -187,12 +185,10 @@ export const getDepositOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'baseInterestRate', 'name', 'minDepositValue', 'maxDepositValue', 'period', 'url'];
-    for (const col of requiredColumns) {
-      if (columnIndex[col] === undefined) {
-        console.error(`Missing required column: ${col}`);
-        return [];
-      }
+    // Check for essential columns, but don't require all
+    if (columnIndex['provider'] === undefined) {
+      console.error('Missing essential column: provider');
+      return [];
     }
 
     const response = await sheets.spreadsheets.values.get({
@@ -248,7 +244,7 @@ export const getDepositOffers = noStore(
           logo: logoUrl,
           promoted,
           hidden,
-          url: row[columnIndex['url']] || '/#',
+          url: row[columnIndex['url']] || '#',
         }
       });
     }
@@ -297,12 +293,10 @@ export const getCurrencyDepositOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'currency', 'baseInterestRate', 'name', 'minDepositValue', 'maxDepositValue', 'period', 'capitalization', 'url'];
-    for (const col of requiredColumns) {
-      if (columnIndex[col] === undefined) {
-        console.error(`Missing required column: ${col}`);
-        return [];
-      }
+    // Check for essential columns, but don't require all
+    if (columnIndex['provider'] === undefined) {
+      console.error('Missing essential column: provider');
+      return [];
     }
 
     const response = await sheets.spreadsheets.values.get({
@@ -335,14 +329,14 @@ export const getCurrencyDepositOffers = noStore(
 
         return {
           provider,
-          currency: row[columnIndex['currency']],
+          currency: row[columnIndex['currency']] || 'EUR',
           baseInterestRate: parseNumericValue(row[columnIndex['baseInterestRate']], 0),
           name: row[columnIndex['name']] || '',
           minDepositValue: parseIntValue(row[columnIndex['minDepositValue']], 0),
           maxDepositValue: parseIntValue(row[columnIndex['maxDepositValue']], -1),
           period: parseIntValue(row[columnIndex['period']], 0),
           capitalization: parseIntValue(row[columnIndex['capitalization']], 0),
-          url: row[columnIndex['url']] || '/#',
+          url: row[columnIndex['url']] || '#',
           logo: logoUrl,
           promoted,
           hidden,
@@ -391,12 +385,10 @@ export const getTreasuryBondOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['symbol', 'baseInterestRate', 'Interest_description', 'Interest_description_v2', 'Interest_description_v3', 'capitalization', 'payday', 'url'];
-    for (const col of requiredColumns) {
-      if (columnIndex[col] === undefined) {
-        console.error(`Missing required column: ${col}`);
-        return [];
-      }
+    // Check for essential columns, but don't require all
+    if (columnIndex['symbol'] === undefined) {
+      console.error('Missing essential column: symbol');
+      return [];
     }
 
     const response = await sheets.spreadsheets.values.get({
@@ -423,7 +415,7 @@ export const getTreasuryBondOffers = noStore(
           interestDescriptionV3: row[columnIndex['Interest_description_v3']] || '',
           capitalization: row[columnIndex['capitalization']] || '',
           payday: row[columnIndex['payday']] || '',
-          url: row[columnIndex['url']] || '/#',
+          url: row[columnIndex['url']] || '#',
           promoted: false,
           hidden: false,
         };
@@ -474,12 +466,10 @@ export const getSavingsAccountOffers = noStore(
       columnIndex[header] = index;
     });
 
-    const requiredColumns = ['provider', 'baseInterestRate', 'name', 'maxDepositValue', 'period', 'accNeed', 'url'];
-    for (const col of requiredColumns) {
-      if (columnIndex[col] === undefined) {
-        console.error(`Missing required column: ${col}`);
-        return [];
-      }
+    // Check for essential columns, but don't require all
+    if (columnIndex['provider'] === undefined) {
+      console.error('Missing essential column: provider');
+      return [];
     }
 
     const response = await sheets.spreadsheets.values.get({
@@ -518,7 +508,7 @@ export const getSavingsAccountOffers = noStore(
           maxDepositValue: parseIntValue(row[columnIndex['maxDepositValue']], 0),
           period: parseIntValue(row[columnIndex['period']], 0),
           accNeed: row[columnIndex['accNeed']] === 'tak',
-          url: row[columnIndex['url']] || '/#',
+          url: row[columnIndex['url']] || '#',
           promoted,
           hidden,
         }
@@ -534,5 +524,96 @@ export const getSavingsAccountOffers = noStore(
 ['savingsAccountOffers', 'sheets'],
 {
   tags: ['savingsAccountOffers', 'sheets'],
+}
+);
+
+export const getBusinessAccountOffers = noStore(
+  async (): Promise<BusinessAccountOffer[]> => {
+  try {
+    const auth = await getAuth();
+    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    const sheetName = 'Konta_Firmowe';
+
+    if (!spreadsheetId || !sheetName) {
+      console.error('Spreadsheet ID or Sheet Name is missing.');
+      return [];
+    }
+
+    const logos = await getLogos();
+    const logoMap = new Map(logos.map(logo => [logo.provider, logo.logoURL]));
+
+    const headerResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A1:L1`,
+    });
+
+    const headers = headerResponse.data.values?.[0];
+    if (!headers) {
+      console.error('Sheet headers are missing.');
+      return [];
+    }
+
+    const columnIndex: { [key: string]: number } = {};
+    headers.forEach((header, index) => {
+      columnIndex[header] = index;
+    });
+
+    // Check for essential columns, but don't require all
+    if (columnIndex['provider'] === undefined) {
+      console.error('Missing essential column: provider');
+      return [];
+    }
+
+    const response = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${sheetName}!A2:L`,
+    });
+
+    const rows = response.data.values;
+    if (rows && rows.length) {
+      return rows.map(row => {
+        const provider = row[columnIndex['provider']];
+        const logoUrl = logoMap.get(provider) || '/trust.jpg';
+        
+        const promoted = row[columnIndex['promoted']] === 'TRUE';
+        const hidden = row[columnIndex['hidden']] === 'TRUE';
+        const extraLabel = row[columnIndex['extraLabel']] || '';
+
+        const parseNumericValue = (value: string | undefined, defaultValue: number = 0): number => {
+          if (!value || value === '' || value === undefined) return defaultValue;
+          const cleaned = value.toString().replace(',', '.');
+          const parsed = parseFloat(cleaned);
+          return isNaN(parsed) ? defaultValue : parsed;
+        };
+
+        return {
+          provider: provider,
+          logo: logoUrl,
+          accountFeeMin: parseNumericValue(row[columnIndex['accountFeeMin']], 0),
+          accountFeeMax: parseNumericValue(row[columnIndex['accountFeeMax']], 0),
+          cardFeeMin: parseNumericValue(row[columnIndex['cardFeeMin']], 0),
+          cardFeeMax: parseNumericValue(row[columnIndex['cardFeeMax']], 0),
+          atmWithdrawalMin: parseNumericValue(row[columnIndex['atmWithdrawalMin']], 0),
+          atmWithdrawalMax: parseNumericValue(row[columnIndex['atmWithdrawalMax']], 0),
+          bonus: parseNumericValue(row[columnIndex['bonus']], 0),
+          promoted,
+          hidden,
+          extraLabel,
+          url: row[columnIndex['url']] || '#',
+        }
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.error('API Error fetching business account offers:', error);
+    return [];
+  }
+},
+['businessAccountOffers', 'sheets'],
+{
+  tags: ['businessAccountOffers', 'sheets'],
 }
 );

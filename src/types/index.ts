@@ -142,6 +142,22 @@ export type CalculatedSavingsAccountOffer = SavingsAccountOffer & {
   totalReturn: number;
 };
 
+export type BusinessAccountOffer = {
+  provider: string;
+  logo: string;
+  accountFeeMin: number;
+  accountFeeMax: number;
+  cardFeeMin: number;
+  cardFeeMax: number;
+  atmWithdrawalMin: number;
+  atmWithdrawalMax: number;
+  bonus: number; // bonus in PLN
+  promoted: boolean;
+  hidden: boolean;
+  extraLabel: string;
+  url: string;
+};
+
 // --- Sanity Blog Types ---
 
 export type SanityImage = {

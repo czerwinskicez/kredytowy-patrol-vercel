@@ -31,6 +31,7 @@ Treści na bloga "FinanSowa" są zarządzane za pomocą headless CMS **Sanity.io
 
 ### **Inne Produkty**
 - **`Konto_Oszczędnościowe`** - konta oszczędnościowe
+- **`Konta_Firmowe`** - konta firmowe dla przedsiębiorców
 - **`Obligacje_Skarbowe`** - obligacje skarbowe
 
 ### **Arkusze Pomocnicze**
@@ -67,7 +68,13 @@ Dane są pobierane po stronie serwera za pomocą biblioteki `googleapis`. Głów
 - **Function**: Pobiera oferty kont oszczędnościowych
 - **Enrichment**: Łączy dane z logo
 
-#### **6. `getTreasuryBondOffers()`**
+#### **6. `getBusinessAccountOffers()`**
+- **Sheet**: `Konta_Firmowe`
+- **Function**: Pobiera oferty kont firmowych
+- **Data**: provider, accountFeeMin, accountFeeMax, cardFeeMin, cardFeeMax, atmWithdrawalMin, atmWithdrawalMax, bonus, promoted, hidden, extraLabel, url
+- **Enrichment**: Łączy dane z logo
+
+#### **7. `getTreasuryBondOffers()`**
 - **Sheet**: `Obligacje_Skarbowe`
 - **Function**: Pobiera oferty obligacji skarbowych
 - **Enrichment**: Łączy dane z logo

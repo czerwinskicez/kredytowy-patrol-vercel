@@ -42,7 +42,8 @@ export function Footer() {
                 <li className="mb-2"><a href="/lokata" className="hover:text-[#f0c14b] transition-colors">Lokaty</a></li>
                 <li className="mb-2"><a href="/lokaty-walutowe" className="hover:text-[#f0c14b] transition-colors">Lokaty walutowe</a></li>
                 <li className="mb-2"><a href="/obligacje-skarbowe" className="hover:text-[#f0c14b] transition-colors">Obligacje skarbowe</a></li>
-                <li className="mb-2"><a href="#" className="hover:text-[#f0c14b] transition-colors">Konta oszczędnościowe</a></li>
+                <li className="mb-2"><a href="/konto-oszczednosciowe" className="hover:text-[#f0c14b] transition-colors">Konta oszczędnościowe</a></li>
+                <li className="mb-2"><a href="/konta-firmowe" className="hover:text-[#f0c14b] transition-colors">Konta firmowe</a></li>
               </ul>
             </div>
             <div className="w-1/2 md:w-1/3">

@@ -48,6 +48,7 @@ kredytowy-patrol-vercel/
 │   │   ├── lokata/        # Sekcja lokat PLN
 │   │   ├── lokaty-walutowe/ # Sekcja lokat walutowych
 │   │   ├── konto-oszczednosciowe/ # Konta oszczędnościowe
+│   │   ├── konta-firmowe/     # Konta firmowe
 │   │   ├── obligacje-skarbowe/ # Obligacje skarbowe
 │   │   ├── layout.tsx     # Główny layout aplikacji
 │   │   ├── page.tsx       # Strona główna

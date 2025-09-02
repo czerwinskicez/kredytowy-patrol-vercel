@@ -1,6 +1,5 @@
 import React from 'react';
-import { FaLandmark, FaMoneyBillWave, FaHome, FaPiggyBank, FaChartLine, FaCoins, FaFileAlt } from 'react-icons/fa';
-import { FaRegCreditCard } from 'react-icons/fa6';
+import { FaLandmark, FaMoneyBillWave, FaHome, FaPiggyBank, FaChartLine, FaCoins, FaFileAlt, FaBuilding } from 'react-icons/fa';
 import Link from 'next/link';
 
 const categories = [{
@@ -19,10 +18,10 @@ const categories = [{
   icon: <FaLandmark />,
   href: '/kredyty/konsolidacyjny'
 }, {
-  id: 'creditcards',
-  name: 'Karty kredytowe',
-  icon: <FaRegCreditCard />,
-  href: '#'
+  id: 'business',
+  name: 'Konta firmowe',
+  icon: <FaBuilding />,
+  href: '/konta-firmowe'
 }, {
   id: 'properties',
   name: 'Lokaty',

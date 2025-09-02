@@ -93,6 +93,30 @@ Ten dokument zawiera przegląd kluczowych komponentów w aplikacji Kredytowy Pat
 - **Dane**: Pobiera dane za pomocą `getSavingsAccountOffers`
 - **Funkcje**:
   - Ranking kont według oprocentowania
+
+## 🏢 **Komponenty Kont Firmowych**
+
+### **`BusinessAccountRanking.tsx`**
+- **Opis**: Komponent porównywania kont firmowych
+- **Dane**: Pobiera dane za pomocą `getBusinessAccountOffers`
+- **Funkcje**:
+  - Slidery do wyboru liczby transakcji i wypłat z bankomatów
+  - Kalkulacje miesięcznych kosztów na podstawie użytkowania
+  - Uwzględnienie bonusów za założenie konta
+  - Sortowanie według efektywnego zysku
+
+### **`BusinessAccountCard.tsx`**
+- **Opis**: Komponent wyświetlający pojedynczą ofertę konta firmowego
+- **Funkcje**:
+  - Wyświetlanie opłat za prowadzenie konta, karty i wypłaty
+  - Kalkulacja efektywnego bonusu (bonus minus roczne koszty)
+  - Responsywny design z wyróżnieniem promowanych ofert
+
+### **`BusinessAccountComparisonSection.tsx`**
+- **Opis**: Wrapper dla dynamicznego ładowania rankingu kont firmowych
+- **Funkcje**:
+  - SSR-friendly loading state
+  - Dynamic import dla lepszej wydajności
   - Filtrowanie według warunków
   - Kalkulacje zysków
 

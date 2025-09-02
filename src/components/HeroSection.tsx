@@ -20,7 +20,7 @@ export function HeroSection() {
                 <div className="w-2 h-2 rounded-full bg-[#f0c14b] mr-1"></div>
                 <div className="w-2 h-2 rounded-full bg-[#f0c14b] mr-2"></div>
                 <span className="text-[#f0c14b] text-lg">
-                  Porównywarka kredytów, lokat i kont oszczędnościowych
+                  Porównywarka kredytów, lokat, kont oszczędnościowych i firmowych
                 </span>
               </div>
             </div>
@@ -30,7 +30,7 @@ export function HeroSection() {
               i Oszczędności w Jednym Miejscu
             </h1>
             <p className="text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-8">
-              Skorzystaj z naszej porównywarki kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najwyżej oprocentowane lokaty bankowe i konta oszczędnościowe. Nasz ekspert kredytowy pomoże Ci wybrać najlepszą ofertę i zaoszczędzić pieniądze.
+              Skorzystaj z naszej porównywarki kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najwyżej oprocentowane lokaty bankowe, konta oszczędnościowe i najlepsze konta firmowe. Nasz ekspert finansowy pomoże Ci wybrać najlepszą ofertę i zaoszczędzić pieniądze.
             </p>
           </div>
         </div>
