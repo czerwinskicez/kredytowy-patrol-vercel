@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import type { BusinessAccountOffer } from '@/types';
+import { InfoTooltip } from './InfoTooltip';
+import { BusinessAccountDetailModal } from './BusinessAccountDetailModal';
 
 type BusinessAccountCardProps = {
   account: BusinessAccountOffer;
@@ -10,6 +12,8 @@ type BusinessAccountCardProps = {
 };
 
 export function BusinessAccountCard({ account, rank, isPromoted = false }: BusinessAccountCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   const rankColors: { [key: number]: string } = {
     1: 'bg-[#f0c14b] text-[#0a472e]',
     2: 'bg-gray-300 text-gray-800',
@@ -24,7 +28,7 @@ export function BusinessAccountCard({ account, rank, isPromoted = false }: Busin
   };
 
   const formatBonus = (bonus: number) => {
-    if (bonus === 0) return 'Brak bonusu';
+    if (bonus === 0) return 'Brak';
     return `${bonus.toLocaleString('pl-PL')} zł`;
   };
 
@@ -44,23 +48,23 @@ export function BusinessAccountCard({ account, rank, isPromoted = false }: Busin
         </div>
       )}
 
-      {/* {account.extraLabel && (
+      {account.extraLabel && (
         <div className="absolute -top-3 -right-2 px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-500 text-white shadow-lg z-10 border-2 border-white">
           {account.extraLabel}
         </div>
-      )} */}
+      )}
 
       {/* Bonus badge */}
-      {account.bonus > 0 && (
+      {/* {account.bonus > 0 && (
         <div className="absolute top-4 right-4 flex flex-wrap gap-1">
           <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             Bonus {account.bonus.toLocaleString('pl-PL')} zł
           </span>
         </div>
-      )}
+      )} */}
       
       <div className="p-6 flex-grow">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center min-h-[120px]">
           {/* Bank info and details */}
           <div className="md:col-span-10">
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
@@ -81,28 +85,44 @@ export function BusinessAccountCard({ account, rank, isPromoted = false }: Busin
                   <p className="text-sm text-gray-600">Konto firmowe</p>
                 </div>
                 <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center md:text-left">
-                  <div>
-                    <p className="text-sm text-gray-500" title="Miesięczna opłata za prowadzenie rachunku firmowego">
-                      Prowadzenie konta
-                    </p>
+                  <div className="flex flex-col justify-center">
+                    <div className="text-sm text-gray-500 flex items-center justify-center md:justify-start">
+                      <span>Prowadzenie konta</span>
+                      <InfoTooltip 
+                        content={account.accountFeeTooltip} 
+                        fallback="Miesięczna opłata za prowadzenie rachunku firmowego"
+                      />
+                    </div>
                     <p className="text-lg font-bold text-[#0a472e]">{formatFee(account.accountFeeMin, account.accountFeeMax)}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500" title="Miesięczna opłata za kartę płatniczą do konta firmowego">
-                      Karta płatnicza
-                    </p>
+                  <div className="flex flex-col justify-center">
+                    <div className="text-sm text-gray-500 flex items-center justify-center md:justify-start">
+                      <span>Karta płatnicza</span>
+                      <InfoTooltip 
+                        content={account.cardFeeTooltip} 
+                        fallback="Miesięczna opłata za kartę płatniczą do konta firmowego"
+                      />
+                    </div>
                     <p className="text-lg font-bold text-gray-800">{formatFee(account.cardFeeMin, account.cardFeeMax)}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500" title="Opłata za jedną wypłatę z bankomatu">
-                      Wypłata z bankomatu
-                    </p>
+                  <div className="flex flex-col justify-center">
+                    <div className="text-sm text-gray-500 flex items-center justify-center md:justify-start">
+                      <span>Wypłata z bankomatu</span>
+                      <InfoTooltip 
+                        content={account.atmWithdrawalTooltip} 
+                        fallback="Opłata za jedną wypłatę z bankomatu"
+                      />
+                    </div>
                     <p className="text-lg font-bold text-gray-800">{formatFee(account.atmWithdrawalMin, account.atmWithdrawalMax)}</p>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500" title="Jednorazowy bonus za założenie konta firmowego">
-                      Bonus za założenie
-                    </p>
+                  <div className="flex flex-col justify-center">
+                    <div className="text-sm text-gray-500 flex items-center justify-center md:justify-start">
+                      <span>Bonus za założenie</span>
+                      <InfoTooltip 
+                        content="" 
+                        fallback="Jednorazowy bonus za założenie konta firmowego"
+                      />
+                    </div>
                     <p className="text-lg font-bold text-green-600">{formatBonus(account.bonus)}</p>
                   </div>
                 </div>
@@ -110,19 +130,31 @@ export function BusinessAccountCard({ account, rank, isPromoted = false }: Busin
             </div>
           </div>
           
-          {/* CTA Button */}
-          <div className="md:col-span-2 w-full">
+          {/* Action Buttons */}
+          <div className="md:col-span-2 flex flex-col items-center md:items-end space-y-2">
             <a 
               href={account.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-[#053320] hover:bg-[#0a472e] text-white font-bold py-3 px-6 rounded-lg transition-colors text-center block"
+              className="w-full md:w-auto text-center bg-[#0a472e] hover:bg-[#0c5a3a] text-white font-bold py-3 px-6 rounded-lg transition-colors"
             >
-              Sprawdź ofertę
+              Wybierz
             </a>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="w-full md:w-auto text-sm font-semibold text-[#0a472e] hover:underline"
+            >
+              Szczegóły oferty
+            </button>
           </div>
         </div>
       </div>
+      
+      <BusinessAccountDetailModal
+        account={account}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

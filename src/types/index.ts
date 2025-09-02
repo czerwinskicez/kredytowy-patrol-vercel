@@ -156,6 +156,9 @@ export type BusinessAccountOffer = {
   hidden: boolean;
   extraLabel: string;
   url: string;
+  accountFeeTooltip?: string;
+  cardFeeTooltip?: string;
+  atmWithdrawalTooltip?: string;
 };
 
 // --- Sanity Blog Types ---

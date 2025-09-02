@@ -36,7 +36,7 @@ export default async function BusinessAccountsPage() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-blue-700">
-                <strong>Wskazówka:</strong> Przy wyborze konta firmowego zwróć uwagę nie tylko na miesięczne opłaty, ale także na bonusy za założenie konta oraz koszty transakcji. Nasza porównywarka uwzględnia Twoje przewidywane użytkowanie.
+                <strong>Wskazówka:</strong> Przy wyborze konta firmowego zwróć uwagę nie tylko na miesięczne opłaty, ale głównie na koszty transakcji.
               </p>
             </div>
           </div>

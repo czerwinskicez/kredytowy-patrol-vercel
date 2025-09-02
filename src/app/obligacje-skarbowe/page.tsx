@@ -5,13 +5,13 @@ import { Metadata } from 'next';
 import { PageWrapper } from '@/components/PageWrapper';
 
 const title = 'Obligacje Skarbowe - Porównaj i Wybierz Najlepsze';
-const description = 'Znajdź najlepsze obligacje skarbowe. Porównaj oprocentowanie OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD. Interaktywny symulator zysków.';
+const description = 'Znajdź najlepsze obligacje skarbowe. Porównaj oprocentowanie OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD. Interaktywny kalkulator zysków.';
 const url = "/obligacje-skarbowe";
 
 export const metadata: Metadata = {
   title,
   description,
-  keywords: "obligacje skarbowe, obligacje skarbu państwa, inwestycje, OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD, oprocentowanie obligacji, symulator obligacji, porównanie obligacji, obligacje 2024, bezpieczne inwestycje, oszczędzanie, kapitalizacja odsetek, obligacje długoterminowe, obligacje krótkoterminowe, inflacja plus, obligacje rodzinne",
+  keywords: "obligacje skarbowe, obligacje skarbu państwa, inwestycje, OTS, ROR, DOR, TOS, COI, EDO, ROS, ROD, oprocentowanie obligacji, symulator obligacji, kalkulator obligacji, porównanie obligacji, obligacje 2024, bezpieczne inwestycje, oszczędzanie, kapitalizacja odsetek, obligacje długoterminowe, obligacje krótkoterminowe, inflacja plus, obligacje rodzinne",
   openGraph: {
     title,
     description,
@@ -71,11 +71,11 @@ export default async function TreasuryBondsPage() {
             </p>
           </div>
 
-          {/* Zunifikowany komponent obligacji z symulatoremo i przełączaniem widoku */}
+          {/* Zunifikowany komponent obligacji z kalkulatorem i przełączaniem widoku */}
           <section>
             <TreasuryBondOffers 
               initialBondOffers={treasuryBondOffers}
-              title="Symulator Obligacji Skarbowych"
+              title="Kalkulator Obligacji Skarbowych"
             />
           </section>
 
@@ -95,7 +95,7 @@ export default async function TreasuryBondsPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Ochrona przed inflacją</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   Obligacje COI, EDO, ROS i ROD to obligacje inflacyjne - ich oprocentowanie jest powiązane z inflacją. 
-                  W naszym symulatorze możesz ustawić oczekiwaną inflację, aby zobaczyć jak wpłynie ona na rzeczywistą rentowność tych inwestycji.
+                  W naszym kalkulatorze możesz ustawić oczekiwaną inflację, aby zobaczyć jak wpłynie ona na rzeczywistą rentowność tych inwestycji.
                 </p>
               </div>
               <div>

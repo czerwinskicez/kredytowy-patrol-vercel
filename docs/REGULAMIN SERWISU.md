@@ -134,5 +134,5 @@
 
 7. Niniejszy Regulamin jest dostępny nieodpłatnie na stronie internetowej Serwisu (w formie umożliwiającej jego pobranie, utrwalenie i wydrukowanie).
 
-8. Regulamin wchodzi w życie z dniem **[●]** (dniem opublikowania na stronie Serwisu).  
+8. Regulamin wchodzi w życie z dniem 04.09.2025.  
    

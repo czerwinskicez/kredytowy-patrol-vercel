@@ -545,7 +545,7 @@ export const getBusinessAccountOffers = noStore(
     const headerResponse = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A1:L1`,
+      range: `${sheetName}!A1:O1`,
     });
 
     const headers = headerResponse.data.values?.[0];
@@ -568,7 +568,7 @@ export const getBusinessAccountOffers = noStore(
     const response = await sheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
-      range: `${sheetName}!A2:L`,
+      range: `${sheetName}!A2:O`,
     });
 
     const rows = response.data.values;
@@ -602,6 +602,9 @@ export const getBusinessAccountOffers = noStore(
           hidden,
           extraLabel,
           url: row[columnIndex['url']] || '#',
+          accountFeeTooltip: row[columnIndex['accountFeeTooltip']] || undefined,
+          cardFeeTooltip: row[columnIndex['cardFeeTooltip']] || undefined,
+          atmWithdrawalTooltip: row[columnIndex['atmWithdrawalTooltip']] || undefined,
         }
       });
     }
