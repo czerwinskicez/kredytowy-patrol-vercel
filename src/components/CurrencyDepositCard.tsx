@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 import type { CalculatedCurrencyDepositOffer } from '@/types';
 
 type CurrencyDepositCardProps = {
@@ -61,10 +62,14 @@ export function CurrencyDepositCard({ deposit, rank, isPromoted = false }: Curre
           <div className="md:col-span-10">
             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
               <div className="flex-shrink-0 w-40 h-16 md:w-24 md:h-10 flex items-center justify-center">
-                <img 
+                <Image 
                   src={deposit.logo} 
                   alt={`${deposit.provider} logo`} 
+                  width={160}
+                  height={64}
+                  priority={false}
                   className="max-h-full max-w-full object-contain"
+                  sizes="(max-width: 768px) 160px, 96px"
                 />
               </div>
               <div className="w-full">

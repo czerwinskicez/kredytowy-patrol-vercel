@@ -17,9 +17,36 @@
   }
 } */
 
+/* Footer stability to prevent CLS */
+footer {
+  position: relative;
+  margin-top: auto;
+  min-height: 300px; /* Reserve space for footer */
+  width: 100%;
+}
+
+/* Ensure main content doesn't cause footer shift */
+main {
+  flex-grow: 1;
+  min-height: calc(100vh - 400px); /* Account for header + footer */
+}
+
+/* Prevent image loading from affecting footer position */
+.flex.flex-col.min-h-screen {
+  position: relative;
+}
+
+/* Additional CLS prevention */
+img[data-nimg] {
+  display: block;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 html{

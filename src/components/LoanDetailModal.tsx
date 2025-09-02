@@ -39,7 +39,7 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
         <div className="text-center mb-6">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#0a472e] mb-4">{loan.provider}</h2>
           <div className="flex justify-center mb-4">
-            <img src={loan.logo} alt={`${loan.provider} logo`} className="h-12 sm:h-16 md:h-20 object-contain" />
+            <img src={loan.logo} alt={`${loan.provider} logo`} width={160} height={64} loading="lazy" className="h-12 sm:h-16 md:h-20 object-contain" />
           </div>
           <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium">{loan.name}</p>
         </div>

@@ -34,7 +34,7 @@ export function AnalyticsScripts() {
 
       {/* Microsoft Clarity */}
       {ANALYTICS_CONFIG.CLARITY_PROJECT_ID && (
-        <Script id="microsoft-clarity" strategy="afterInteractive">
+        <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -48,7 +48,7 @@ export function AnalyticsScripts() {
       {/* Facebook Pixel Base Code */}
       {ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID && (
         <>
-          <Script id="facebook-pixel" strategy="afterInteractive">
+          <Script id="facebook-pixel" strategy="lazyOnload">
             {`
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -74,7 +74,7 @@ export function AnalyticsScripts() {
       )}
 
       {/* --- OW Analytics Status Function --- */}
-      <Script id="ow-analytics-status" strategy="afterInteractive">
+      <Script id="ow-analytics-status" strategy="lazyOnload">
         {`
           (function() {
             window.ow = window.ow || {};

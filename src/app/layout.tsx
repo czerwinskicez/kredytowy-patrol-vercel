@@ -15,6 +15,8 @@ import { PageSpeedOptimizer } from '@/components/PageSpeedOptimizer';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 import { SpeedInsights as VercelSpeedInsights} from '@vercel/speed-insights/next'
 import { baseMetadata } from '@/lib/metadata';
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 // const fontHeading = Poppins({
 //   subsets: ['latin'],
@@ -64,12 +66,23 @@ export default function RootLayout({
       <head>
         <meta name="mylead-verification" content="976678ce69b37a1ee1ec89b1b20f7e9d" />
         {/* mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
+        <link rel="preconnect" href="https://scripts.clarity.ms" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
       </head>
       <body className="antialiased font-body">
         <ConsentProvider>
-          {children}
-          <CookieBanner />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+            <CookieBanner />
+          </div>
+          <VercelAnalytics/>
         </ConsentProvider>
         <AnalyticsScripts />
         <StructuredData />

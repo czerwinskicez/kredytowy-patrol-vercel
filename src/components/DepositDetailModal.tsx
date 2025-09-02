@@ -32,7 +32,7 @@ export function DepositDetailModal({ isOpen, onClose, deposit }: DepositDetailMo
         </button>
 
         <div className="flex items-center mb-6">
-          <img src={deposit.logo} alt={`${deposit.provider} logo`} className="h-12 mr-6" />
+          <img src={deposit.logo} alt={`${deposit.provider} logo`} width={160} height={64} loading="lazy" className="h-12 mr-6" />
           <div>
             <h2 className="text-2xl font-bold text-gray-800">{deposit.provider}</h2>
             <p className="text-md text-gray-600">{deposit.name}</p>

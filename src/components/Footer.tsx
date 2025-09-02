@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import React from 'react';
 import { useConsent } from '@/contexts/ConsentContext';
 
@@ -14,7 +15,7 @@ export function Footer() {
           {/* Logo i opis */}
           <div className="w-full md:w-1/3 mb-8 md:mb-0">
             <div className="flex items-center mb-4">
-              <img src="/logo_male.png" alt="Logo" className="h-12 mr-3" />
+              <Image src="/logo_male.png" alt="Logo" width={48} height={48} priority className="h-12 mr-3" />
               <span className="text-lg font-semibold">
                 <span className="text-white">Kredytowy</span>
                 <span className="text-[#f0c14b]"> Patrol</span>

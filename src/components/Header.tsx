@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const dropdowns = [
   {
@@ -80,7 +81,7 @@ export function Header() {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <img src="/logo_male.png" alt="Logo" className="h-12 mr-3" />
+            <Image src="/logo_male.png" alt="Logo" width={48} height={48} priority className="h-12 mr-3" />
             <span className="text-lg font-semibold font-sarala">
               <span className="text-white">Kredytowy</span>
               <span className="text-[#f0c14b]"> Patrol</span>
