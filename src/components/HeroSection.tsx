@@ -25,9 +25,9 @@ export function HeroSection() {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Znajdź Najlepszy Kredyt
+              Porównaj Oferty Kredytów:
               <br />
-              i Oszczędności w Jednym Miejscu
+              Niska Rata, RRSO i Prowizja
             </h1>
             <p className="text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-8">
               Skorzystaj z naszej porównywarki kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najwyżej oprocentowane lokaty bankowe, konta oszczędnościowe i najlepsze konta firmowe. Nasz ekspert finansowy pomoże Ci wybrać najlepszą ofertę i zaoszczędzić pieniądze.

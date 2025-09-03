@@ -5,12 +5,12 @@ import type { SanityImage, Post } from '@/types';
 
 const siteUrl = 'https://www.kredytowypatrol.pl';
 const siteName = 'Kredytowy Patrol';
-const siteDescription = 'Kredytowy Patrol to Twoja niezależna porównywarka finansowa. Znajdź i porównaj najlepsze oferty kredytów hipotecznych, gotówkowych, konsolidacyjnych i samochodowych. Sprawdź aktualne rankingi lokat bankowych, kont oszczędnościowych i kart kredytowych. Użyj naszych kalkulatorów, aby wybrać najkorzystniejszą ofertę. Kredytowy Patrol - Twój ekspert i przewodnik po świecie finansów w Polsce.';
+const siteDescription = 'Porównaj oferty kredytów z niskim RRSO i prowizją. Oblicz miesięczną ratę i całkowitą kwotę. Sprawdź promowane lokaty i konta. Kredytowy Patrol.';
 
 export const baseMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `Porównywarka Kredytów, Lokat i Kont Oszczędnościowych | ${siteName}`,
+    default: `Porównywarka Kredytów, Lokat, Kont | ${siteName}`,
     template: `%s | ${siteName}`,
   },
   description: siteDescription,

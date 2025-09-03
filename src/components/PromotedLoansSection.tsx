@@ -92,7 +92,7 @@ const PromotedLoansSection: React.FC<PromotedLoansSectionProps> = ({
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl">
-            Ranking Kredytów i Pożyczek
+            Promowane Oferty i Ranking Kredytów
           </h2>
           <p className="mt-4 text-base font-normal leading-7 text-gray-600 sm:mt-6">
             Sprawdź nasz ranking kredytów gotówkowych, hipotecznych i konsolidacyjnych. Znajdź najlepszą ofertę dopasowaną do swoich potrzeb.
