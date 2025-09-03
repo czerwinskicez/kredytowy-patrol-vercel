@@ -58,41 +58,6 @@ const mapToGoogleConsent = (consentSettings: ConsentSettings): GoogleConsentSett
   security_storage: 'granted',
 });
 
-// Google Tag Manager
-export const initializeGTM = (consentSettings: ConsentSettings) => {
-  if (!ANALYTICS_CONFIG.GTM_CONTAINER_ID || typeof window === 'undefined') return;
-
-  safelyExecute(() => {
-    // Initialize dataLayer for GTM
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function() {
-      window.dataLayer?.push(arguments);
-    };
-    
-    // Set default consent state for GTM
-    const googleConsentSettings: GoogleConsentSettings = mapToGoogleConsent(consentSettings);
-    window.gtag('consent', 'default', googleConsentSettings);
-    
-    logAnalyticsEvent('GTM', 'Default consent set', googleConsentSettings);
-
-    // Initialize GTM
-    window.dataLayer.push({
-      'gtm.start': new Date().getTime(),
-      event: 'gtm.js'
-    });
-
-    // Load GTM script
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${ANALYTICS_CONFIG.GTM_CONTAINER_ID}`;
-    script.onload = () => logAnalyticsEvent('GTM', 'Loaded successfully');
-    script.onerror = () => console.error('❌ Failed to load GTM');
-    document.head.appendChild(script);
-    
-    logAnalyticsEvent('GTM', 'Initialized', { containerId: ANALYTICS_CONFIG.GTM_CONTAINER_ID });
-  }, 'GTM initialization');
-};
-
 // Update GTM consent
 export const updateGTMConsent = (consentSettings: ConsentSettings) => {
   if (typeof window === 'undefined' || !window.dataLayer) return;
@@ -125,80 +90,6 @@ export const updateGoogleConsent = (consentSettings: ConsentSettings) => {
       logAnalyticsEvent('GA4', 'Consent updated via GTM', googleConsentSettings);
     }, 'GA4 consent update');
   }
-};
-
-// Facebook Pixel
-export const initializeFacebookPixel = (consentSettings: ConsentSettings) => {
-  if (!ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID || typeof window === 'undefined' || !consentSettings.marketing) return;
-
-  safelyExecute(() => {
-    window.fbq = function() {
-      if (window.fbq?.callMethod) {
-        window.fbq.callMethod.apply(window.fbq, arguments);
-      } else {
-        window.fbq.queue = window.fbq.queue || [];
-        window.fbq.queue.push(arguments);
-      }
-    };
-
-    if (!window._fbq) window._fbq = window.fbq;
-    window.fbq.push = window.fbq;
-    window.fbq.loaded = true;
-    window.fbq.version = '2.0';
-    window.fbq.queue = [];
-
-    window.fbq('init', ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID);
-    window.fbq('track', 'PageView');
-    
-    logAnalyticsEvent('Facebook Pixel', 'Initialized', { pixelId: ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID });
-  }, 'Facebook Pixel initialization');
-};
-
-// Cloudflare Web Analytics
-export const initializeCloudflareAnalytics = () => {
-  if (!ANALYTICS_CONFIG.CLOUDFLARE_TOKEN || typeof window === 'undefined') return;
-
-  safelyExecute(() => {
-    const script = document.createElement('script');
-    script.defer = true;
-    script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-    script.setAttribute('data-cf-beacon', `{"token": "${ANALYTICS_CONFIG.CLOUDFLARE_TOKEN}"}`);
-    script.onload = () => logAnalyticsEvent('Cloudflare', 'Loaded successfully');
-    script.onerror = () => console.error('❌ Failed to load Cloudflare Analytics');
-    document.head.appendChild(script);
-    
-    logAnalyticsEvent('Cloudflare', 'Initialized', { token: ANALYTICS_CONFIG.CLOUDFLARE_TOKEN });
-  }, 'Cloudflare Analytics initialization');
-};
-
-// Microsoft Clarity
-export const initializeClarity = () => {
-  if (!ANALYTICS_CONFIG.CLARITY_PROJECT_ID || typeof window === 'undefined') return;
-
-  safelyExecute(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (function(c: any, l: Document, a: string, r: string, i: string, t?: HTMLScriptElement, y?: Element) {
-      c[a] = c[a] || function() { (c[a].q = c[a].q || []).push(arguments); };
-      t = l.createElement(r) as HTMLScriptElement;
-      t.async = true;
-      t.src = "https://www.clarity.ms/tag/" + i;
-      t.onload = () => logAnalyticsEvent('Clarity', 'Loaded successfully');
-      t.onerror = () => console.error('❌ Failed to load Microsoft Clarity');
-      y = l.getElementsByTagName(r)[0];
-      if (y && y.parentNode) {
-        y.parentNode.insertBefore(t, y);
-      }
-    })(window, document, "clarity", "script", ANALYTICS_CONFIG.CLARITY_PROJECT_ID);
-    
-    logAnalyticsEvent('Clarity', 'Initialized', { projectId: ANALYTICS_CONFIG.CLARITY_PROJECT_ID });
-  }, 'Clarity initialization');
-};
-
-// Vercel Analytics - handled by @vercel/analytics package
-export const initializeVercelAnalytics = () => {
-  // Vercel Analytics is handled by the @vercel/analytics package
-  // No manual initialization needed
-  logAnalyticsEvent('Vercel', 'Initialized via @vercel/analytics package');
 };
 
 // Enhanced tracking functions with validation
@@ -264,48 +155,6 @@ export const trackPageView = (url: string, title?: string) => {
       logAnalyticsEvent('Facebook Pixel', 'PageView', pageData);
     }
   }, 'Page view tracking');
-};
-
-// Initialize all analytics based on consent
-export const initializeAnalytics = (consentSettings: ConsentSettings) => {
-  if (typeof window === 'undefined') return;
-
-  const startTime = performance.now();
-  
-  logAnalyticsEvent('Analytics', 'Initialization started', consentSettings);
-
-  // Always initialize Cloudflare (minimal privacy impact)
-  initializeCloudflareAnalytics();
-  
-  // Always initialize Clarity (first-party, privacy-friendly)
-  if (consentSettings.analytics) {
-    initializeClarity();
-  }
-  
-  // Vercel Analytics is handled by @vercel/analytics package
-  initializeVercelAnalytics();
-
-  // Initialize GTM if available
-  if (ANALYTICS_CONFIG.GTM_CONTAINER_ID) {
-    initializeGTM(consentSettings);
-  }
-
-  // Initialize Facebook Pixel only if marketing consent is given
-  if (consentSettings.marketing) {
-    initializeFacebookPixel(consentSettings);
-  }
-  
-  const endTime = performance.now();
-  logAnalyticsEvent('Analytics', 'Initialization completed', {
-    duration: `${(endTime - startTime).toFixed(2)}ms`,
-    enabledServices: {
-      gtm: !!ANALYTICS_CONFIG.GTM_CONTAINER_ID,
-      ga4: !!ANALYTICS_CONFIG.GA_MEASUREMENT_ID,
-      clarity: !!ANALYTICS_CONFIG.CLARITY_PROJECT_ID && consentSettings.analytics,
-      facebook: !!ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID && consentSettings.marketing,
-      cloudflare: !!ANALYTICS_CONFIG.CLOUDFLARE_TOKEN,
-    }
-  });
 };
 
 // Standardized financial tracking events

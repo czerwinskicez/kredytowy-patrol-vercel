@@ -9,7 +9,7 @@ import {
 import "./globals.css";
 import { ConsentProvider } from '@/contexts/ConsentContext';
 import { CookieBanner } from '@/components/CookieBanner';
-import { AnalyticsScripts } from '@/components/AnalyticsScripts';
+import { ConditionalAnalyticsScripts } from '@/components/ConditionalAnalyticsScripts';
 import { StructuredData } from '@/components/StructuredData';
 import { PageSpeedOptimizer } from '@/components/PageSpeedOptimizer';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
@@ -71,6 +71,28 @@ export default function RootLayout({
         <link rel="preconnect" href="https://scripts.clarity.ms" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@40,200,0,0" />
+        
+        {/* Google Consent Mode v2 - MUST be before any analytics scripts */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              
+              // Set default consent state BEFORE any analytics load
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied', 
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied',
+                'functionality_storage': 'denied',
+                'personalization_storage': 'denied',
+                'security_storage': 'granted',
+                'wait_for_update': 500
+              });
+            `,
+          }}
+        />
       </head>
       <body className="antialiased font-body">
         <ConsentProvider>
@@ -82,12 +104,12 @@ export default function RootLayout({
             <Footer />
             <CookieBanner />
           </div>
-          <VercelAnalytics/>
+          <ConditionalAnalyticsScripts />
         </ConsentProvider>
-        <AnalyticsScripts />
+        {/* Vercel Analytics - First-party, privacy-compliant, no consent required */}
+        <VercelAnalytics />
         <StructuredData />
         <PageSpeedOptimizer />
-        <VercelAnalytics />
         <VercelSpeedInsights />
         <div dangerouslySetInnerHTML={{__html: '<!-- mylead-verification: 976678ce69b37a1ee1ec89b1b20f7e9d -->'}} />
       </body>

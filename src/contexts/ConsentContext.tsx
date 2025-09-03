@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ConsentSettings, ConsentContextType, CookieConsentData } from '@/types/analytics';
-import { initializeAnalytics, updateGoogleConsent, enableAnalyticsDebugger } from '@/lib/analytics';
+import { updateGoogleConsent, enableAnalyticsDebugger } from '@/lib/analytics';
 
 const CONSENT_VERSION = '1.0';
 const CONSENT_STORAGE_KEY = 'cookie-consent';
@@ -46,14 +46,17 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
                         Date.now() - consentData.timestamp < 365 * 24 * 60 * 60 * 1000; // 1 year
         
         if (isValid) {
+          // 1. Update the Google Consent state with the user's saved choice
+          updateGoogleConsent(consentData.consent);
+
+          // 2. Set the local React state which will trigger ConditionalAnalyticsScripts
           setConsent(consentData.consent);
           setHasConsent(true);
-          // Initialize analytics with saved consent
-          setTimeout(() => initializeAnalytics(consentData.consent), 100);
         } else {
           // Remove expired consent
           localStorage.removeItem(CONSENT_STORAGE_KEY);
           setShowBanner(true);
+          // The default 'denied' state from layout.tsx <head> script applies here
         }
       } catch (error) {
         console.error('Error parsing consent data:', error);
@@ -62,6 +65,7 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       }
     } else {
       setShowBanner(true);
+      // The default 'denied' state from layout.tsx <head> script applies for new users
     }
 
     // --- OW Analytics Consent Function ---
@@ -112,12 +116,6 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
     
     // Update analytics with new consent
     updateGoogleConsent(newConsent);
-    
-    // If analytics or marketing was just enabled, initialize those services
-    if (newConsent.analytics || newConsent.marketing) {
-      // Small delay to ensure DOM is ready
-      setTimeout(() => initializeAnalytics(newConsent), 100);
-    }
     
     // Log consent changes in development
     if (process.env.NODE_ENV === 'development') {
