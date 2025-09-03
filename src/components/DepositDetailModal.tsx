@@ -119,9 +119,14 @@ export function DepositDetailModal({ isOpen, onClose, deposit }: DepositDetailMo
         </div>
         
         <div className="mt-8 text-right">
-            <button className="bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-3 px-8 rounded-lg transition-colors">
+            <a 
+              href={deposit.url !== '/#' ? deposit.url : '#'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-3 px-8 rounded-lg transition-colors"
+            >
               Przejdź do oferty
-            </button>
+            </a>
         </div>
       </div>
     </div>

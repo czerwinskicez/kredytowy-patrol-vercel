@@ -34,15 +34,9 @@ function onEdit(e) {
       return;
     }
     
-    var url = 'https://kredytowypatrol.pl/api/revalidate?secret=' + secret;
-    var payload = { 'sheetName': sheetName };
-    var options = {
-      'method': 'post',
-      'contentType': 'application/json',
-      'payload': JSON.stringify(payload)
-    };
-
-    UrlFetchApp.fetch(url, options);
+    var url = 'https://kredytowypatrol.pl/api/revalidate?secret=' + secret + '&sheetName=' + encodeURIComponent(sheetName);
+    
+    UrlFetchApp.fetch(url);
     Logger.log('Successfully sent revalidation request for sheet: ' + sheetName);
     // Zapisz czas ostatniego udanego wysłania, aby throttling mógł działać
     scriptProperties.setProperty('lastOnEditExecutionTime', now.toString());
@@ -69,16 +63,10 @@ function onManualRefresh() {
     return;
   }
 
-  var url = 'https://kredytowypatrol.pl/api/revalidate?secret=' + secret;
-  var payload = { 'sheetName': 'ALL' };
-  var options = {
-    'method': 'post',
-    'contentType': 'application/json',
-    'payload': JSON.stringify(payload)
-  };
+  var url = 'https://kredytowypatrol.pl/api/revalidate?secret=' + secret + '&sheetName=ALL';
   
   try {
-    UrlFetchApp.fetch(url, options);
+    UrlFetchApp.fetch(url);
     Logger.log('Successfully sent manual refresh request for all pages');
     SpreadsheetApp.getActiveSpreadsheet().toast('Wszystkie strony zostały odświeżone!', 'Sukces', 3);
   } catch (error) {

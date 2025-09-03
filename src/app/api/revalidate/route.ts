@@ -2,15 +2,19 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
 /**
- * Endpoint do rewalidacji treści z Sanity.
- * Wywoływany przez webhook z Sanity za pomocą metody GET.
- * Autoryzacja odbywa się przez parametry `secret` i `tag` w URL.
- * Przykład: /api/revalidate?tag=sanity&secret=...
+ * Endpoint do rewalidacji treści.
+ * Obsługuje zarówno Sanity.io (tag=sanity) jak i Google Sheets (sheetName parameter).
+ * Autoryzacja odbywa się przez parametry `secret` i `tag`/`sheetName` w URL.
+ * Przykłady: 
+ * - Sanity: /api/revalidate?tag=sanity&secret=...
+ * - Google Sheets: /api/revalidate?sheetName=Kredyt_Gotówkowy&secret=...
  */
 export async function GET(req: NextRequest) {
   const secret = req.nextUrl.searchParams.get('secret')
   const tag = req.nextUrl.searchParams.get('tag')
+  const sheetName = req.nextUrl.searchParams.get('sheetName')
 
+  // Obsługa Sanity.io webhook
   if (tag === 'sanity' && secret === process.env.SANITY_REVALIDATE_SECRET) {
     try {
       console.log("Revalidating 'sanity' tag based on GET request.")
@@ -22,27 +26,9 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ message: 'Invalid secret or tag for GET request' }, { status: 401 })
-}
-
-
-/**
- * Endpoint do rewalidacji treści z Google Sheets.
- * Wywoływany przez Google Apps Script za pomocą metody POST.
- * Autoryzacja odbywa się przez parametr `secret` w URL.
- * W ciele (`body`) żądania przekazywana jest nazwa edytowanego arkusza.
- */
-export async function POST(req: NextRequest) {
-  const secret = req.nextUrl.searchParams.get('secret')
-
-  if (secret === process.env.REVALIDATE_SECRET) {
+  // Obsługa Google Sheets webhook
+  if (sheetName && secret === process.env.REVALIDATE_SECRET) {
     try {
-      const body = await req.json()
-      const { sheetName } = body
-      if (!sheetName) {
-        return NextResponse.json({ message: 'Sheet name is required' }, { status: 400 })
-      }
-
       console.log(`Revalidation request from Google Sheets for: ${sheetName}`);
 
       const editedSheetToSlug: { [key: string]: string } = {
@@ -70,11 +56,13 @@ export async function POST(req: NextRequest) {
           revalidatePath(`/${sheetName.toLowerCase()}`);
         }
       }
-      return NextResponse.json({ revalidated: true, source: 'Google Sheets', now: Date.now() });
+      return NextResponse.json({ revalidated: true, source: 'Google Sheets (via GET)', now: Date.now() });
     } catch (err: any) {
       return NextResponse.json({ message: 'Error revalidating from Google Sheets', error: err.message }, { status: 500 });
     }
   }
 
-  return NextResponse.json({ message: 'Invalid secret for POST request' }, { status: 401 })
-} 
+  return NextResponse.json({ message: 'Invalid secret, tag, or sheetName for GET request' }, { status: 401 })
+}
+
+ 

@@ -103,9 +103,14 @@ export function LoanDetailModal({ isOpen, onClose, loan }: LoanDetailModalProps)
         </div>
 
         <div className="mt-6 sm:mt-8 text-center sm:text-right">
-          <button className="w-full sm:w-auto bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base">
+          <a 
+            href={loan.url !== '/#' ? loan.url : '#'} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block w-full sm:w-auto bg-[#f0c14b] hover:bg-[#e0b03b] text-[#0a472e] font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-lg transition-colors text-sm sm:text-base text-center"
+          >
             Przejdź do oferty
-          </button>
+          </a>
         </div>
       </div>
     </div>
