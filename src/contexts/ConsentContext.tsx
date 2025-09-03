@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { ConsentSettings, ConsentContextType, CookieConsentData } from '@/types/analytics';
-import { updateGoogleConsent, enableAnalyticsDebugger } from '@/lib/analytics';
+import { enableAnalyticsDebugger } from '@/lib/analytics';
 
 const CONSENT_VERSION = '1.0';
 const CONSENT_STORAGE_KEY = 'cookie-consent';
@@ -32,41 +32,52 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
     }
   }, []);
 
-  // Load consent from localStorage on mount
+  // Sync with centralized consent manager
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const savedConsent = localStorage.getItem(CONSENT_STORAGE_KEY);
-    if (savedConsent) {
-      try {
-        const consentData: CookieConsentData = JSON.parse(savedConsent);
+    // Check if consent manager is ready
+    const checkConsentManager = () => {
+      if (window.ow?.analytics?._consentManager) {
+        const currentConsent = window.ow.analytics._consentManager.get();
         
-        // Check if consent is still valid (not expired, correct version)
-        const isValid = consentData.version === CONSENT_VERSION && 
-                        Date.now() - consentData.timestamp < 365 * 24 * 60 * 60 * 1000; // 1 year
-        
-        if (isValid) {
-          // 1. Update the Google Consent state with the user's saved choice
-          updateGoogleConsent(consentData.consent);
-
-          // 2. Set the local React state which will trigger ConditionalAnalyticsScripts
-          setConsent(consentData.consent);
+        if (currentConsent) {
+          // Convert Google consent format back to our format
+          const reactConsent: ConsentSettings = {
+            necessary: true,
+            analytics: currentConsent.analytics_storage === 'granted',
+            marketing: currentConsent.ad_storage === 'granted', 
+            preferences: currentConsent.functionality_storage === 'granted'
+          };
+          
+          setConsent(reactConsent);
           setHasConsent(true);
-        } else {
-          // Remove expired consent
-          localStorage.removeItem(CONSENT_STORAGE_KEY);
-          setShowBanner(true);
-          // The default 'denied' state from layout.tsx <head> script applies here
+          
+          // If all denied, show banner
+          if (!reactConsent.analytics && !reactConsent.marketing && !reactConsent.preferences) {
+            setShowBanner(true);
+          }
         }
-      } catch (error) {
-        console.error('Error parsing consent data:', error);
-        localStorage.removeItem(CONSENT_STORAGE_KEY);
-        setShowBanner(true);
+        
+        // Listen for future changes
+        window.ow.analytics._consentManager.onChange((newGoogleConsent: any) => {
+          const reactConsent: ConsentSettings = {
+            necessary: true,
+            analytics: newGoogleConsent.analytics_storage === 'granted',
+            marketing: newGoogleConsent.ad_storage === 'granted',
+            preferences: newGoogleConsent.functionality_storage === 'granted'
+          };
+          
+          setConsent(reactConsent);
+          setHasConsent(true);
+        });
+      } else {
+        // Retry if consent manager not ready yet
+        setTimeout(checkConsentManager, 50);
       }
-    } else {
-      setShowBanner(true);
-      // The default 'denied' state from layout.tsx <head> script applies for new users
-    }
+    };
+    
+    checkConsentManager();
 
     // --- OW Analytics Consent Function ---
     window.ow = window.ow || {};
@@ -109,13 +120,34 @@ export function ConsentProvider({ children }: ConsentProviderProps) {
       version: CONSENT_VERSION,
     };
     
+    // 1. Save to localStorage
     localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consentData));
+    
+    // 2. Convert to Google format
+    const googleConsent = {
+      'ad_storage': newConsent.marketing ? 'granted' : 'denied',
+      'ad_user_data': newConsent.marketing ? 'granted' : 'denied',
+      'ad_personalization': newConsent.marketing ? 'granted' : 'denied',
+      'analytics_storage': newConsent.analytics ? 'granted' : 'denied',
+      'functionality_storage': newConsent.preferences ? 'granted' : 'denied',
+      'personalization_storage': newConsent.preferences ? 'granted' : 'denied',
+      'security_storage': 'granted'
+    };
+    
+    // 3. Update centralized manager (this will notify all listeners including React)
+    if (window.ow?.analytics?._consentManager) {
+      window.ow.analytics._consentManager.set(googleConsent);
+    }
+    
+    // 4. Update Google Consent Mode
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('consent', 'update', googleConsent);
+    }
+    
+    // 5. Update local React state and hide banner
     setConsent(newConsent);
     setHasConsent(true);
     setShowBanner(false);
-    
-    // Update analytics with new consent
-    updateGoogleConsent(newConsent);
     
     // Log consent changes in development
     if (process.env.NODE_ENV === 'development') {

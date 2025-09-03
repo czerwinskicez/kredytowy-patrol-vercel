@@ -1,22 +1,48 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { useConsent } from '@/contexts/ConsentContext';
 import { ANALYTICS_CONFIG } from '@/lib/analytics';
 
 export function ConditionalAnalyticsScripts() {
   const { consent, hasConsent } = useConsent();
+  const [consentState, setConsentState] = useState<any>(null);
 
-  // Don't render anything until user has made a consent choice
-  if (!hasConsent) {
+  // Listen to centralized consent manager
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const waitForConsentManager = () => {
+      if (window.ow?.analytics?._consentManager) {
+        // Get current state
+        const current = window.ow.analytics._consentManager.get();
+        setConsentState(current);
+
+        // Listen for changes
+        window.ow.analytics._consentManager.onChange((newConsent: any) => {
+          setConsentState(newConsent);
+        });
+      } else {
+        setTimeout(waitForConsentManager, 100);
+      }
+    };
+
+    waitForConsentManager();
+  }, []);
+
+  // Don't render anything until we have consent state from manager
+  if (!consentState) {
     return null;
   }
+
+  const shouldLoadAnalytics = consentState.analytics_storage === 'granted';
+  const shouldLoadMarketing = consentState.ad_storage === 'granted';
 
   return (
     <>
       {/* Google Tag Manager - Only if analytics OR marketing consent */}
-      {ANALYTICS_CONFIG.GTM_CONTAINER_ID && (consent.analytics || consent.marketing) && (
+      {ANALYTICS_CONFIG.GTM_CONTAINER_ID && (shouldLoadAnalytics || shouldLoadMarketing) && (
         <>
           <Script
             id="google-tag-manager"
@@ -42,7 +68,7 @@ export function ConditionalAnalyticsScripts() {
       )}
 
       {/* Microsoft Clarity - Only if analytics consent */}
-      {ANALYTICS_CONFIG.CLARITY_PROJECT_ID && consent.analytics && (
+      {ANALYTICS_CONFIG.CLARITY_PROJECT_ID && shouldLoadAnalytics && (
         <Script id="microsoft-clarity" strategy="lazyOnload">
           {`
             (function(c,l,a,r,i,t,y){
@@ -55,7 +81,7 @@ export function ConditionalAnalyticsScripts() {
       )}
 
       {/* Facebook Pixel - Only if marketing consent */}
-      {ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID && consent.marketing && (
+      {ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID && shouldLoadMarketing && (
         <>
           <Script id="facebook-pixel" strategy="lazyOnload">
             {`
@@ -97,9 +123,6 @@ export function ConditionalAnalyticsScripts() {
         </Script>
       )}
 
-      {/* Note: Vercel Analytics is handled by @vercel/analytics package in layout.tsx */}
-      {/* It's first-party analytics and privacy-compliant, so it can run without explicit consent */}
-
       {/* Enhanced OW Analytics Status Function */}
       <Script id="ow-analytics-status" strategy="afterInteractive">
         {`
@@ -116,25 +139,8 @@ export function ConditionalAnalyticsScripts() {
                 CLOUDFLARE_TOKEN: '${ANALYTICS_CONFIG.CLOUDFLARE_TOKEN || ''}',
               };
 
-              // Helper to get the most recent Google Consent Mode state from dataLayer
-              const getGoogleConsentState = () => {
-                if (!window.dataLayer) return {};
-                const consentEvents = window.dataLayer.filter(item => 
-                  item && Array.isArray(item) && item[0] === 'consent' && item[1] === 'update'
-                );
-                if (consentEvents.length > 0) {
-                  return consentEvents[consentEvents.length - 1][2] || {};
-                }
-                const defaultConsentEvents = window.dataLayer.filter(item => 
-                  item && Array.isArray(item) && item[0] === 'consent' && item[1] === 'default'
-                );
-                if (defaultConsentEvents.length > 0) {
-                  return defaultConsentEvents[defaultConsentEvents.length - 1][2] || {};
-                }
-                return {};
-              };
-
-              const consentState = getGoogleConsentState();
+              // Use centralized consent state
+              const consentState = window.ow.analytics._consentManager?.get() || {};
 
               const getServiceStatus = (serviceName) => {
                 const status = {
@@ -156,7 +162,7 @@ export function ConditionalAnalyticsScripts() {
                     status.consent.status = consentState.analytics_storage === 'granted' || consentState.ad_storage === 'granted' ? 'granted' : 'denied';
                     if (window.google_tag_manager) {
                       status.scriptState = 'Loaded';
-                      status.details.dataLayerEvents = window.dataLayer.filter(e => e && e.event && (e.event === 'gtm.js' || e.event === 'gtm.load')).length;
+                      status.details.dataLayerEvents = window.dataLayer ? window.dataLayer.filter(e => e && e.event && (e.event === 'gtm.js' || e.event === 'gtm.load')).length : 0;
                     } else if (window.dataLayer) {
                       status.scriptState = 'Initialized';
                     }
@@ -241,6 +247,7 @@ export function ConditionalAnalyticsScripts() {
                 table: function() {
                   console.log('--- Analytics Status Report ---');
                   console.log('Full Consent State:', this.fullConsentState);
+                  console.log('Last Updated:', this.fullConsentState.lastUpdated);
                   
                   const tableData = Object.values(this.services).map(service => ({
                     'Service': service.name,
@@ -256,6 +263,17 @@ export function ConditionalAnalyticsScripts() {
 
               return report;
             }
+
+            // Method to manually update consent state
+            window.ow.analytics.updateConsent = function(consentData) {
+              if (window.ow.analytics._consentManager) {
+                window.ow.analytics._consentManager.set(consentData);
+                
+                if (typeof window.gtag === 'function') {
+                  window.gtag('consent', 'update', consentData);
+                }
+              }
+            };
           })();
         `}
       </Script>

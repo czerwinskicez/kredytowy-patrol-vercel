@@ -79,17 +79,74 @@ export default function RootLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               
-              // Set default consent state BEFORE any analytics load
-              gtag('consent', 'default', {
-                'ad_storage': 'denied',
-                'ad_user_data': 'denied', 
-                'ad_personalization': 'denied',
-                'analytics_storage': 'denied',
-                'functionality_storage': 'denied',
-                'personalization_storage': 'denied',
-                'security_storage': 'granted',
-                'wait_for_update': 500
-              });
+              // Initialize centralized consent manager
+              window.ow = window.ow || {};
+              window.ow.analytics = window.ow.analytics || {};
+              window.ow.analytics._consentManager = {
+                current: null,
+                listeners: [],
+                
+                get: function() {
+                  return this.current;
+                },
+                
+                set: function(newConsent) {
+                  this.current = newConsent;
+                  this.notify();
+                },
+                
+                notify: function() {
+                  this.listeners.forEach(fn => fn(this.current));
+                },
+                
+                onChange: function(callback) {
+                  this.listeners.push(callback);
+                  if (this.current) callback(this.current);
+                }
+              };
+              
+              // Check localStorage for existing consent
+              const savedConsent = localStorage.getItem('cookie-consent');
+              let initialConsent;
+              
+              if (savedConsent) {
+                try {
+                  const consentData = JSON.parse(savedConsent);
+                  const isValid = consentData.version === '1.0' && 
+                                  Date.now() - consentData.timestamp < 365 * 24 * 60 * 60 * 1000;
+                  
+                  if (isValid) {
+                    initialConsent = {
+                      'ad_storage': consentData.consent.marketing ? 'granted' : 'denied',
+                      'ad_user_data': consentData.consent.marketing ? 'granted' : 'denied',
+                      'ad_personalization': consentData.consent.marketing ? 'granted' : 'denied',
+                      'analytics_storage': consentData.consent.analytics ? 'granted' : 'denied',
+                      'functionality_storage': consentData.consent.preferences ? 'granted' : 'denied',
+                      'personalization_storage': consentData.consent.preferences ? 'granted' : 'denied',
+                      'security_storage': 'granted'
+                    };
+                  }
+                } catch (e) {
+                  localStorage.removeItem('cookie-consent');
+                }
+              }
+              
+              // Default to denied if no valid consent found
+              if (!initialConsent) {
+                initialConsent = {
+                  'ad_storage': 'denied',
+                  'ad_user_data': 'denied',
+                  'ad_personalization': 'denied',
+                  'analytics_storage': 'denied',
+                  'functionality_storage': 'denied',
+                  'personalization_storage': 'denied',
+                  'security_storage': 'granted'
+                };
+              }
+              
+              // Set initial consent state
+              gtag('consent', 'default', initialConsent);
+              window.ow.analytics._consentManager.set(initialConsent);
             `,
           }}
         />
